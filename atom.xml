@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>WHT</title>
+  
+  <subtitle>io Blog</subtitle>
+  <link href="http://wht6.github.io/atom.xml" rel="self"/>
+  
+  <link href="http://wht6.github.io/"/>
+  <updated>2021-03-16T05:17:40.295Z</updated>
+  <id>http://wht6.github.io/</id>
+  
+  <author>
+    <name>Wang HT</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>pytorch环境搭建</title>
+    <link href="http://wht6.github.io/2021/03/16/pytorch-huan-jing-da-jian/"/>
+    <id>http://wht6.github.io/2021/03/16/pytorch-huan-jing-da-jian/</id>
+    <published>2021-03-16T05:17:40.000Z</published>
+    <updated>2021-03-16T05:17:40.295Z</updated>
+    
+    
+    
+    
+    
+  </entry>
+  
+</feed>
