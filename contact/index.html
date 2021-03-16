@@ -43,7 +43,7 @@
                 <a href="/" class="waves-effect waves-light">
 					<div>
 						
-						<img src="/medias/logo.png" class="logo-img" alt="LOGO">
+						<img src="./images/loading.gif" data-original="/medias/logo.png" class="logo-img" alt="LOGO">
 						
 						<span class="logo-span">WHT</span>
 					<div>
@@ -168,7 +168,7 @@
 
     <div class="mobile-head bg-color">
         
-        <img src="/medias/logo.png" class="logo-img circle responsive-img">
+        <img src="./images/loading.gif" data-original="/medias/logo.png" class="logo-img circle responsive-img">
         
         <div class="logo-name">WHT</div>
         <div class="logo-desc">
@@ -718,6 +718,12 @@ $(function () {
     <script src="/libs/instantpage/instantpage.js" type="module"></script>
     
 
-</body>
+<script>
+            window.imageLazyLoadSetting = {
+                isSPA: false,
+                preloadRatio: 1,
+                processImages: null,
+            };
+        </script><script>window.addEventListener("load",function(){var t=/\.(gif|jpg|jpeg|tiff|png)$/i,r=/^data:image\/[a-z]+;base64,/;Array.prototype.slice.call(document.querySelectorAll("img[data-original]")).forEach(function(a){var e=a.parentNode;"A"===e.tagName&&(e.href.match(t)||e.href.match(r))&&(e.href=a.dataset.original)})});</script><script>undefined</script></body>
 
 </html>
