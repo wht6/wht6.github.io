@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title>WHT</title>
   
-  <subtitle>WHT Blog</subtitle>
+  <subtitle>指 Blog</subtitle>
   <link href="http://wht6.github.io/atom.xml" rel="self"/>
   
   <link href="http://wht6.github.io/"/>
