@@ -555,7 +555,7 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="Linux相关命令"><a href="#Linux相关命令" class="headerlink" title="Linux相关命令"></a>Linux相关命令</h2><p>cd /home 进入 ‘/ home’ 目录’<br>cd .. 返回上一级目录<br>cd ~ 进入个人的主目录<br>cd - 返回上次所在的目录<br>ls 查看目录中的文件<br>ls -a 显示隐藏文件<br>mkdir dir1 创建一个叫做 ‘dir1’ 的目录’<br>rm -f file1 删除一个叫做 ‘file1’ 的文件’<br>rm -rf dir1 删除一个叫做 ‘dir1’ 的目录并同时删除其内容<br>cp -i file1 file2 将文档 file1复制成file2，复制后名称被改file2<br>cp -i file1 dir1 将文档 file1复制到dir1目录下，复制后名称仍未file1<br>cp -r dir1 dir2 将dir1下的所有文件及其子目录复制到dir2中<br>locate 文件名 搜索文件<br>sudo 管理员权限<br>chmod a+x file 给file添加用户可执行权限<br>chmod 777 file 或 chmod a=rwx file 设置所有人可以读写及执行<br>unrar x file1.rar 解压rar包<br>tar -zxvf archive.tar.gz 解压一个gzip格式的压缩包<br>tar -jxvf archive.tar.bz2 解压一个bzip2格式的压缩包<br>unzip file1.zip 解压一个zip格式压缩包<br>dpkg -i package.deb 安装/更新一个 deb 包<br>apt-get install package_name 安装/更新一个 deb 包<br>apt-get update 升级列表中的软件包<br>apt-get upgrade 升级所有已安装的软件<br>cat file1 从第一个字节开始正向查看文件的内容<br>ifconfig eth0 显示一个以太网卡的配置<br>reboot 重启</p>
+                <h1 id="ubuntu20-04配置pytorch环境"><a href="#ubuntu20-04配置pytorch环境" class="headerlink" title="ubuntu20.04配置pytorch环境"></a>ubuntu20.04配置pytorch环境</h1><h2 id="Linux相关命令"><a href="#Linux相关命令" class="headerlink" title="Linux相关命令"></a>Linux相关命令</h2><p>cd /home 进入 ‘/ home’ 目录’<br>cd .. 返回上一级目录<br>cd ~ 进入个人的主目录<br>cd - 返回上次所在的目录<br>ls 查看目录中的文件<br>ls -a 显示隐藏文件<br>mkdir dir1 创建一个叫做 ‘dir1’ 的目录’<br>rm -f file1 删除一个叫做 ‘file1’ 的文件’<br>rm -rf dir1 删除一个叫做 ‘dir1’ 的目录并同时删除其内容<br>cp -i file1 file2 将文档 file1复制成file2，复制后名称被改file2<br>cp -i file1 dir1 将文档 file1复制到dir1目录下，复制后名称仍未file1<br>cp -r dir1 dir2 将dir1下的所有文件及其子目录复制到dir2中<br>locate 文件名 搜索文件<br>sudo 管理员权限<br>chmod a+x file 给file添加用户可执行权限<br>chmod 777 file 或 chmod a=rwx file 设置所有人可以读写及执行<br>unrar x file1.rar 解压rar包<br>tar -zxvf archive.tar.gz 解压一个gzip格式的压缩包<br>tar -jxvf archive.tar.bz2 解压一个bzip2格式的压缩包<br>unzip file1.zip 解压一个zip格式压缩包<br>dpkg -i package.deb 安装/更新一个 deb 包<br>apt-get install package_name 安装/更新一个 deb 包<br>apt-get update 升级列表中的软件包<br>apt-get upgrade 升级所有已安装的软件<br>cat file1 从第一个字节开始正向查看文件的内容<br>ifconfig eth0 显示一个以太网卡的配置<br>reboot 重启</p>
 <h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><p>如果需要远程，可以在控制端和本机上安装teamviewer，邮箱注册，邮箱会收到TeamViewer发过来的激活账户邮件，点击激活连接就能够登录客户端了。<br>然后会再收到一封TeamViewer发过来的设备授权认证邮件，选择信任。连接的时候还要验证，需要手机号验证。如果感觉太繁琐，可以装VNC。</p>
 <p>先用自带的编辑器更改apt源，不然后面下载和更新软件会很难受。<br><a target="_blank" rel="noopener" href="https://mirrors.tuna.tsinghua.edu.cn/help/ubuntu/">清华镜像</a></p>
 <p><a target="_blank" rel="noopener" href="http://dongdongdong.me/2018/01/22/OS/Installation/Ubuntu/vim/">vim安装</a></p>
@@ -629,7 +629,7 @@ make install
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="/about" rel="external nofollow noreferrer">Wang HT</a>
+                    <a href="/about" rel="external nofollow noreferrer">并指如刀</a>
                 </span>
             </div>
             <div class="reprint__type">
@@ -652,7 +652,7 @@ make install
                     本博客所有文章除特別声明外，均采用
                     <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
                     许可协议。转载请注明来源
-                    <a href="/about" target="_blank">Wang HT</a>
+                    <a href="/about" target="_blank">并指如刀</a>
                     !
                 </span>
             </div>
@@ -879,7 +879,7 @@ make install
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
-                            Wang HT
+                            并指如刀
                             
                         </span>
                     </div>
@@ -929,7 +929,7 @@ make install
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
-                            Wang HT
+                            并指如刀
                             
                         </span>
                     </div>
@@ -988,7 +988,7 @@ make install
         var url = document.location.href;
         newdiv.innerHTML += '<br />'
             + '来源: WHT<br />'
-            + '文章作者: Wang HT<br />'
+            + '文章作者: 并指如刀<br />'
             + '文章链接: <a href="' + url + '">' + url + '</a><br />'
             + '本文章著作权归作者所有，任何形式的转载都请注明出处。';
 
@@ -1180,7 +1180,7 @@ make install
                 <span id="year">2021</span>
             
             <span id="year">2021</span>
-            <a href="/about" target="_blank">Wang HT</a>
+            <a href="/about" target="_blank">并指如刀</a>
             |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
             |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
             <br>
