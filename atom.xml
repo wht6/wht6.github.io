@@ -6,7 +6,7 @@
   <link href="http://wht6.github.io/atom.xml" rel="self"/>
   
   <link href="http://wht6.github.io/"/>
-  <updated>2021-03-16T05:17:40.295Z</updated>
+  <updated>2021-03-17T06:23:46.532Z</updated>
   <id>http://wht6.github.io/</id>
   
   <author>
@@ -17,15 +17,54 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>pytorch环境搭建</title>
-    <link href="http://wht6.github.io/2021/03/16/pytorch-huan-jing-da-jian/"/>
-    <id>http://wht6.github.io/2021/03/16/pytorch-huan-jing-da-jian/</id>
-    <published>2021-03-16T05:17:40.000Z</published>
-    <updated>2021-03-16T05:17:40.295Z</updated>
+    <title>ubuntu20.04配置pytorch环境</title>
+    <link href="http://wht6.github.io/2021/03/17/ubuntu20-04-pei-zhi-pytorch-huan-jing/"/>
+    <id>http://wht6.github.io/2021/03/17/ubuntu20-04-pei-zhi-pytorch-huan-jing/</id>
+    <published>2021-03-17T06:17:44.000Z</published>
+    <updated>2021-03-17T06:23:46.532Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;Linux相关命令&quot;&gt;&lt;a href=&quot;#Linux相关命令&quot; class=&quot;headerlink&quot; title=&quot;Linux相关命令&quot;&gt;&lt;/a&gt;Linux相关命令&lt;/h2&gt;&lt;p&gt;cd /home 进入 ‘/ home’ 目录’&lt;br&gt;cd ..</summary>
+        
+      
     
     
     
     
+    <category term="环境配置" scheme="http://wht6.github.io/tags/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/"/>
+    
+    <category term="pytorch" scheme="http://wht6.github.io/tags/pytorch/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>一步步理解图像实例分割（一）——线性回归</title>
+    <link href="http://wht6.github.io/2021/03/17/yi-bu-bu-li-jie-tu-xiang-shi-li-fen-ge-yi-xian-xing-hui-gui/"/>
+    <id>http://wht6.github.io/2021/03/17/yi-bu-bu-li-jie-tu-xiang-shi-li-fen-ge-yi-xian-xing-hui-gui/</id>
+    <published>2021-03-17T06:14:48.000Z</published>
+    <updated>2021-03-17T06:25:27.104Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h3 id=&quot;一步步理解图像实例分割（一）——线性回归&quot;&gt;&lt;a href=&quot;#一步步理解图像实例分割（一）——线性回归&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    
+    <category term="实例分割" scheme="http://wht6.github.io/tags/%E5%AE%9E%E4%BE%8B%E5%88%86%E5%89%B2/"/>
+    
+    <category term="深度学习" scheme="http://wht6.github.io/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
+    
+    <category term="计算机视觉" scheme="http://wht6.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/"/>
     
   </entry>
   
