@@ -1,70 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>WHT</title>
+  <title>{{ config.title }}</title>
   
-  <subtitle>IO Blog</subtitle>
-  <link href="http://wht6.github.io/atom.xml" rel="self"/>
+  <subtitle>{{ config.subtitle }}</subtitle>
+  <link href="{{ feed_url | uriencode }}" rel="self"/>
   
-  <link href="http://wht6.github.io/"/>
-  <updated>2021-03-17T06:33:11.811Z</updated>
-  <id>http://wht6.github.io/</id>
+  <link href="{{ url | uriencode }}"/>
+  <updated>{{ posts.first().updated.toISOString() }}</updated>
+  <id>{{ url | uriencode }}</id>
   
   <author>
-    <name>并指如刀</name>
+    <name>{{ config.author }}</name>
     
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>ubuntu20.04配置pytorch环境</title>
-    <link href="http://wht6.github.io/2021/03/17/ubuntu20-04-pei-zhi-pytorch-huan-jing/"/>
-    <id>http://wht6.github.io/2021/03/17/ubuntu20-04-pei-zhi-pytorch-huan-jing/</id>
-    <published>2021-03-17T06:17:44.000Z</published>
-    <updated>2021-03-17T06:33:11.811Z</updated>
+    <title>{{ post.title }}</title>
+    <link href="{{ post.permalink | uriencode }}"/>
+    <id>{{ post.permalink | uriencode }}</id>
+    <published>{{ post.date.toISOString() }}</published>
+    <updated>{{ post.updated.toISOString() }}</updated>
     
     
       
       
         
         
-    <summary type="html">&lt;h1 id=&quot;ubuntu20-04配置pytorch环境&quot;&gt;&lt;a href=&quot;#ubuntu20-04配置pytorch环境&quot; class=&quot;headerlink&quot;</summary>
+    <summary type="html">{{ short_content.substring(0, delim_pos) }}</summary>
         
       
     
     
     
     
-    <category term="环境配置" scheme="http://wht6.github.io/tags/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/"/>
-    
-    <category term="pytorch" scheme="http://wht6.github.io/tags/pytorch/"/>
+    <category term="{{ tag.name }}" scheme="{{ tag.permalink }}"/>
     
   </entry>
   
   <entry>
-    <title>一步步理解图像实例分割（一）——线性回归</title>
-    <link href="http://wht6.github.io/2021/03/17/yi-bu-bu-li-jie-tu-xiang-shi-li-fen-ge-yi-xian-xing-hui-gui/"/>
-    <id>http://wht6.github.io/2021/03/17/yi-bu-bu-li-jie-tu-xiang-shi-li-fen-ge-yi-xian-xing-hui-gui/</id>
-    <published>2021-03-17T06:14:48.000Z</published>
-    <updated>2021-03-17T08:13:36.135Z</updated>
+    <title>{{ post.title }}</title>
+    <link href="{{ post.permalink | uriencode }}"/>
+    <id>{{ post.permalink | uriencode }}</id>
+    <published>{{ post.date.toISOString() }}</published>
+    <updated>{{ post.updated.toISOString() }}</updated>
     
     
       
       
         
         
-    <summary type="html">&lt;h1 id=&quot;一步步理解图像实例分割（一）——线性回归&quot;&gt;&lt;a href=&quot;#一步步理解图像实例分割（一）——线性回归&quot; class=&quot;headerlink&quot;</summary>
+    <summary type="html">{{ short_content.substring(0, delim_pos) }}</summary>
         
       
     
     
     
     
-    <category term="实例分割" scheme="http://wht6.github.io/tags/%E5%AE%9E%E4%BE%8B%E5%88%86%E5%89%B2/"/>
+    <category term="{{ tag.name }}" scheme="{{ tag.permalink }}"/>
     
-    <category term="深度学习" scheme="http://wht6.github.io/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
+    <category term="{{ tag.name }}" scheme="{{ tag.permalink }}"/>
     
-    <category term="计算机视觉" scheme="http://wht6.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/"/>
+  </entry>
+  
+  <entry>
+    <title>{{ post.title }}</title>
+    <link href="{{ post.permalink | uriencode }}"/>
+    <id>{{ post.permalink | uriencode }}</id>
+    <published>{{ post.date.toISOString() }}</published>
+    <updated>{{ post.updated.toISOString() }}</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">{{ short_content.substring(0, delim_pos) }}</summary>
+        
+      
+    
+    
+    
+    
+    <category term="{{ tag.name }}" scheme="{{ tag.permalink }}"/>
+    
+    <category term="{{ tag.name }}" scheme="{{ tag.permalink }}"/>
+    
+    <category term="{{ tag.name }}" scheme="{{ tag.permalink }}"/>
     
   </entry>
   
