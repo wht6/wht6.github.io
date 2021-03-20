@@ -34,7 +34,7 @@
 }
 
 body {
-    background-color: #393E46;
+    background-color: #222831;
     margin: 0;
     color: #34495e;
     overflow-x: hidden;
@@ -241,7 +241,7 @@ mark {
 }
 
 .bg-color {
-    background-image: linear-gradient(to right, #222831 0%, #393E46 100%);
+    background-image: linear-gradient(to right, #393E46 0%, #00ADB5 100%);
 }
 
 .text-color {
