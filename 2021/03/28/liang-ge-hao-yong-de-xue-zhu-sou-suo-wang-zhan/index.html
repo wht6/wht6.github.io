@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="一步步理解图像实例分割（一）——线性回归, Pytorch,DeepLearning,Image Segmentation,STM32">
+    <meta name="keywords" content="两个好用的学术搜索网站, Pytorch,DeepLearning,Image Segmentation,STM32">
     <meta name="description" content="专注学习,分享技术,分享知识">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>一步步理解图像实例分割（一）——线性回归 | WHT</title>
+    <title>两个好用的学术搜索网站 | WHT</title>
     <link rel="icon" type="image/png" href="/favicon_o.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -390,12 +390,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/22.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/6.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">一步步理解图像实例分割（一）——线性回归</h1>
+                    <h1 class="description center-align post-title">两个好用的学术搜索网站</h1>
                 </div>
             </div>
         </div>
@@ -511,16 +511,12 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
-                                <span class="chip bg-color">深度学习</span>
+                            <a href="/tags/%E5%AD%A6%E6%9C%AF/">
+                                <span class="chip bg-color">学术</span>
                             </a>
                         
-                            <a href="/tags/%E5%AE%9E%E4%BE%8B%E5%88%86%E5%89%B2/">
-                                <span class="chip bg-color">实例分割</span>
-                            </a>
-                        
-                            <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/">
-                                <span class="chip bg-color">计算机视觉</span>
+                            <a href="/tags/%E7%BD%91%E7%AB%99%E6%8E%A8%E8%8D%90/">
+                                <span class="chip bg-color">网站推荐</span>
                             </a>
                         
                     </div>
@@ -535,7 +531,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2021-03-17
+                    2021-03-28
                 </div>
                 
 
@@ -544,7 +540,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.2k
+                    237
                 </div>
                 
 
@@ -561,24 +557,19 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="一步步理解图像实例分割（一）——线性回归"><a href="#一步步理解图像实例分割（一）——线性回归" class="headerlink" title="一步步理解图像实例分割（一）——线性回归"></a>一步步理解图像实例分割（一）——线性回归</h1><h2 id="线性回归"><a href="#线性回归" class="headerlink" title="线性回归"></a>线性回归</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>线性回归（ Linear Regression） 是机器学习和统计学中最基础和最广泛应用的模型， 是一种对自变量和因变量之间关系进行建模的回归分析．<br>线性回归模型的一般形式：<br>$$<br>\hat{y}=\omega^Tx+b<br>$$<br>其中权重向量$\omega$与偏置b都是可学习的参数。给定一个训练集，每个样本包括特征向量x和标签y，我们希望能够学习到一组参数$\omega$使模型估计的$\hat{y}$能够很好的预测真实值y。这就引出了两个问题，如何训练以及如何评估。</p>
-<h3 id="模型的训练"><a href="#模型的训练" class="headerlink" title="模型的训练"></a>模型的训练</h3><p>在模型训练中，我们需要衡量预测值与真实值之间的误差。通常我们会选取一个非负数作为误差，且数值越小表示误差越小。我们把衡量这些误差的函数称为损失函数。当模型和损失函数形式较为简单时，误差最小化问题的解可以直接用公式表达出来。这类解叫作解析解（analytical solution）。然而，大多数深度学习模型并没有解析解，只能通过优化算法有限次迭代模型参数来尽可能降低损失函数值。这类解叫作数值解（numerical solution）。</p>
-<p>在求数值解的优化算法中，小批量随机梯度下降（mini-batch stochastic gradient descent）在深度学习中被广泛使用。它的算法很单：先选取一组模型参数的初始值，如随机选取；接下来对参数进行多次迭代，使每次迭代都可能降低损失函数的值。在每次迭代中，先随机均匀采样一个由固定数目训练数据样本所组成的小批量（mini-batch）$\mathcal{B}$，然后求小批量中数据样本的平均损失有关模型参数的导数（梯度），最后用此结果与预先设定的一个正数（学习率）的乘积作为模型参数在本次迭代的减小量。<br>$$<br>\omega  \leftarrow \omega  - \eta \frac{1}{K}\sum {\frac{{\partial L(y,\hat y)}}{{\partial \omega }}}<br>$$<br>其中，$\eta$是学习率，K是小批量样本的个数，L是损失函数。</p>
-<h3 id="神经网络图"><a href="#神经网络图" class="headerlink" title="神经网络图"></a>神经网络图</h3><p>在深度学习中，我们可以使用神经网络图直观地表现模型结构。</p>
-<p>线性回归模型：$\hat{y}=x_1w_1+x_2w_2+b$</p>
-<p>为了更清晰地展示线性回归作为神经网络的结构，下图使用神经网络图表示上面的线性回归模型。神经网络图隐去了模型参数权重和偏差。</p>
-<p><img src="/2021/03/17/yi-bu-bu-li-jie-tu-xiang-shi-li-fen-ge-yi-xian-xing-hui-gui/3.1_linreg.svg"></p>
-<p>由于输入层并不涉及计算，上图神经网络的层数为1。其中，$x_1$和$x_2$是输入，输入个数为2，输入个数也叫特征数或特征向量维度。箭头指向输出节点表示加权求和的操作。输出层中的神经元和输入层中各个输入完全连接。因此，这里的输出层又叫全连接层（fully-connected layer）。</p>
-<h2 id="Softmax回归"><a href="#Softmax回归" class="headerlink" title="Softmax回归"></a>Softmax回归</h2><h2 id="Logistic回归"><a href="#Logistic回归" class="headerlink" title="Logistic回归"></a>Logistic回归</h2><p>Logistic 回归（ Logistic Regression，LR） 是一种常用的处理二分类问题的线性模型．  </p>
-<p>${\rm{y}} \in { 0,1}$是一个二分类问题，显然用单纯的线性模型无法解决。我们需要一个非线性的激活函数，这里选择Logistic函数作为激活函数，将线性函数的值域挤压的0到1之间来表示概率。那么标签$y = 1$的概率为<br>$$<br>\hat{y}=p(y = 1) = \frac{1}{{1 + \exp ( - \omega x)}}<br>$$<br>当概率值大于0.5是认为$y = 1$，否则$y = 0$。</p>
-<p>Logistic 回归采用交叉熵作为损失函数， 并使用梯度下降法来对参数进行优化。</p>
-<h3 id="Softmax回归-1"><a href="#Softmax回归-1" class="headerlink" title="Softmax回归"></a>Softmax回归</h3><p>Logistic 回归只使用二分类问题，放在神经网络中只有单一的输出。对于多分类问题就要用到Softmax回归。<br>$$<br>o_1=x_1w_11+x_2w_21+x_3w_31+x_4w_41+b_1,\\<br>o_2=x_1w_12+x_2w_22+x_3w_32+x_4w_42+b_2,\\<br>o_3=x_1w_13+x_2w_23+x_3w_33+x_4w_43+b_3.<br>$$<br>我们需要将三个输出的至于压缩到0到1之间，并且三者之和为1，就能够表示成概率值，那么哪个输出的概率值大就分类成哪个标签。<br>$$<br>{\hat y_1} = \frac{{exp({o_1})}}{{\sum {exp({o_i})} }},{\hat y_2} = \frac{{exp({o_2})}}{{\sum {exp({o_i})} }},{\hat y_3} = \frac{{exp({o_3})}}{{\sum {exp({o_i})} }}<br>$$<br>经过上面的映射，${\hat y_1}+{\hat y_2}+{\hat y_3}=1$且$0\le{\hat y_1},{\hat y_2},{\hat y_3}\le1$。</p>
-<p>可以看出，Softmax回归同线性回归一样也是单层的全连接网络。</p>
-<p><img src="/2021/03/17/yi-bu-bu-li-jie-tu-xiang-shi-li-fen-ge-yi-xian-xing-hui-gui/3.4_softmaxreg.svg"></p>
-<p>Softmax回归采用的也是交叉熵损失函数， 并使用梯度下降法来对参数进行优化。</p>
-<p>Softmax交叉熵损失函数的公式：<br>$$<br>Loss({{\bf{y}}^{(i)}},{{\bf{\hat y}}^{(i)}}) =  - \sum\limits_{j = 1}^c {{y_j}^{(i)}} \log {\hat y_j}^{(i)}<br>$$<br>其中，c是类别数，i表示样本i。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>《神经网络与深度学习 》邱锡鹏  </p>
-<p><a target="_blank" rel="noopener" href="http://zh.d2l.ai/">《动手学深度学习》</a></p>
+                <h1 id="两个好用的学术搜索网站"><a href="#两个好用的学术搜索网站" class="headerlink" title="两个好用的学术搜索网站"></a>两个好用的学术搜索网站</h1><h2 id="Semantic-Scholar"><a href="#Semantic-Scholar" class="headerlink" title="Semantic Scholar"></a>Semantic Scholar</h2><p>Semantic Scholar网站简洁的页面：<br><img src="/2021/03/28/liang-ge-hao-yong-de-xue-zhu-sou-suo-wang-zhan/Hexo\source_posts\两个好用的学术搜索网站\f1.png"><br>找到论文后可方便查看论文摘要，参考文献以及引用的情况。此外还可以预览论文中的图片和表格，提供论文参考代码。网站排版很清晰，看着很舒服。<br><img src="/2021/03/28/liang-ge-hao-yong-de-xue-zhu-sou-suo-wang-zhan/Hexo\source_posts\两个好用的学术搜索网站\f2.png"></p>
+<p><img src="/2021/03/28/liang-ge-hao-yong-de-xue-zhu-sou-suo-wang-zhan/Hexo\source_posts\两个好用的学术搜索网站\f3.png"></p>
+<p><img src="/2021/03/28/liang-ge-hao-yong-de-xue-zhu-sou-suo-wang-zhan/Hexo\source_posts\两个好用的学术搜索网站\f4.png"></p>
+<p><img src="/2021/03/28/liang-ge-hao-yong-de-xue-zhu-sou-suo-wang-zhan/Hexo\source_posts\两个好用的学术搜索网站\f5.png"></p>
+<p>网站地址：<a target="_blank" rel="noopener" href="https://www.semanticscholar.org/">https://www.semanticscholar.org/</a></p>
+<h2 id="Papers-with-code"><a href="#Papers-with-code" class="headerlink" title="Papers with code"></a>Papers with code</h2><p>Papers with code提供的论文以及论文附带的代码。Semantic Scholar的代码就是从Papers with code获取的。Papers with code提供的代码更多，而且会显示代码star的数量。</p>
+<p><img src="/2021/03/28/liang-ge-hao-yong-de-xue-zhu-sou-suo-wang-zhan/Hexo\source_posts\两个好用的学术搜索网站\g1.png"></p>
+<p>论文所用到的数据集及使用的方法也都整理好了，帮助我们节省大量的时间。</p>
+<p><img src="/2021/03/28/liang-ge-hao-yong-de-xue-zhu-sou-suo-wang-zhan/Hexo\source_posts\两个好用的学术搜索网站\g2.png"></p>
+<p>此外，Papers with code还提供SODA的论文的对比分析。计算机视觉方面有关于各个数据集的AP排行榜，可以帮助我们快速了解领域内最优秀的方法。</p>
+<p><img src="/2021/03/28/liang-ge-hao-yong-de-xue-zhu-sou-suo-wang-zhan/Hexo\source_posts\两个好用的学术搜索网站\g3.png"></p>
+<p><img src="/2021/03/28/liang-ge-hao-yong-de-xue-zhu-sou-suo-wang-zhan/Hexo\source_posts\两个好用的学术搜索网站\g4.png"></p>
+<p>网站地址：<a target="_blank" rel="noopener" href="https://paperswithcode.com/">https://paperswithcode.com/</a></p>
 
                 
             </div>
@@ -605,7 +596,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://wht6.github.io/2021/03/17/yi-bu-bu-li-jie-tu-xiang-shi-li-fen-ge-yi-xian-xing-hui-gui/">http://wht6.github.io/2021/03/17/yi-bu-bu-li-jie-tu-xiang-shi-li-fen-ge-yi-xian-xing-hui-gui/</a>
+                    <a href="http://wht6.github.io/2021/03/28/liang-ge-hao-yong-de-xue-zhu-sou-suo-wang-zhan/">http://wht6.github.io/2021/03/28/liang-ge-hao-yong-de-xue-zhu-sou-suo-wang-zhan/</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -643,16 +634,12 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
-                                    <span class="chip bg-color">深度学习</span>
+                                <a href="/tags/%E5%AD%A6%E6%9C%AF/">
+                                    <span class="chip bg-color">学术</span>
                                 </a>
                             
-                                <a href="/tags/%E5%AE%9E%E4%BE%8B%E5%88%86%E5%89%B2/">
-                                    <span class="chip bg-color">实例分割</span>
-                                </a>
-                            
-                                <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/">
-                                    <span class="chip bg-color">计算机视觉</span>
+                                <a href="/tags/%E7%BD%91%E7%AB%99%E6%8E%A8%E8%8D%90/">
+                                    <span class="chip bg-color">网站推荐</span>
                                 </a>
                             
                         </div>
@@ -822,66 +809,18 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2021/03/17/ubuntu20-04-pei-zhi-pytorch-huan-jing/">
+                <a href="/2021/03/28/liang-ge-hao-yong-de-xue-zhu-sou-suo-wang-zhan/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/23.jpg" class="responsive-img" alt="ubuntu20.04配置pytorch环境">
+                        <img src="/medias/featureimages/6.jpg" class="responsive-img" alt="两个好用的学术搜索网站">
                         
-                        <span class="card-title">ubuntu20.04配置pytorch环境</span>
-                    </div>
-                </a>
-                <div class="card-content article-content">
-                    <div class="summary block-with-text">
-                        
-                            
-                        
-                    </div>
-                    <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2021-03-17
-                        </span>
-                        <span class="publish-author">
-                            
-                            <i class="fas fa-user fa-fw"></i>
-                            并指如刀
-                            
-                        </span>
-                    </div>
-                </div>
-                
-                <div class="card-action article-tags">
-                    
-                    <a href="/tags/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/">
-                        <span class="chip bg-color">环境配置</span>
-                    </a>
-                    
-                    <a href="/tags/pytorch/">
-                        <span class="chip bg-color">pytorch</span>
-                    </a>
-                    
-                </div>
-                
-            </div>
-        </div>
-        
-        
-        <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge right-badge text-color">
-                本篇&nbsp;<i class="far fa-dot-circle"></i>
-            </div>
-            <div class="card">
-                <a href="/2021/03/17/yi-bu-bu-li-jie-tu-xiang-shi-li-fen-ge-yi-xian-xing-hui-gui/">
-                    <div class="card-image">
-                        
-                        
-                        <img src="/medias/featureimages/22.jpg" class="responsive-img" alt="一步步理解图像实例分割（一）——线性回归">
-                        
-                        <span class="card-title">一步步理解图像实例分割（一）——线性回归</span>
+                        <span class="card-title">两个好用的学术搜索网站</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -892,7 +831,7 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-03-17
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-03-28
                             </span>
                         <span class="publish-author">
                             
@@ -906,16 +845,57 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
-                        <span class="chip bg-color">深度学习</span>
+                    <a href="/tags/%E5%AD%A6%E6%9C%AF/">
+                        <span class="chip bg-color">学术</span>
                     </a>
                     
-                    <a href="/tags/%E5%AE%9E%E4%BE%8B%E5%88%86%E5%89%B2/">
-                        <span class="chip bg-color">实例分割</span>
+                    <a href="/tags/%E7%BD%91%E7%AB%99%E6%8E%A8%E8%8D%90/">
+                        <span class="chip bg-color">网站推荐</span>
                     </a>
                     
-                    <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/">
-                        <span class="chip bg-color">计算机视觉</span>
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2021/03/22/stm32-shi-xian-de-fei-lai-led-wen-zi-gun-dong-xiao-guo/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/16.jpg" class="responsive-img" alt="STM32实现德飞莱LED文字滚动效果">
+                        
+                        <span class="card-title">STM32实现德飞莱LED文字滚动效果</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-03-22
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-user fa-fw"></i>
+                            并指如刀
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/STM32/">
+                        <span class="chip bg-color">STM32</span>
                     </a>
                     
                 </div>
@@ -1083,13 +1063,6 @@
 
 </main>
 
-
-<script src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-<script>
-    MathJax.Hub.Config({
-        tex2jax: {inlineMath: [['$', '$'], ['\(', '\)']]}
-    });
-</script>
 
 
 
