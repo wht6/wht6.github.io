@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="一步步理解图像实例分割（一）——线性回归, Pytorch,DeepLearning,Image Segmentation,STM32">
+    <meta name="keywords" content="STM32实现德飞莱LED文字滚动效果, Pytorch,DeepLearning,Image Segmentation,STM32">
     <meta name="description" content="专注学习,分享技术,分享知识">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>一步步理解图像实例分割（一）——线性回归 | WHT</title>
+    <title>STM32实现德飞莱LED文字滚动效果 | WHT</title>
     <link rel="icon" type="image/png" href="/favicon_o.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -390,12 +390,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/22.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/16.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">一步步理解图像实例分割（一）——线性回归</h1>
+                    <h1 class="description center-align post-title">STM32实现德飞莱LED文字滚动效果</h1>
                 </div>
             </div>
         </div>
@@ -511,16 +511,8 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
-                                <span class="chip bg-color">深度学习</span>
-                            </a>
-                        
-                            <a href="/tags/%E5%AE%9E%E4%BE%8B%E5%88%86%E5%89%B2/">
-                                <span class="chip bg-color">实例分割</span>
-                            </a>
-                        
-                            <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/">
-                                <span class="chip bg-color">计算机视觉</span>
+                            <a href="/tags/STM32/">
+                                <span class="chip bg-color">STM32</span>
                             </a>
                         
                     </div>
@@ -535,7 +527,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2021-03-17
+                    2021-03-22
                 </div>
                 
 
@@ -544,7 +536,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.2k
+                    1.4k
                 </div>
                 
 
@@ -561,24 +553,68 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="一步步理解图像实例分割（一）——线性回归"><a href="#一步步理解图像实例分割（一）——线性回归" class="headerlink" title="一步步理解图像实例分割（一）——线性回归"></a>一步步理解图像实例分割（一）——线性回归</h1><h2 id="线性回归"><a href="#线性回归" class="headerlink" title="线性回归"></a>线性回归</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>线性回归（ Linear Regression） 是机器学习和统计学中最基础和最广泛应用的模型， 是一种对自变量和因变量之间关系进行建模的回归分析．<br>线性回归模型的一般形式：<br>$$<br>\hat{y}=\omega^Tx+b<br>$$<br>其中权重向量$\omega$与偏置b都是可学习的参数。给定一个训练集，每个样本包括特征向量x和标签y，我们希望能够学习到一组参数$\omega$使模型估计的$\hat{y}$能够很好的预测真实值y。这就引出了两个问题，如何训练以及如何评估。</p>
-<h3 id="模型的训练"><a href="#模型的训练" class="headerlink" title="模型的训练"></a>模型的训练</h3><p>在模型训练中，我们需要衡量预测值与真实值之间的误差。通常我们会选取一个非负数作为误差，且数值越小表示误差越小。我们把衡量这些误差的函数称为损失函数。当模型和损失函数形式较为简单时，误差最小化问题的解可以直接用公式表达出来。这类解叫作解析解（analytical solution）。然而，大多数深度学习模型并没有解析解，只能通过优化算法有限次迭代模型参数来尽可能降低损失函数值。这类解叫作数值解（numerical solution）。</p>
-<p>在求数值解的优化算法中，小批量随机梯度下降（mini-batch stochastic gradient descent）在深度学习中被广泛使用。它的算法很单：先选取一组模型参数的初始值，如随机选取；接下来对参数进行多次迭代，使每次迭代都可能降低损失函数的值。在每次迭代中，先随机均匀采样一个由固定数目训练数据样本所组成的小批量（mini-batch）$\mathcal{B}$，然后求小批量中数据样本的平均损失有关模型参数的导数（梯度），最后用此结果与预先设定的一个正数（学习率）的乘积作为模型参数在本次迭代的减小量。<br>$$<br>\omega  \leftarrow \omega  - \eta \frac{1}{K}\sum {\frac{{\partial L(y,\hat y)}}{{\partial \omega }}}<br>$$<br>其中，$\eta$是学习率，K是小批量样本的个数，L是损失函数。</p>
-<h3 id="神经网络图"><a href="#神经网络图" class="headerlink" title="神经网络图"></a>神经网络图</h3><p>在深度学习中，我们可以使用神经网络图直观地表现模型结构。</p>
-<p>线性回归模型：$\hat{y}=x_1w_1+x_2w_2+b$</p>
-<p>为了更清晰地展示线性回归作为神经网络的结构，下图使用神经网络图表示上面的线性回归模型。神经网络图隐去了模型参数权重和偏差。</p>
-<p><img src="/2021/03/17/yi-bu-bu-li-jie-tu-xiang-shi-li-fen-ge-yi-xian-xing-hui-gui/3.1_linreg.svg"></p>
-<p>由于输入层并不涉及计算，上图神经网络的层数为1。其中，$x_1$和$x_2$是输入，输入个数为2，输入个数也叫特征数或特征向量维度。箭头指向输出节点表示加权求和的操作。输出层中的神经元和输入层中各个输入完全连接。因此，这里的输出层又叫全连接层（fully-connected layer）。</p>
-<h2 id="Softmax回归"><a href="#Softmax回归" class="headerlink" title="Softmax回归"></a>Softmax回归</h2><h2 id="Logistic回归"><a href="#Logistic回归" class="headerlink" title="Logistic回归"></a>Logistic回归</h2><p>Logistic 回归（ Logistic Regression，LR） 是一种常用的处理二分类问题的线性模型．  </p>
-<p>${\rm{y}} \in { 0,1}$是一个二分类问题，显然用单纯的线性模型无法解决。我们需要一个非线性的激活函数，这里选择Logistic函数作为激活函数，将线性函数的值域挤压的0到1之间来表示概率。那么标签$y = 1$的概率为<br>$$<br>\hat{y}=p(y = 1) = \frac{1}{{1 + \exp ( - \omega x)}}<br>$$<br>当概率值大于0.5是认为$y = 1$，否则$y = 0$。</p>
-<p>Logistic 回归采用交叉熵作为损失函数， 并使用梯度下降法来对参数进行优化。</p>
-<h3 id="Softmax回归-1"><a href="#Softmax回归-1" class="headerlink" title="Softmax回归"></a>Softmax回归</h3><p>Logistic 回归只使用二分类问题，放在神经网络中只有单一的输出。对于多分类问题就要用到Softmax回归。<br>$$<br>o_1=x_1w_11+x_2w_21+x_3w_31+x_4w_41+b_1,\\<br>o_2=x_1w_12+x_2w_22+x_3w_32+x_4w_42+b_2,\\<br>o_3=x_1w_13+x_2w_23+x_3w_33+x_4w_43+b_3.<br>$$<br>我们需要将三个输出的至于压缩到0到1之间，并且三者之和为1，就能够表示成概率值，那么哪个输出的概率值大就分类成哪个标签。<br>$$<br>{\hat y_1} = \frac{{exp({o_1})}}{{\sum {exp({o_i})} }},{\hat y_2} = \frac{{exp({o_2})}}{{\sum {exp({o_i})} }},{\hat y_3} = \frac{{exp({o_3})}}{{\sum {exp({o_i})} }}<br>$$<br>经过上面的映射，${\hat y_1}+{\hat y_2}+{\hat y_3}=1$且$0\le{\hat y_1},{\hat y_2},{\hat y_3}\le1$。</p>
-<p>可以看出，Softmax回归同线性回归一样也是单层的全连接网络。</p>
-<p><img src="/2021/03/17/yi-bu-bu-li-jie-tu-xiang-shi-li-fen-ge-yi-xian-xing-hui-gui/3.4_softmaxreg.svg"></p>
-<p>Softmax回归采用的也是交叉熵损失函数， 并使用梯度下降法来对参数进行优化。</p>
-<p>Softmax交叉熵损失函数的公式：<br>$$<br>Loss({{\bf{y}}^{(i)}},{{\bf{\hat y}}^{(i)}}) =  - \sum\limits_{j = 1}^c {{y_j}^{(i)}} \log {\hat y_j}^{(i)}<br>$$<br>其中，c是类别数，i表示样本i。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>《神经网络与深度学习 》邱锡鹏  </p>
-<p><a target="_blank" rel="noopener" href="http://zh.d2l.ai/">《动手学深度学习》</a></p>
+                <h1 id="STM32实现德飞莱LED文字滚动效果"><a href="#STM32实现德飞莱LED文字滚动效果" class="headerlink" title="STM32实现德飞莱LED文字滚动效果"></a>STM32实现德飞莱LED文字滚动效果</h1><h2 id="显示静止文字"><a href="#显示静止文字" class="headerlink" title="显示静止文字"></a>显示静止文字</h2><p>各个引脚功能：<br>OE：使能端，输出高电平关闭屏幕，行选和列选切换的时候需要关闭一下屏幕，防止产生虚影。</p>
+<p>D/C/B/A：每个引脚有0、1两个状态，四个引脚用于存储一个四位的二进制数，0/0/0/0是第一行，0/0/1/0是第三行。</p>
+<p>R1/G1:R1是红色，G1是绿色，低电平点亮。</p>
+<p>SCK：时钟信号。</p>
+<p>LAT：锁存器。0打开，1关闭。</p>
+<p>列选中原理：将一个16位的二进制串行输入到R1或G1，利用时钟脉冲信号触发寄存器存储当前值，然后通过 LATCH 锁存器将寄存器的值保存。</p>
+<p>使用取字软件取出的C51格式的值。</p>
+<blockquote>
+<p>例如：/<em>–  文字:  中  –</em>/<br>/<em>–  宋体12;  此字体下对应的点阵为：宽x高=16x16  –</em>/<br>0x00,0x00,0x0F,0x08,0x08,0x08,0x08,0xFF,0x08,0x08,0x08,0x08,0x0F,0x00,0x00,0x00,<br>0x00,0x00,0xF0,0x20,0x20,0x20,0x20,0xFF,0x20,0x20,0x20,0x20,0xF0,0x00,0x00,0x00,</p>
+</blockquote>
+<p> 其中第i位十六进制数和第i+16位十六进制数表示的是第i行的状态。i从0到15，逐次点亮16行。</p>
+<pre><code>void display_char()&#123;//显示一个静止的汉字
+     int i=0;
+     int j=0;
+     int change;
+     for(i=0;i&lt;16;i++)
+     &#123;
+        change=(zi[i]&lt;&lt;8)|zi[i+16];//两个8位的二进制数组成一个16位的二进制数
+        LAT = 0; 
+        for(j = 0; j &lt; 16; j++)&#123;
+            R1 = ((~change)&gt;&gt;j)&amp;1;    
+            SCK = 0;
+            SCK = 1;         
+        &#125;
+        OE = 1;
+        get_row(i);
+        LAT = 1; 
+        OE = 0; 
+     &#125;
+&#125;
+void get_row(int i)&#123;//选中行
+     A=i&amp;1;
+     B=(i&amp;2)&gt;&gt;1;
+     C=(i&amp;4)&gt;&gt;2;
+     D=(i&amp;8)&gt;&gt;3;
+&#125;
+</code></pre>
+<h2 id="文字滚动"><a href="#文字滚动" class="headerlink" title="文字滚动"></a>文字滚动</h2><h3 id="显示方式选择："><a href="#显示方式选择：" class="headerlink" title="显示方式选择："></a>显示方式选择：</h3><p>首先搞清楚，取模的方式有横向取模和纵向取模两种。</p>
+<p>一般以C51格式取出来的16x16的汉字，由32个十六进制组成。</p>
+<p>每个十六进制，0是白色的像素点，1是黑色的像素点，文字是由黑色的像素点组成。</p>
+<p>我们需要指导每个十六进制对应汉字的哪个位置。</p>
+<p>横向取模：</p>
+<p>/<em>–  文字:  口  –</em>/<br>/<em>–  新宋体12;  此字体下对应的点阵为：宽x高=16x16  –</em>/<br>0x00,0x00,0x00,0x00,0x3F,0xF8,0x20,0x08,0x20,0x08,0x20,0x08,0x20,0x08,0x20,0x08,<br>0x20,0x08,0x20,0x08,0x20,0x08,0x20,0x08,0x20,0x08,0x3F,0xF8,0x20,0x08,0x00,0x00,</p>
+<p>其中第一行的前两个十六进制，代表的是最上边的16个像素点。每两个十六进制一组，自上而下表示完所有的像素点。</p>
+<p>纵向取模：</p>
+<p>/<em>–  文字:  口  –</em>/<br>/<em>–  新宋体12;  此字体下对应的点阵为：宽x高=16x16  –</em>/<br>0x00,0x00,0x3F,0x20,0x20,0x20,0x20,0x20,0x20,0x20,0x20,0x20,0x3F,0x00,0x00,0x00,<br>0x00,0x00,0xFE,0x04,0x04,0x04,0x04,0x04,0x04,0x04,0x04,0x04,0xFE,0x00,0x00,0x00,</p>
+<p>其中上边一行的16个十六进制，表示的是汉字的上半部分，第一行的第一个表示纵着的8个像素点，自左向右表示汉字的上半部分，第二行十六进制以同样的方式表示汉字的下半部分。</p>
+<p>然后，需要根据LED显示的方式，选择合适的取模方式。（当然，也可以不这么麻烦，无非多试几次）</p>
+<p>R1或者G1 的寄存器，是要输入十六进制锁存的。因为一行或一列LED点有16个，所以需要输入两个字节大小的数据。</p>
+<p>输入1，转换成连个16进制就是0x00,0x01。观察LED屏，发现亮点在一个角上。</p>
+<p>根据上面取模的方式，需要直接把取模得到的16进制直接输入到R1或者G1 的寄存器，所以只能由两种摆放的方式，一个是把亮点放到右上角，对应横向取模，一个是把亮点放到左下角，对应纵向取模。</p>
+<p>横向取模，每次把左右相邻的两个十六进制输入到寄存器，自上而下刷新显示。</p>
+<p>纵向取模，每次把两行的同一列的两个十六进制输入到寄存器，自左向右刷新显示。</p>
+<p>如果，不级联显示，这两种方式都是可以的，单个屏幕的滚动和静止显示都没问题。</p>
+<p>但是，当你想要级联的时候，想要做一个较长屏幕的滚动显示，你会发现级联接口正好对应着横向取模的方式。</p>
+<p>所以，放弃纵向取模的显示方式，改用横向取模的显示方式。</p>
+<h3 id="滚动效果"><a href="#滚动效果" class="headerlink" title="滚动效果"></a>滚动效果</h3><p>原理其实很简单，若干个静止的状态连续的有规律地切换，就形成了滚动的效果。</p>
+<p>而每次切换改变的仅仅是每块屏的最左边一列和最右边一列。</p>
+<p>因此只需要，前一个字节左移n位|后一个字节右移8-n位,</p>
+<p>但是，这个寄存器在输入的时候必须把bit流倒着输入，所以就需要倒序取模，前一个字节右移n位|后一个字节左移8-n位。</p>
+<p>然后需要保持这个状态静止一段时间才完成一次的移动。保持的方法是每次刷新加一个细小的延时，延后循环n次。</p>
+<p>当完成8次移动之后，需要取出一个新的字节。所以需要预先多取出两个字节，移动16次一个循环，循环完成后取出下一个汉字。</p>
 
                 
             </div>
@@ -605,7 +641,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://wht6.github.io/2021/03/17/yi-bu-bu-li-jie-tu-xiang-shi-li-fen-ge-yi-xian-xing-hui-gui/">http://wht6.github.io/2021/03/17/yi-bu-bu-li-jie-tu-xiang-shi-li-fen-ge-yi-xian-xing-hui-gui/</a>
+                    <a href="http://wht6.github.io/posts/dc68.html">http://wht6.github.io/posts/dc68.html</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -643,16 +679,8 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
-                                    <span class="chip bg-color">深度学习</span>
-                                </a>
-                            
-                                <a href="/tags/%E5%AE%9E%E4%BE%8B%E5%88%86%E5%89%B2/">
-                                    <span class="chip bg-color">实例分割</span>
-                                </a>
-                            
-                                <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/">
-                                    <span class="chip bg-color">计算机视觉</span>
+                                <a href="/tags/STM32/">
+                                    <span class="chip bg-color">STM32</span>
                                 </a>
                             
                         </div>
@@ -826,13 +854,13 @@
             <div class="article-badge left-badge text-color">
                 <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2021/03/17/ubuntu20-04-pei-zhi-pytorch-huan-jing/">
+                <a href="/posts/9a02.html">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/23.jpg" class="responsive-img" alt="ubuntu20.04配置pytorch环境">
+                        <img src="/medias/featureimages/6.jpg" class="responsive-img" alt="两个好用的学术搜索网站">
                         
-                        <span class="card-title">ubuntu20.04配置pytorch环境</span>
+                        <span class="card-title">两个好用的学术搜索网站</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -843,7 +871,7 @@
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2021-03-17
+                            <i class="far fa-clock fa-fw icon-date"></i>2021-03-28
                         </span>
                         <span class="publish-author">
                             
@@ -856,12 +884,12 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE/">
-                        <span class="chip bg-color">环境配置</span>
+                    <a href="/tags/%E5%AD%A6%E6%9C%AF/">
+                        <span class="chip bg-color">学术</span>
                     </a>
                     
-                    <a href="/tags/pytorch/">
-                        <span class="chip bg-color">pytorch</span>
+                    <a href="/tags/%E7%BD%91%E7%AB%99%E6%8E%A8%E8%8D%90/">
+                        <span class="chip bg-color">网站推荐</span>
                     </a>
                     
                 </div>
@@ -872,16 +900,16 @@
         
         <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge right-badge text-color">
-                本篇&nbsp;<i class="far fa-dot-circle"></i>
+                下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2021/03/17/yi-bu-bu-li-jie-tu-xiang-shi-li-fen-ge-yi-xian-xing-hui-gui/">
+                <a href="/posts/2c33.html">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/22.jpg" class="responsive-img" alt="一步步理解图像实例分割（一）——线性回归">
+                        <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="CNN的三个重要性质">
                         
-                        <span class="card-title">一步步理解图像实例分割（一）——线性回归</span>
+                        <span class="card-title">CNN的三个重要性质</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -892,7 +920,7 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-03-17
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-03-22
                             </span>
                         <span class="publish-author">
                             
@@ -902,20 +930,11 @@
                         </span>
                     </div>
                 </div>
-
                 
                 <div class="card-action article-tags">
                     
                     <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
                         <span class="chip bg-color">深度学习</span>
-                    </a>
-                    
-                    <a href="/tags/%E5%AE%9E%E4%BE%8B%E5%88%86%E5%89%B2/">
-                        <span class="chip bg-color">实例分割</span>
-                    </a>
-                    
-                    <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/">
-                        <span class="chip bg-color">计算机视觉</span>
                     </a>
                     
                 </div>
@@ -1083,13 +1102,6 @@
 
 </main>
 
-
-<script src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-<script>
-    MathJax.Hub.Config({
-        tex2jax: {inlineMath: [['$', '$'], ['\(', '\)']]}
-    });
-</script>
 
 
 
