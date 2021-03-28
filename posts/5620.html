@@ -511,12 +511,12 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
-                                <span class="chip bg-color">深度学习</span>
-                            </a>
-                        
                             <a href="/tags/%E5%AE%9E%E4%BE%8B%E5%88%86%E5%89%B2/">
                                 <span class="chip bg-color">实例分割</span>
+                            </a>
+                        
+                            <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
+                                <span class="chip bg-color">深度学习</span>
                             </a>
                         
                             <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/">
@@ -567,14 +567,14 @@
 <h3 id="神经网络图"><a href="#神经网络图" class="headerlink" title="神经网络图"></a>神经网络图</h3><p>在深度学习中，我们可以使用神经网络图直观地表现模型结构。</p>
 <p>线性回归模型：$\hat{y}=x_1w_1+x_2w_2+b$</p>
 <p>为了更清晰地展示线性回归作为神经网络的结构，下图使用神经网络图表示上面的线性回归模型。神经网络图隐去了模型参数权重和偏差。</p>
-<p><img src="/posts/5620.htm/3.1_linreg.svg"></p>
+<p><img src="https://raw.githubusercontent.com/wht6/image/master/img/3.1_linreg.svg"></p>
 <p>由于输入层并不涉及计算，上图神经网络的层数为1。其中，$x_1$和$x_2$是输入，输入个数为2，输入个数也叫特征数或特征向量维度。箭头指向输出节点表示加权求和的操作。输出层中的神经元和输入层中各个输入完全连接。因此，这里的输出层又叫全连接层（fully-connected layer）。</p>
 <h2 id="Softmax回归"><a href="#Softmax回归" class="headerlink" title="Softmax回归"></a>Softmax回归</h2><h2 id="Logistic回归"><a href="#Logistic回归" class="headerlink" title="Logistic回归"></a>Logistic回归</h2><p>Logistic 回归（ Logistic Regression，LR） 是一种常用的处理二分类问题的线性模型．  </p>
 <p>${\rm{y}} \in { 0,1}$是一个二分类问题，显然用单纯的线性模型无法解决。我们需要一个非线性的激活函数，这里选择Logistic函数作为激活函数，将线性函数的值域挤压的0到1之间来表示概率。那么标签$y = 1$的概率为<br>$$<br>\hat{y}=p(y = 1) = \frac{1}{{1 + \exp ( - \omega x)}}<br>$$<br>当概率值大于0.5是认为$y = 1$，否则$y = 0$。</p>
 <p>Logistic 回归采用交叉熵作为损失函数， 并使用梯度下降法来对参数进行优化。</p>
 <h3 id="Softmax回归-1"><a href="#Softmax回归-1" class="headerlink" title="Softmax回归"></a>Softmax回归</h3><p>Logistic 回归只使用二分类问题，放在神经网络中只有单一的输出。对于多分类问题就要用到Softmax回归。<br>$$<br>o_1=x_1w_11+x_2w_21+x_3w_31+x_4w_41+b_1,\\<br>o_2=x_1w_12+x_2w_22+x_3w_32+x_4w_42+b_2,\\<br>o_3=x_1w_13+x_2w_23+x_3w_33+x_4w_43+b_3.<br>$$<br>我们需要将三个输出的至于压缩到0到1之间，并且三者之和为1，就能够表示成概率值，那么哪个输出的概率值大就分类成哪个标签。<br>$$<br>{\hat y_1} = \frac{{exp({o_1})}}{{\sum {exp({o_i})} }},{\hat y_2} = \frac{{exp({o_2})}}{{\sum {exp({o_i})} }},{\hat y_3} = \frac{{exp({o_3})}}{{\sum {exp({o_i})} }}<br>$$<br>经过上面的映射，${\hat y_1}+{\hat y_2}+{\hat y_3}=1$且$0\le{\hat y_1},{\hat y_2},{\hat y_3}\le1$。</p>
 <p>可以看出，Softmax回归同线性回归一样也是单层的全连接网络。</p>
-<p><img src="/posts/5620.htm/3.4_softmaxreg.svg"></p>
+<p><img src="https://raw.githubusercontent.com/wht6/image/master/img/3.4_softmaxreg.svg"></p>
 <p>Softmax回归采用的也是交叉熵损失函数， 并使用梯度下降法来对参数进行优化。</p>
 <p>Softmax交叉熵损失函数的公式：<br>$$<br>Loss({{\bf{y}}^{(i)}},{{\bf{\hat y}}^{(i)}}) =  - \sum\limits_{j = 1}^c {{y_j}^{(i)}} \log {\hat y_j}^{(i)}<br>$$<br>其中，c是类别数，i表示样本i。</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p>《神经网络与深度学习 》邱锡鹏  </p>
@@ -643,12 +643,12 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
-                                    <span class="chip bg-color">深度学习</span>
-                                </a>
-                            
                                 <a href="/tags/%E5%AE%9E%E4%BE%8B%E5%88%86%E5%89%B2/">
                                     <span class="chip bg-color">实例分割</span>
+                                </a>
+                            
+                                <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
+                                    <span class="chip bg-color">深度学习</span>
                                 </a>
                             
                                 <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/">
@@ -906,12 +906,12 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
-                        <span class="chip bg-color">深度学习</span>
-                    </a>
-                    
                     <a href="/tags/%E5%AE%9E%E4%BE%8B%E5%88%86%E5%89%B2/">
                         <span class="chip bg-color">实例分割</span>
+                    </a>
+                    
+                    <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
+                        <span class="chip bg-color">深度学习</span>
                     </a>
                     
                     <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/">
