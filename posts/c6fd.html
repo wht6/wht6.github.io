@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="获得因特网的存在：拼好拼图, Pytorch,DeepLearning,Image Segmentation,STM32">
+    <meta name="keywords" content="实例分割框架：SOLO解读, Pytorch,DeepLearning,Image Segmentation,STM32">
     <meta name="description" content="专注学习,分享技术,分享知识">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>获得因特网的存在：拼好拼图 | WHT</title>
+    <title>实例分割框架：SOLO解读 | WHT</title>
     <link rel="icon" type="image/png" href="/favicon_o.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -390,12 +390,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/9.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/0.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">获得因特网的存在：拼好拼图</h1>
+                    <h1 class="description center-align post-title">实例分割框架：SOLO解读</h1>
                 </div>
             </div>
         </div>
@@ -511,8 +511,8 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/%E7%BD%91%E7%BB%9C/">
-                                <span class="chip bg-color">-网络</span>
+                            <a href="/tags/%E5%AE%9E%E4%BE%8B%E5%88%86%E5%89%B2-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
+                                <span class="chip bg-color">-实例分割 -深度学习</span>
                             </a>
                         
                     </div>
@@ -527,7 +527,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2021-04-29
+                    2021-05-07
                 </div>
                 
 
@@ -536,7 +536,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.1k
+                    750
                 </div>
                 
 
@@ -553,14 +553,24 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="获得因特网的存在：拼好拼图"><a href="#获得因特网的存在：拼好拼图" class="headerlink" title="获得因特网的存在：拼好拼图"></a>获得因特网的存在：拼好拼图</h1><blockquote>
-<p>假定你刚刚创建一个有一些服务器的小型公司网络，包括一个描述你所在公司产品和服务的公共web服务器、公司雇员获得电子邮件报文的电子邮件服务器和一台DNS服务器。你自然地希望整个世界能够在你的web站点上冲浪，知道你那些令人兴奋的产品和服务。此外，你将希望公司雇员能够向遍及全球的潜在用户发送和接收电子邮件。</p>
-<p>为了满足这些目标，你先要获得因特网连通性。为做到这一点，要与一个本地ISP签订合同并与之连接。你的公司将要有一台网关路由器，将其与本地ISP相连接。这种连接可以是通过现有的电话基础设施的DSL连接、一条到ISP的租用线，或在第1章中描述的许多其他接入方案之一。你的本地ISP也将为你提供一个IP地址范围，例如由256个地址组成的/24地址范围。一旦有了自己的物理连接和IP地址范围，你将在该地址范围内分配IP地址：一个给你的web服务器，一个给你的邮件服务器，一个给你的DNS服务器，一个给你的网关路由器，其他IP地址给你公司网络中的其他服务器和网络设备。</p>
-<p>除了与一个ISP签约外，你还需要与一个因特网注册机构签约，以便为你的公司获得一个域名，如第二章所述。例如，如果你的公司名为Xanadu公司，你当然试图获得域名xanadu.com。你的公司还必须在DNS系统中存在。特别是，因为外部要与你的DNS服务器联系以获得服务器的IP地址，你还需要注册你的DNS服务器的IP地址。你的注册机构将你的DNS服务器（域名和对应的地址）放入.com顶级域名服务器中的一个表项中，如在第二章中所述。完成这个步骤后，知道你域名(如xanadu.com)的任何用户将能够通过DNS系统获得你DNS服务器的IP地址。</p>
-<p>为了使人们能够发现你web服务器的IP地址，你需要在你的DNS服务器中包括一个将你的web服务器名字（<a target="_blank" rel="noopener" href="http://www.xanadu.com)映射为其ip地址的表项.你还要有用于其他公共可用的公司服务器的类似表项,包括你的邮件服务器.如此一来,如果alice要浏览你的web服务器,dns系统将联系你的dns服务器,找出你的web服务器的ip地址,并将其提交alice.alice则能够与你的web服务器直接创建一条tcp连接./">www.xanadu.com)映射为其IP地址的表项。你还要有用于其他公共可用的公司服务器的类似表项，包括你的邮件服务器。如此一来，如果Alice要浏览你的web服务器，DNS系统将联系你的DNS服务器，找出你的web服务器的IP地址，并将其提交Alice。Alice则能够与你的web服务器直接创建一条TCP连接。</a></p>
-<p>然而，允许来自全世界的外部者接入你的web服务器仍存在其他必要的、决定性的步骤。考虑下列情况，假设Alice知道你的web服务器的IP地址，当她向那个IP地址发送一个IP数据报（如一个TCP SYN报文段）。这个报文段将通过因特网进行路由，访问位于许多不同AS中的一系列路由器，并最终达到你的web服务器。当这些路由器中的任一个接收到该报文段，将去其转发表中的查找表项，以决定它转发该报文段的出口。因此，每台路由器需要知道你公司的/24前缀（或某些聚合项）的存在。一台路由器怎样才能知道你公司的前缀呢？如我们刚才所见，它从BGP知道了前缀！特别是，当你的公司联系一个本地ISP并分配到一个前缀（如一个地址范围）时，你的本地ISP将使用BGP来向它连接的ISP通告该前缀（或包括你的前缀的某些聚合），因而能够以你的web和邮件服务器为目的地适当地转发数据报。</p>
-<p>————《计算机网络：自顶向下方法》</p>
+                <h1 id="实例分割框架：SOLO解读"><a href="#实例分割框架：SOLO解读" class="headerlink" title="实例分割框架：SOLO解读"></a>实例分割框架：SOLO解读</h1><h2 id="SOLO思想"><a href="#SOLO思想" class="headerlink" title="SOLO思想"></a>SOLO思想</h2><p>SOLO通过引入一个“实例类别”的概念，根据实例的位置和大小为实例中的每个像素分配一个“实例类别”，将实例分割任务转换成了一个单阶端的分类任务。</p>
+<p>这里可能会难以理解“实例类别”的概念，这个概念其实并不难理解。首先对于图像中的每个目标，都有一个语义类别，比如猫或狗等。但是如果图像上有多只猫，我们就无法通过语义类别来分开不同的猫，因为它们具有相同的语义类别——猫。但是如果我们给每只猫加上一个位置和大小的标签呢，不同的猫显然具有不同的大小和位置。论文这里就把“语义类别+位置和大小”起了个名字，叫做实例类别。</p>
+<p>这里作者为了证明图像中的大多数目标确实具有不同的位置和大小，也进行了调研。</p>
+<blockquote>
+<p>Take the challenging MS COCO dataset [16] for example. There are in total 36; 780 objects in the validation subset, 98:3% of object pairs have center distance greater than 30 pixels. As for the rest 1:7% of object pairs, 40:5% of them have size ratio greater than 1.5×. To conclude, in most cases two instances in an image either have different center locations or have different object sizes.  </p>
 </blockquote>
+<h2 id="SOLO框架"><a href="#SOLO框架" class="headerlink" title="SOLO框架"></a>SOLO框架</h2><p>！<a href="!%5B%5D(https://raw.githubusercontent.com/wht6/image/master/img/solo_kuangjia1.png)"></a></p>
+<p>SOLO将图像划分成S*S的网格，每个网格代表一个中心位置类。如同语义分割框架FCN那样，SOLO将中心位置类编码到通道轴上。其中每个通道负责一个中心位置类，相关的通道需要预测中心属于此位置的实例mask（如同FCN属于猫类的通道负责预测猫的mask那样）。</p>
+<p>如图中所示，下边的Mask Branch即将中心位置类编码到通道轴的结果，每一个网格对应一个通道，所以一共有$S^2$个通道。</p>
+<p>而上边的Category Branch则是和语义分割FCN相同，为每个像素进行语义分类。</p>
+<h2 id="实现细节"><a href="#实现细节" class="headerlink" title="实现细节"></a>实现细节</h2><p>这时你可能会问为什么没考虑尺寸信息呢，当出现相同位置且不同尺寸的两个对象怎么办呢？</p>
+<p>这里SOLO使用了经典的FPN（特征金字塔网络）结构，通过将不同的尺寸的对象分配给不同FPN等级（level）来预测。此时，不同尺寸的对象就被分开处理了。</p>
+<p>可以看出，SOLO将实例分割转变成两个分类任务，设计了一个无检测、无聚类的端到端学习框架。</p>
+<p>作者给出的改进思路是可以借鉴最新的优秀语义分割方法来改进SOLO的两个分类任务</p>
+<blockquote>
+<p>The proposed SOLO only needs to solve two pixel-level classification tasks, thus it may be possible to borrow some of the<br>recent advances in semantic segmentation for improving SOLO.   </p>
+</blockquote>
+<p>SOLO其实也存在一些缺点，不利于检测尺寸小的目标和目标密集的区域。</p>
 
                 
             </div>
@@ -587,7 +597,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://wht6.github.io/posts/9iyu.html">http://wht6.github.io/posts/9iyu.html</a>
+                    <a href="http://wht6.github.io/posts/c6fd.html">http://wht6.github.io/posts/c6fd.html</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -625,8 +635,8 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/%E7%BD%91%E7%BB%9C/">
-                                    <span class="chip bg-color">-网络</span>
+                                <a href="/tags/%E5%AE%9E%E4%BE%8B%E5%88%86%E5%89%B2-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
+                                    <span class="chip bg-color">-实例分割 -深度学习</span>
                                 </a>
                             
                         </div>
@@ -796,9 +806,10 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/posts/c6fd.html">
                     <div class="card-image">
@@ -816,9 +827,9 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2021-05-07
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-05-07
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -827,6 +838,7 @@
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -845,13 +857,13 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/posts/9a02.html">
+                <a href="/posts/9iyu.html">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/6.jpg" class="responsive-img" alt="两个好用的学术搜索网站">
+                        <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="获得因特网的存在：拼好拼图">
                         
-                        <span class="card-title">两个好用的学术搜索网站</span>
+                        <span class="card-title">获得因特网的存在：拼好拼图</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -862,7 +874,7 @@
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-03-28
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-04-29
                             </span>
                         <span class="publish-author">
                             
@@ -875,12 +887,8 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E5%AD%A6%E6%9C%AF/">
-                        <span class="chip bg-color">学术</span>
-                    </a>
-                    
-                    <a href="/tags/%E7%BD%91%E7%AB%99%E6%8E%A8%E8%8D%90/">
-                        <span class="chip bg-color">网站推荐</span>
+                    <a href="/tags/%E7%BD%91%E7%BB%9C/">
+                        <span class="chip bg-color">-网络</span>
                     </a>
                     
                 </div>
@@ -1048,6 +1056,13 @@
 
 </main>
 
+
+<script src="https://cdn.bootcss.com/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script>
+    MathJax.Hub.Config({
+        tex2jax: {inlineMath: [['$', '$'], ['\(', '\)']]}
+    });
+</script>
 
 
 
