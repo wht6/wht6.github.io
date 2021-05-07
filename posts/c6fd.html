@@ -559,7 +559,7 @@
 <blockquote>
 <p>Take the challenging MS COCO dataset [16] for example. There are in total 36; 780 objects in the validation subset, 98:3% of object pairs have center distance greater than 30 pixels. As for the rest 1:7% of object pairs, 40:5% of them have size ratio greater than 1.5×. To conclude, in most cases two instances in an image either have different center locations or have different object sizes.  </p>
 </blockquote>
-<h2 id="SOLO框架"><a href="#SOLO框架" class="headerlink" title="SOLO框架"></a>SOLO框架</h2><p>！<a href="!%5B%5D(https://raw.githubusercontent.com/wht6/image/master/img/solo_kuangjia1.png)"></a></p>
+<h2 id="SOLO框架"><a href="#SOLO框架" class="headerlink" title="SOLO框架"></a>SOLO框架</h2><p><img src="https://raw.githubusercontent.com/wht6/image/master/img/solo_kuangjia1.png"></p>
 <p>SOLO将图像划分成S*S的网格，每个网格代表一个中心位置类。如同语义分割框架FCN那样，SOLO将中心位置类编码到通道轴上。其中每个通道负责一个中心位置类，相关的通道需要预测中心属于此位置的实例mask（如同FCN属于猫类的通道负责预测猫的mask那样）。</p>
 <p>如图中所示，下边的Mask Branch即将中心位置类编码到通道轴的结果，每一个网格对应一个通道，所以一共有$S^2$个通道。</p>
 <p>而上边的Category Branch则是和语义分割FCN相同，为每个像素进行语义分类。</p>
