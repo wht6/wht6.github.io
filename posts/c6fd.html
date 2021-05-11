@@ -511,8 +511,16 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/%E5%AE%9E%E4%BE%8B%E5%88%86%E5%89%B2-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
-                                <span class="chip bg-color">-实例分割 -深度学习</span>
+                            <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
+                                <span class="chip bg-color">深度学习</span>
+                            </a>
+                        
+                            <a href="/tags/%E5%AE%9E%E4%BE%8B%E5%88%86%E5%89%B2/">
+                                <span class="chip bg-color">实例分割</span>
+                            </a>
+                        
+                            <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/">
+                                <span class="chip bg-color">计算机视觉</span>
                             </a>
                         
                     </div>
@@ -536,7 +544,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1.6k
+                    2.4k
                 </div>
                 
 
@@ -625,6 +633,22 @@ ins_ind_label_list<span class="token punctuation">.</span>append<span class="tok
 <p>因此，论文提出了两个创新：</p>
 <p>1）使用动态卷积的方法预测掩膜。</p>
 <p>2）设计能够并行计算的Matrix NMS代替传统的NMS。</p>
+<h3 id="实现方案"><a href="#实现方案" class="headerlink" title="实现方案"></a>实现方案</h3><p>SOLO在生成掩膜的过程中，最后一层的输入特征为$F \in {\mathbb{R}^{H \times W \times E}}$，通过一层卷积层输出为$S^2$个通道。这个过程可以建模为：<br>$$<br>{M_{i,j}} = {G_{i,j}} \circledast F<br>$$<br>其中，${G_{i,j}} \in {\mathbb{R}^{1 \times 1 \times E}}$是卷积核，${M_{i,j}} \in {\mathbb{R}^{H \times W}}$是位置在（i, j）处的实例掩膜。</p>
+<p>M是很大的，消耗许多存储与算力。而实例的位置体现在网格中是稀疏的。所以在$S^2$个卷积核中只有很小一部分发挥作用，而其他的都是冗余的。</p>
+<p>针对上面的问题，论文提出了动态卷积的方法，一个分支预测卷积核G，一个分支预测feature map，最后feature map与学习到的卷积核做卷积生成mask M。</p>
+<h4 id="Mask-kernel-G"><a href="#Mask-kernel-G" class="headerlink" title="Mask kernel G"></a>Mask kernel G</h4><p>在给定backbone与FPN的情况下，为每个FPN的等级预测动态卷积核G。将FPN生成的$H\times W\times C$的feature map对齐到$S\times S\times C$，然后经过四层卷积，最后经过一个$3\times 3\times D$的卷积层得到动态卷积核G。为了保持位置敏感性，在第一个卷积层加入坐标通道。同样每个FPN等级共享参数。</p>
+<h4 id="Mask-Feature-F"><a href="#Mask-Feature-F" class="headerlink" title="Mask Feature F"></a>Mask Feature F</h4><p>FPN每个level经过一个$3\times 3$卷积层，组归一化，RELU和2次的双线性上采样后将P2到P5的特征融合。融合的过程是像素级求和，然后$1\times 1$卷积，组归一化，RELU。在FPN的P5层加入了坐标通道提升位置敏感性。</p>
+<p>在预测阶段，对于类别分支用0.1的阈值剔除得分低的网格。在用网格对应的动态卷积核去预测Mask。（减少计算量就体现在这里）</p>
+<h4 id="Matrix-NMS"><a href="#Matrix-NMS" class="headerlink" title="Matrix NMS"></a>Matrix NMS</h4><p>这里先简单介绍传统的NMS与改进的Soft NMS。</p>
+<h5 id="NMS"><a href="#NMS" class="headerlink" title="NMS"></a>NMS</h5><p>1）对目标按照得分排序</p>
+<p>2）保留得分最高的目标</p>
+<p>3）删除与目标最相近的其他目标（通常是根据IOU，删除与目标IOU大于某个阈值的框）</p>
+<p>NMS有个很大的缺点，容易误删。特别是两个相似而又靠近的目标，容易删除较小的目标。</p>
+<h5 id="Soft-NMS"><a href="#Soft-NMS" class="headerlink" title="Soft NMS"></a>Soft NMS</h5><p>Soft NMS剔除的改进方法是降低相似目标的得分，而非直接暴力地删除。</p>
+<p> 原来的NMS可以描述如下：将IOU大于阈值的目标的得分全部置为0。<br>$$<br>{s_i} = \left{ {\begin{array}{<em>{20}{c}}<br>  {{s_i},\quad iou(M,{b_i}) < {N_t}} \<br>  {0,\quad iou(M,{b_i}) \geqslant {N_t}}<br>\end{array}} \right.<br>$$<br>Soft NMS的改进，线性加权的方式：<br>$$<br>{s_i} = \left{ {\begin{array}{</em>{20}{c}}<br>  {{s_i},\quad iou(M,{b_i}) < {N_t}} \<br>  {{s_i}(1 - iou(M,{b_i})),\quad iou(M,{b_i}) \geqslant {N_t}}<br>\end{array}} \right.<br>$$<br>还有一种高斯加权的方式，这里不做过多介绍。</p>
+<p>总之，思路都是IOU越大，得分降低的越多。 </p>
+<h4 id="实现细节-1"><a href="#实现细节-1" class="headerlink" title="实现细节"></a>实现细节</h4><p>1）最后动态卷积核的生成并没有经过激活函数。</p>
+<p>2）损失函数与SOLO的损失函数的计算方式一样。</p>
 
                 
             </div>
@@ -689,8 +713,16 @@ ins_ind_label_list<span class="token punctuation">.</span>append<span class="tok
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/%E5%AE%9E%E4%BE%8B%E5%88%86%E5%89%B2-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
-                                    <span class="chip bg-color">-实例分割 -深度学习</span>
+                                <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
+                                    <span class="chip bg-color">深度学习</span>
+                                </a>
+                            
+                                <a href="/tags/%E5%AE%9E%E4%BE%8B%E5%88%86%E5%89%B2/">
+                                    <span class="chip bg-color">实例分割</span>
+                                </a>
+                            
+                                <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/">
+                                    <span class="chip bg-color">计算机视觉</span>
                                 </a>
                             
                         </div>
@@ -896,8 +928,16 @@ ins_ind_label_list<span class="token punctuation">.</span>append<span class="tok
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E5%AE%9E%E4%BE%8B%E5%88%86%E5%89%B2-%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
-                        <span class="chip bg-color">-实例分割 -深度学习</span>
+                    <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">
+                        <span class="chip bg-color">深度学习</span>
+                    </a>
+                    
+                    <a href="/tags/%E5%AE%9E%E4%BE%8B%E5%88%86%E5%89%B2/">
+                        <span class="chip bg-color">实例分割</span>
+                    </a>
+                    
+                    <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/">
+                        <span class="chip bg-color">计算机视觉</span>
                     </a>
                     
                 </div>
