@@ -536,7 +536,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    750
+                    1.6k
                 </div>
                 
 
@@ -553,24 +553,78 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="实例分割框架：SOLO解读"><a href="#实例分割框架：SOLO解读" class="headerlink" title="实例分割框架：SOLO解读"></a>实例分割框架：SOLO解读</h1><h2 id="SOLO思想"><a href="#SOLO思想" class="headerlink" title="SOLO思想"></a>SOLO思想</h2><p>SOLO通过引入一个“实例类别”的概念，根据实例的位置和大小为实例中的每个像素分配一个“实例类别”，将实例分割任务转换成了一个单阶端的分类任务。</p>
+                <h1 id="实例分割框架：SOLO解读"><a href="#实例分割框架：SOLO解读" class="headerlink" title="实例分割框架：SOLO解读"></a>实例分割框架：SOLO解读</h1><h2 id="SOLO"><a href="#SOLO" class="headerlink" title="SOLO"></a>SOLO</h2><h3 id="SOLO思想"><a href="#SOLO思想" class="headerlink" title="SOLO思想"></a>SOLO思想</h3><p>SOLO通过引入一个“实例类别”的概念，根据实例的位置和大小为实例中的每个像素分配一个“实例类别”，将实例分割任务转换成了一个单阶端的分类任务。</p>
 <p>这里可能会难以理解“实例类别”的概念，这个概念其实并不难理解。首先对于图像中的每个目标，都有一个语义类别，比如猫或狗等。但是如果图像上有多只猫，我们就无法通过语义类别来分开不同的猫，因为它们具有相同的语义类别——猫。但是如果我们给每只猫加上一个位置和大小的标签呢，不同的猫显然具有不同的大小和位置。论文这里就把“语义类别+位置和大小”起了个名字，叫做实例类别。</p>
 <p>这里作者为了证明图像中的大多数目标确实具有不同的位置和大小，也进行了调研。</p>
 <blockquote>
 <p>Take the challenging MS COCO dataset [16] for example. There are in total 36; 780 objects in the validation subset, 98:3% of object pairs have center distance greater than 30 pixels. As for the rest 1:7% of object pairs, 40:5% of them have size ratio greater than 1.5×. To conclude, in most cases two instances in an image either have different center locations or have different object sizes.  </p>
 </blockquote>
-<h2 id="SOLO框架"><a href="#SOLO框架" class="headerlink" title="SOLO框架"></a>SOLO框架</h2><p><img src="https://raw.githubusercontent.com/wht6/image/master/img/solo_kuangjia1.png"></p>
+<h3 id="SOLO框架"><a href="#SOLO框架" class="headerlink" title="SOLO框架"></a>SOLO框架</h3><p><img src="https://raw.githubusercontent.com/wht6/image/master/img/solo_kuangjia1.png"></p>
 <p>SOLO将图像划分成S*S的网格，每个网格代表一个中心位置类。如同语义分割框架FCN那样，SOLO将中心位置类编码到通道轴上。其中每个通道负责一个中心位置类，相关的通道需要预测中心属于此位置的实例mask（如同FCN属于猫类的通道负责预测猫的mask那样）。</p>
 <p>如图中所示，下边的Mask Branch即将中心位置类编码到通道轴的结果，每一个网格对应一个通道，所以一共有$S^2$个通道。</p>
-<p>而上边的Category Branch则是和语义分割FCN相同，为每个像素进行语义分类。</p>
-<h2 id="实现细节"><a href="#实现细节" class="headerlink" title="实现细节"></a>实现细节</h2><p>这时你可能会问为什么没考虑尺寸信息呢，当出现相同位置且不同尺寸的两个对象怎么办呢？</p>
-<p>这里SOLO使用了经典的FPN（特征金字塔网络）结构，通过将不同的尺寸的对象分配给不同FPN等级（level）来预测。此时，不同尺寸的对象就被分开处理了。</p>
+<p>而上边的Category Branch则是和语义分割FCN相似，但是并非为每个像素分类而是为每个网格进行语义分类。（论文假设每个网格只属于一个单独的实例）</p>
+<h3 id="实现细节"><a href="#实现细节" class="headerlink" title="实现细节"></a>实现细节</h3><p>1）这时你可能会问为什么没考虑尺寸信息呢，当出现相同位置且不同尺寸的两个对象怎么办呢？</p>
+<p>这里SOLO使用了经典的FPN（特征金字塔网络）结构，通过将不同的尺寸的对象分配给不同FPN等级（level）来预测。此时，不同尺寸的对象就被分开处理了。具体做法是计算每个ground truth的面积，将不同面积的实例分配到不同的FPN等级预测。</p>
+<p>FPN的不同层参数共享（7层），最后一层参数不共享。</p>
+<blockquote>
+<p>Weights for the head are shared across different levels. Grid number may varies at different pyramids. Only the last conv is not shared in this scenario.  </p>
+</blockquote>
+<p>2）论文中网格和通道的对应方式：第k个通道对应第i*S+j个网格，如此就可以一一对应了。</p>
+<p>3）如果像FCN那样对中心位置分类，则会因为卷积的空间不变性使得分割对位置不敏感。因此，论文使用了CoorConv的方法将归一化的坐标作为两个通道加入Mask Branch（其中一个通道是x坐标，一个通道是y坐标）。</p>
+<p>4）最后，结合每个网格生成的结果得到一些实例掩码，在用NMS选出最好的分割结果。</p>
+<p>5）正负样本的选择，如果网格落在真实掩膜（ground truth mask）的中心范围，那么视为正样本，其他的为负样本。在代码中，作者将gt_box缩小到1/5（以质心为中心），然后找出覆盖的网格，这些网格就是正样本。接着把类别标签与mask标签放到网格对应的通道上。</p>
+<pre class=" language-python"><code class="language-python"><span class="token comment" spellcheck="true"># mass center 计算质心</span>
+gt_masks_pt <span class="token operator">=</span> torch<span class="token punctuation">.</span>from_numpy<span class="token punctuation">(</span>gt_masks<span class="token punctuation">)</span><span class="token punctuation">.</span>to<span class="token punctuation">(</span>device<span class="token operator">=</span>device<span class="token punctuation">)</span>
+center_ws<span class="token punctuation">,</span> center_hs <span class="token operator">=</span> center_of_mass<span class="token punctuation">(</span>gt_masks_pt<span class="token punctuation">)</span>
+valid_mask_flags <span class="token operator">=</span> gt_masks_pt<span class="token punctuation">.</span>sum<span class="token punctuation">(</span>dim<span class="token operator">=</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">.</span>sum<span class="token punctuation">(</span>dim<span class="token operator">=</span><span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">></span> <span class="token number">0</span>
+</code></pre>
+<pre class=" language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 计算质心范围覆盖的网格</span>
+<span class="token comment" spellcheck="true"># left, top, right, down</span>
+top_box <span class="token operator">=</span> max<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> int<span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">(</span>center_h <span class="token operator">-</span> half_h<span class="token punctuation">)</span> <span class="token operator">/</span> upsampled_size<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">//</span> <span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">.</span> <span class="token operator">/</span> num_grid<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+down_box <span class="token operator">=</span> min<span class="token punctuation">(</span>num_grid <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">,</span> int<span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">(</span>center_h <span class="token operator">+</span> half_h<span class="token punctuation">)</span> <span class="token operator">/</span> upsampled_size<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">//</span> <span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">.</span> <span class="token operator">/</span> num_grid<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+left_box <span class="token operator">=</span> max<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> int<span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">(</span>center_w <span class="token operator">-</span> half_w<span class="token punctuation">)</span> <span class="token operator">/</span> upsampled_size<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">//</span> <span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">.</span> <span class="token operator">/</span> num_grid<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+right_box <span class="token operator">=</span> min<span class="token punctuation">(</span>num_grid <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">,</span> int<span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">(</span>center_w <span class="token operator">+</span> half_w<span class="token punctuation">)</span> <span class="token operator">/</span> upsampled_size<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">//</span> <span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">.</span> <span class="token operator">/</span> num_grid<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+top <span class="token operator">=</span> max<span class="token punctuation">(</span>top_box<span class="token punctuation">,</span> coord_h<span class="token number">-1</span><span class="token punctuation">)</span>
+down <span class="token operator">=</span> min<span class="token punctuation">(</span>down_box<span class="token punctuation">,</span> coord_h<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span>
+left <span class="token operator">=</span> max<span class="token punctuation">(</span>coord_w<span class="token number">-1</span><span class="token punctuation">,</span> left_box<span class="token punctuation">)</span>
+right <span class="token operator">=</span> min<span class="token punctuation">(</span>right_box<span class="token punctuation">,</span> coord_w<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span>
+</code></pre>
+<pre class=" language-python"><code class="language-python"><span class="token comment" spellcheck="true"># 放置真实标签</span>
+<span class="token comment" spellcheck="true"># cate</span>
+cate_label<span class="token punctuation">[</span>top<span class="token punctuation">:</span><span class="token punctuation">(</span>down<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">,</span> left<span class="token punctuation">:</span><span class="token punctuation">(</span>right<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">]</span> <span class="token operator">=</span> gt_label
+<span class="token comment" spellcheck="true"># ins</span>
+seg_mask <span class="token operator">=</span> mmcv<span class="token punctuation">.</span>imrescale<span class="token punctuation">(</span>seg_mask<span class="token punctuation">,</span> scale<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">.</span> <span class="token operator">/</span> output_stride<span class="token punctuation">)</span>
+seg_mask <span class="token operator">=</span> torch<span class="token punctuation">.</span>from_numpy<span class="token punctuation">(</span>seg_mask<span class="token punctuation">)</span><span class="token punctuation">.</span>to<span class="token punctuation">(</span>device<span class="token operator">=</span>device<span class="token punctuation">)</span>
+<span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span>top<span class="token punctuation">,</span> down<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token keyword">for</span> j <span class="token keyword">in</span> range<span class="token punctuation">(</span>left<span class="token punctuation">,</span> right<span class="token operator">+</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+        label <span class="token operator">=</span> int<span class="token punctuation">(</span>i <span class="token operator">*</span> num_grid <span class="token operator">+</span> j<span class="token punctuation">)</span>
+        ins_label<span class="token punctuation">[</span>label<span class="token punctuation">,</span> <span class="token punctuation">:</span>seg_mask<span class="token punctuation">.</span>shape<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">,</span> <span class="token punctuation">:</span>seg_mask<span class="token punctuation">.</span>shape<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">]</span> <span class="token operator">=</span> seg_mask  <span class="token comment" spellcheck="true"># 存储在s*s的某个通道上</span>
+        ins_ind_label<span class="token punctuation">[</span>label<span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token boolean">True</span> <span class="token comment" spellcheck="true"># 哪个通道有实例</span>
+ins_label_list<span class="token punctuation">.</span>append<span class="token punctuation">(</span>ins_label<span class="token punctuation">)</span>
+cate_label_list<span class="token punctuation">.</span>append<span class="token punctuation">(</span>cate_label<span class="token punctuation">)</span>
+ins_ind_label_list<span class="token punctuation">.</span>append<span class="token punctuation">(</span>ins_ind_label<span class="token punctuation">)</span>
+</code></pre>
+<p>6）损失函数：<br>$$<br>L=L_{cate}+\lambda L_{mask}<br>$$<br>其中$L_{cate}$是类别分支的损失（Focal loss），$L_{mask}$是mask分支的损失（Dice loss）。</p>
+<p>7）置信度分输计算：</p>
+<p>对mask中所有得分大于0.5的像素求和取平均得到mask的置信度分数。</p>
+<p>将mask的置信度分数乘以类别得分得到类别的置信度分数。</p>
 <p>可以看出，SOLO将实例分割转变成两个分类任务，设计了一个无检测、无聚类的端到端学习框架。</p>
 <p>作者给出的改进思路是可以借鉴最新的优秀语义分割方法来改进SOLO的两个分类任务</p>
 <blockquote>
 <p>The proposed SOLO only needs to solve two pixel-level classification tasks, thus it may be possible to borrow some of the<br>recent advances in semantic segmentation for improving SOLO.   </p>
 </blockquote>
 <p>SOLO其实也存在一些缺点，不利于检测尺寸小的目标和目标密集的区域。</p>
+<h2 id="SOLOv2"><a href="#SOLOv2" class="headerlink" title="SOLOv2"></a>SOLOv2</h2><h3 id="SOLOv2创新"><a href="#SOLOv2创新" class="headerlink" title="SOLOv2创新"></a>SOLOv2创新</h3><p>论文认为有三个瓶颈限制了SOLO的表现：</p>
+<p>1）低效的掩膜预测。因为掩膜分支有S*S个通道，会消耗许多资源和算力。并且S在不同的fpn的level值是不同的，每个level的最后一层并不共享参数，这些都导致了掩膜预测效率的低下。</p>
+<p>2）掩膜精细程度差。精细的掩膜需要更高分辨率的mask处理目标的边缘信息。但是大分辨率的mask以为了更复杂的计算。</p>
+<p>3）Mask NMS速度慢。相比于box NMS，Mask NMS会消耗更多的时间。</p>
+<blockquote>
+<p>However, three main bottlenecks limit the performance of SOLO: a) inefficient mask representation and learning; b) not high enough resolution for finer mask predictions; c) slow mask NMS.  </p>
+</blockquote>
+<p>因此，论文提出了两个创新：</p>
+<p>1）使用动态卷积的方法预测掩膜。</p>
+<p>2）设计能够并行计算的Matrix NMS代替传统的NMS。</p>
 
                 
             </div>
