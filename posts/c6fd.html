@@ -544,7 +544,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    2.4k
+                    2.8k
                 </div>
                 
 
@@ -638,17 +638,32 @@ ins_ind_label_list<span class="token punctuation">.</span>append<span class="tok
 <p>针对上面的问题，论文提出了动态卷积的方法，一个分支预测卷积核G，一个分支预测feature map，最后feature map与学习到的卷积核做卷积生成mask M。</p>
 <h4 id="Mask-kernel-G"><a href="#Mask-kernel-G" class="headerlink" title="Mask kernel G"></a>Mask kernel G</h4><p>在给定backbone与FPN的情况下，为每个FPN的等级预测动态卷积核G。将FPN生成的$H\times W\times C$的feature map对齐到$S\times S\times C$，然后经过四层卷积，最后经过一个$3\times 3\times D$的卷积层得到动态卷积核G。为了保持位置敏感性，在第一个卷积层加入坐标通道。同样每个FPN等级共享参数。</p>
 <h4 id="Mask-Feature-F"><a href="#Mask-Feature-F" class="headerlink" title="Mask Feature F"></a>Mask Feature F</h4><p>FPN每个level经过一个$3\times 3$卷积层，组归一化，RELU和2次的双线性上采样后将P2到P5的特征融合。融合的过程是像素级求和，然后$1\times 1$卷积，组归一化，RELU。在FPN的P5层加入了坐标通道提升位置敏感性。</p>
-<p>在预测阶段，对于类别分支用0.1的阈值剔除得分低的网格。在用网格对应的动态卷积核去预测Mask。（减少计算量就体现在这里）</p>
+<p>在预测阶段，对于类别分支用0.1的阈值剔除得分低的网格。在用网格对应的动态卷积核（不确定）去预测Mask。（减少计算量就体现在这里）</p>
 <h4 id="Matrix-NMS"><a href="#Matrix-NMS" class="headerlink" title="Matrix NMS"></a>Matrix NMS</h4><p>这里先简单介绍传统的NMS与改进的Soft NMS。</p>
 <h5 id="NMS"><a href="#NMS" class="headerlink" title="NMS"></a>NMS</h5><p>1）对目标按照得分排序</p>
 <p>2）保留得分最高的目标</p>
 <p>3）删除与目标最相近的其他目标（通常是根据IOU，删除与目标IOU大于某个阈值的框）</p>
 <p>NMS有个很大的缺点，容易误删。特别是两个相似而又靠近的目标，容易删除较小的目标。</p>
-<h5 id="Soft-NMS"><a href="#Soft-NMS" class="headerlink" title="Soft NMS"></a>Soft NMS</h5><p>Soft NMS剔除的改进方法是降低相似目标的得分，而非直接暴力地删除。</p>
-<p> 原来的NMS可以描述如下：将IOU大于阈值的目标的得分全部置为0。<br>$$<br>{s_i} = \left{ {\begin{array}{<em>{20}{c}}<br>  {{s_i},\quad iou(M,{b_i}) < {N_t}} \<br>  {0,\quad iou(M,{b_i}) \geqslant {N_t}}<br>\end{array}} \right.<br>$$<br>Soft NMS的改进，线性加权的方式：<br>$$<br>{s_i} = \left{ {\begin{array}{</em>{20}{c}}<br>  {{s_i},\quad iou(M,{b_i}) < {N_t}} \<br>  {{s_i}(1 - iou(M,{b_i})),\quad iou(M,{b_i}) \geqslant {N_t}}<br>\end{array}} \right.<br>$$<br>还有一种高斯加权的方式，这里不做过多介绍。</p>
+<h5 id="Soft-NMS"><a href="#Soft-NMS" class="headerlink" title="Soft NMS"></a>Soft NMS</h5><p>Soft NMS剔除的改进方法是将得分乘以一个惩罚项decay来降低相似目标的得分，而非直接暴力地删除。</p>
+<p> 原来的NMS可以描述如下：将IOU大于阈值的目标的得分全部置为0。<br>$$<br>{s_i} = \left{ {\begin{array}{*{20}{c}}<br>  {{s_i},\quad iou(M,{b_i}) < {N_t}} \<br>  {0,\quad iou(M,{b_i}) \geqslant {N_t}}<br>\end{array}} \right.<br>$$</p>
+<p>Soft NMS的改进，线性加权的方式，decay是与iou有关的线性函数$f(iou)=1-iou$：<br>$$<br>{s_i} = \left{ {\begin{array}{*{20}{c}}<br>  {{s_i},\quad iou(M,{b_i}) < {N_t}} \<br>  {{s_i}(1 - iou(M,{b_i})),\quad iou(M,{b_i}) \geqslant {N_t}}<br>\end{array}} \right.<br>$$<br>还有一种高斯加权的方式，这里不做过多介绍。</p>
 <p>总之，思路都是IOU越大，得分降低的越多。 </p>
+<p>下面介绍Matrix NMS的思路。</p>
+<p>Matrix NMS的思路是在Soft NMS的思路上延申。</p>
+<p>论文认为一个给定Mask的惩罚项decay与两方面有关：</p>
+<p>1）每个与它同类的得分比它高的预测Mask对它的惩罚。这个即$f(iou)$，iou越大，$f(iou)$越小，惩罚力度越强。</p>
+<p>2）每个与它同类的得分比它高的预测Mask自身被其他得分比它高的预测Mask抑制的概率。而一个mask被抑制的概率与自身相关的最大IOU呈正相关。论文将其设置为$1/f(iou_{max})$，iou越大，越可能被抑制。</p>
+<p>直观理解就是我会被得分高的Mask抑制，但是如果这个得分高的Mask自身被抑制，它很有可能就不是最优的mask，我受它的抑制就需要适当的减弱，就乘以一个与它自身最大IOU成正相关的一个系数，即其被抑制的概率。</p>
+<p>因为要并行处理，所以Matrix NMS的计算全部是矩阵计算。</p>
 <h4 id="实现细节-1"><a href="#实现细节-1" class="headerlink" title="实现细节"></a>实现细节</h4><p>1）最后动态卷积核的生成并没有经过激活函数。</p>
 <p>2）损失函数与SOLO的损失函数的计算方式一样。</p>
+<p>3）Matirx NMS矩阵计算的详细过程：</p>
+<p>筛选top-N的mask，按照得分排序，接着组成$N \times N$的矩阵。</p>
+<p>计算所有的IOU。将每一类得分最高的mask的那一列iou置为0。iou为0即可认为没有相似的mask，主要目的还是保留得分最高的mask。</p>
+<p>计算一个label_matrix。其中同一类的为1，不同类为0。（这里可能会对0产生疑问，0即不被抑制，因为不同类吗，后边会在行最小中删除掉）</p>
+<p>计算列的最大IOU。带入公式计算decay。</p>
+<p>选择行最小的decay为行对应mask的decay。</p>
+<p>decay*score更新score。选出top-k为最终结果。</p>
 
                 
             </div>
