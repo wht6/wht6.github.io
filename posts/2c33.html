@@ -552,9 +552,9 @@
         <div class="card-content article-card-content">
             <div id="articleContent">
                 <h1 id="CNN的三个重要性质"><a href="#CNN的三个重要性质" class="headerlink" title="CNN的三个重要性质"></a>CNN的三个重要性质</h1><h2 id="参数共享"><a href="#参数共享" class="headerlink" title="参数共享"></a>参数共享</h2><p>权值共享得益于卷积自身的性质，假设输入时$W \times H$的图像，卷积核为$m\times m$，进行权值共享时总共参数个数是$m\times m\times channels$；若不进行权值共享，每个像素需要一个单独的参数，则总参数数量则为$W\times H\times channels$。总参数大大增加，导致占用大量内存，模型训练缓慢。</p>
-<p><img src="https://raw.githubusercontent.com/wht6/image/master/img/pic1.gif"></p>
+<p><img src="https://raw.githubusercontent.com/wht6/image/master/img/pic1.gif" alt></p>
 <h2 id="局部连接"><a href="#局部连接" class="headerlink" title="局部连接"></a>局部连接</h2><p>对于局部连接而言：层间神经只有局部范围内的连接，在这个范围内采用全连接的方式，超过这个范围的神经元则没有连接；连接与连接之间独立参数，相比于全连接减少了感受域外的连接，有效减少参数规模。全连接：层间神经元完全连接，每个输出神经元可以获取到所有神经元的信息，有利于信息汇总，常置于网络末尾。</p>
-<p><img src="https://raw.githubusercontent.com/wht6/image/master/img/pic2.gif"></p>
+<p><img src="https://raw.githubusercontent.com/wht6/image/master/img/pic2.gif" alt></p>
 <h2 id="平移等变性"><a href="#平移等变性" class="headerlink" title="平移等变性"></a>平移等变性</h2><p>卷积神经网络参数共享的特殊形式使得神经网络层具有平移等变性(equivariance)。对于图像而言，卷积产生一个 2 维映射来表明某些特征在输入中出现的位置。如果我们移动输入中的对象，它的表示也会在输出中移动同样的量。对于放缩和旋转等其他变换，卷积却不是天然等变的。<br>关于池化，无论采用何种池化函数，当输入作出少量平移时，池化能帮助输入的表示近似不变(invariant)。对于平移的不变性是指当我们对输入进行少量平移时，经过池化函数后的大多数输出并不会发生改变。这意味着池化对特征位置不敏感，只有当我们不关心特征具体出现的位置时，池化才是合理的。<br>CNN 中的卷积操作具有平移等变性，但池化操作具有局部平移不变性。两者矛盾地统一于 CNN 中。</p>
 <p>参考：</p>
 <p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/89109931">https://zhuanlan.zhihu.com/p/89109931</a></p>
