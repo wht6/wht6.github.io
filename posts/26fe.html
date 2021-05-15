@@ -542,7 +542,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    689
+                    1.8k
                 </div>
                 
 
@@ -559,8 +559,15 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="实例分割框架：PolarMask解读"><a href="#实例分割框架：PolarMask解读" class="headerlink" title="实例分割框架：PolarMask解读"></a>实例分割框架：PolarMask解读</h1><h2 id="论文创新"><a href="#论文创新" class="headerlink" title="论文创新"></a>论文创新</h2><h2 id="FCOS"><a href="#FCOS" class="headerlink" title="FCOS"></a>FCOS</h2><p>FCOS是一个box-free的目标检测框架。FCOS希望像FCN那样逐像素的预测边界框，它做法是选择真实框中的像素点为正样本，为每个正样本像素点预测一个4D的向量和一个类别标签。4D向量是像素点到边界框四条边的距离。如果一个像素点落在多个边界框中，则认为其是模糊样本。FCOS证明使用FPN可以极大的消除模糊样本带来的影响。论文发现这个方法会产生大量低质量的框，这些框所对应给像素点皆距离目标中心点较远。因此，FCOS添加了一个center-ness Branch来过滤低质量的框。</p>
-<h2 id="实现方法"><a href="#实现方法" class="headerlink" title="实现方法"></a>实现方法</h2><p>为每个属于正样本的像素点预测一个4D向量：$\boldsymbol t=(l,t,r,b)$，这里$l,t,r,b$是像素点到预测边界框的距离。</p>
+                <h1 id="实例分割框架：PolarMask解读"><a href="#实例分割框架：PolarMask解读" class="headerlink" title="实例分割框架：PolarMask解读"></a>实例分割框架：PolarMask解读</h1><h2 id="论文创新"><a href="#论文创新" class="headerlink" title="论文创新"></a>论文创新</h2><p>PolarMask将实例分割问题表述为通过实例中心分类和极坐标中的密集距离回归来预测实例轮廓。</p>
+<p><img src="https://raw.githubusercontent.com/wht6/image/master/img/polarmask3.png" alt></p>
+<p>图中显示了实例轮廓的两种表示方法，左边是笛卡尔表示法，右边是极坐标表示法。</p>
+<p>选择极坐标系的原因：</p>
+<p>1）极坐标原点可视为目标中心。</p>
+<p>2）轮廓点可以由极坐标原点出发的距离和角度唯一确定。</p>
+<p>3）角度是固定的，根据角度更容易复原出轮廓。</p>
+<h2 id="FCOS简介"><a href="#FCOS简介" class="headerlink" title="FCOS简介"></a>FCOS简介</h2><p>FCOS是一个box-free的目标检测框架。FCOS希望像FCN那样逐像素的预测边界框，它做法是选择真实框中的像素点为正样本，为每个正样本像素点预测一个4D的向量和一个类别标签。4D向量是像素点到边界框四条边的距离。如果一个像素点落在多个边界框中，则认为其是模糊样本。FCOS证明使用FPN可以极大的消除模糊样本带来的影响。论文发现这个方法会产生大量低质量的框，这些框所对应给像素点皆距离目标中心点较远。因此，FCOS添加了一个center-ness Branch来过滤低质量的框。</p>
+<p>为每个属于正样本的像素点预测一个4D向量：$\boldsymbol t=(l,t,r,b)$，这里$l,t,r,b$是像素点到预测边界框的距离。</p>
 <p><img src="https://raw.githubusercontent.com/wht6/image/master/img/polarmask1.png" alt></p>
 <p>除此之外，还需要为每个像素点预测一个类别标签，这个与FCN是一致的，即将类别放到通道维度上。COCO数据集有80类，所有预测类别的分支的输出是80维。</p>
 <p>FCOS会使用更多的前景样本进行预测，而box based的方法会受限与锚框的数量。</p>
@@ -570,7 +577,30 @@
 <p>因为设计了一个中心度，其作用并非改善这些低质量的框，而是直接删除。</p>
 <p>中心度目标的计算方法：</p>
 <script type="math/tex; mode=display">
-centerness^*=\sqrt{\frac{min(l^*,r^*)}{max(l^*,r^*)}\times \frac{min(t^*,b^*)}{max(t^*,b^*)}}</script><p>cennterness分支只有一层，与最终的分类并列。目的是希望像素学习一个正确的位置。在推断阶段，用centerness乘以类别得分来降低远离中心的预测框的得分，之后大概率会被NMS给剔除。</p>
+centerness^*=\sqrt{\frac{min(l^*,r^*)}{max(l^*,r^*)}\times \frac{min(t^*,b^*)}{max(t^*,b^*)}}</script><p>cennterness分支只有一层，与最终的分类并列。目的是希望像素学习一个正确的位置。在推断阶段，用centerness乘以类别得分来降低远离中心的预测框的得分，之后大概率会被NMS给剔除。centerness用的BCE损失，我觉得应该回归，但仔细想想分类也说的通，预测一个像素是不是中心点概率，对于正样本点其概率并不一定是1，而是centerness计算出来的，相当于一个软标签。</p>
+<h2 id="实现细节"><a href="#实现细节" class="headerlink" title="实现细节"></a>实现细节</h2><p>输入一个图像，预测一个正样本位置（候选实例中心）在每个角度上到实例轮廓的距离，组装之后形成最终的mask。网络框架基于FCOS。（看了PolarMask的框架后发现与FCOS几乎一样，似乎FCOS就是专门为PolarMask设计的）</p>
+<p><img src="https://raw.githubusercontent.com/wht6/image/master/img/polarmask4.png" alt></p>
+<p>采样方式是以中心点开始，以固定角度间隔发射n条射线。（如果角度间隔是$10^\circ$，则一共得到36条射线，36个采样点。）因为角度已经预定义，所以只需考虑中心点与中心点到采样点的距离。</p>
+<p>中心点为目标的质心。（论文中还对质心和框心进行了对比，结论是质心优于框心）</p>
+<p><strong>正样本选择</strong>：如果(x,y)落入任何实例质心的周围区域，则将其视为中心样本。正像素采样区域定义为特征图从质心到左、上、右和下的1.5倍步幅。因此，每个实例在质心附近有大约9-16个像素作为中心实例。</p>
+<p>距离回归的两点说明：1）如果一条射线与实例的轮廓有多个相交点，则直接选择长度最大的一条作为回归目标。2）某条射线与轮廓没有相交的点，回归目标设置成最小值$10^{-6}$。论文认为这些极端情况是限制极坐标表示上限达到100%AP的主要障碍。论文解释了不应因此证明极坐标表示劣于二值图像表示。</p>
+<blockquote>
+<p>However, it is not supposed to be seen as Polar Representation being inferior to the non-parametric Pixel-wise Representation. The evidence is two-fold. First, even the Pixel-wise Representation still has certain gap with the upper bound of 100% AP in practice, since some operation, such as down-sampling, is indispensable. Second, current performance is far away from the upper bound regardless of the Pixel-wise Representation or Polar Representation. Therefore, the research effort is suggested to better spend on improving the practical performance of models, rather than the theoretical upper bound.  </p>
+</blockquote>
+<p>直接对距离回归会出现一个问题，每个实例都有n条射线，可能会导致距离回归损失与分类损失之间的不平衡。其次，同一个实例的n条射线具有相关性，应该整体进行训练而不是看作一个独立的回归样本。</p>
+<p><strong>Polar Centerness</strong>:FCOS的centerness只适用于框的抑制。polar centerness的计算方式是</p>
+<script type="math/tex; mode=display">
+polarcenterness=\sqrt{\frac{min(\{d_1,d_2,...d_n\})}{max(\{d_1,d_2,...d_n\})}}</script><p>polarness值越接近1，越靠近中心点。最后类别分支的得分会乘以polarcenterness的值来减小远离中心的预测mask的得分，从而在后边利用NMS过滤掉。</p>
+<p>显然二值mask的IOU是便于计算的，但是结算轮廓的IOU则比较困难，所以论文给出了<strong>Polar IOU</strong>的计算方式。</p>
+<p>在极坐标系中，Mask IOU可以这样计算：</p>
+<script type="math/tex; mode=display">
+IOU=\frac{\int_{0}^{2\pi}\frac{1}{2}d_{min}^2d\theta}{\int_{0}^{2\pi}\frac{1}{2}d_{max}^2d\theta}</script><p>d是回归目标，$d^<em>$是预测线长度，$\theta$是角度。$d_{min}=min(d,d^</em>)$，$d_{max}=max(d,d^*)$下面是离散形式：</p>
+<script type="math/tex; mode=display">
+IOU=\lim_{N\to \infty}\frac{\sum_{i=1}^N\frac{1}{2}d_{min}^2\Delta \theta_i}{\sum_{i=1}^N\frac{1}{2}d_{max}^2\Delta \theta_i}</script><p>论文发现简化后的计算相较于完整的计算只有$\pm0.1$AP的差异，使用的简化计算如下：</p>
+<script type="math/tex; mode=display">
+Polar\quad IOU=\frac{\sum_{i=1}^Nd_{min}}{\sum_{i=1}^Nd_{max}}</script><p><img src="https://raw.githubusercontent.com/wht6/image/master/img/polarmask5.png" alt></p>
+<p>PolarMask的backbone和FPN与FCOS一样，FPN也是按回归距离分配到FPN不同的层次。</p>
+<p>损失是类别分支与回归分支的联合损失。</p>
 
                 
             </div>
