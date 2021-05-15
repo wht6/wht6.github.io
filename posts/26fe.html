@@ -571,7 +571,7 @@
 <p><img src="https://raw.githubusercontent.com/wht6/image/master/img/polarmask1.png" alt></p>
 <p>除此之外，还需要为每个像素点预测一个类别标签，这个与FCN是一致的，即将类别放到通道维度上。COCO数据集有80类，所有预测类别的分支的输出是80维。</p>
 <p>FCOS会使用更多的前景样本进行预测，而box based的方法会受限与锚框的数量。</p>
-<p>FPN样本的分配方式，P3到P7每一层有一个最大回归距离，$ max(l^<em>,t^</em>,r^<em>,b^</em>) $介于$m_i$与$m_{i-1}$之间（$ l^<em>,t^</em>,r^<em>,b^</em> $是像素点到真实边界框的距离），则会被设置为正样本。$m_i$是FPN每层的最大回归距离。 这样大部分重叠的框（即模糊样本）会被分散到不同的FPN层，如果经过FPN分配之后还有一个位置出现两个框的情况，则选择较小的框作为回归的目标。FPN权值共享来减少参数。由于回归的值必须是正值，论文使用exp(x)。虽然共享参数，但是论文给每个FPN的Level设置一个s_i，exp(x*s_i)取代exp(x)，使之性能稍有提升。</p>
+<p>FPN样本的分配方式，P3到P7每一层有一个最大回归距离，$ max(l’,t’,r’,b’) $介于$m_i$与$m_{i-1}$之间（$ l’,t’,r’,b’ $是像素点到真实边界框的距离），则会被设置为正样本。$m_i$是FPN每层的最大回归距离。 这样大部分重叠的框（即模糊样本）会被分散到不同的FPN层，如果经过FPN分配之后还有一个位置出现两个框的情况，则选择较小的框作为回归的目标。FPN权值共享来减少参数。由于回归的值必须是正值，论文使用exp(x)。虽然共享参数，但是论文给每个FPN的Level设置一个$s_i$，$exp(xs_i)$取代exp(x)，使之性能稍有提升。</p>
 <p><img src="https://raw.githubusercontent.com/wht6/image/master/img/polarmask2.png" alt></p>
 <p>此时还有一个问题是远离目标中心点的像素会产生大量低质量的框。</p>
 <p>因为设计了一个中心度，其作用并非改善这些低质量的框，而是直接删除。</p>
@@ -594,7 +594,7 @@ polarcenterness=\sqrt{\frac{min(\{d_1,d_2,...d_n\})}{max(\{d_1,d_2,...d_n\})}}</
 <p>显然二值mask的IOU是便于计算的，但是结算轮廓的IOU则比较困难，所以论文给出了<strong>Polar IOU</strong>的计算方式。</p>
 <p>在极坐标系中，Mask IOU可以这样计算：</p>
 <script type="math/tex; mode=display">
-IOU=\frac{\int_{0}^{2\pi}\frac{1}{2}d_{min}^2d\theta}{\int_{0}^{2\pi}\frac{1}{2}d_{max}^2d\theta}</script><p>d是回归目标，$d^<em>$是预测线长度，$\theta$是角度。$d_{min}=min(d,d^</em>)$，$d_{max}=max(d,d^*)$下面是离散形式：</p>
+IOU=\frac{\int_{0}^{2\pi}\frac{1}{2}d_{min}^2d\theta}{\int_{0}^{2\pi}\frac{1}{2}d_{max}^2d\theta}</script><p>d是回归目标，$d’$是预测线长度，$\theta$是角度。$d_{min}=min(d,d’)$，$d_{max}=max(d,d’)$下面是离散形式：</p>
 <script type="math/tex; mode=display">
 IOU=\lim_{N\to \infty}\frac{\sum_{i=1}^N\frac{1}{2}d_{min}^2\Delta \theta_i}{\sum_{i=1}^N\frac{1}{2}d_{max}^2\Delta \theta_i}</script><p>论文发现简化后的计算相较于完整的计算只有$\pm0.1$AP的差异，使用的简化计算如下：</p>
 <script type="math/tex; mode=display">
