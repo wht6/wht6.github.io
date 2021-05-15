@@ -571,7 +571,7 @@
 <p><img src="https://raw.githubusercontent.com/wht6/image/master/img/polarmask1.png" alt></p>
 <p>除此之外，还需要为每个像素点预测一个类别标签，这个与FCN是一致的，即将类别放到通道维度上。COCO数据集有80类，所有预测类别的分支的输出是80维。</p>
 <p>FCOS会使用更多的前景样本进行预测，而box based的方法会受限与锚框的数量。</p>
-<p>FPN样本的分配方式，P3到P7每一层有一个最大回归距离，$ max(l^<em>,t^</em>,r^<em>,b^</em>) $介于$m<em>i$与$m</em>{i-1}$之间（$ l^<em>,t^</em>,r^<em>,b^</em> $是像素点到真实边界框的距离），则会被设置为正样本。$m_i$是FPN每层的最大回归距离。 这样大部分重叠的框（即模糊样本）会被分散到不同的FPN层，如果经过FPN分配之后还有一个位置出现两个框的情况，则选择较小的框作为回归的目标。FPN权值共享来减少参数。由于回归的值必须是正值，论文使用exp(x)。虽然共享参数，但是论文给每个FPN的Level设置一个s_i，exp(x*s_i)取代exp(x)，使之性能稍有提升。</p>
+<p>FPN样本的分配方式，P3到P7每一层有一个最大回归距离，$ max(l^<em>,t^</em>,r^<em>,b^</em>) $介于$m_i$与$m_{i-1}$之间（$ l^<em>,t^</em>,r^<em>,b^</em> $是像素点到真实边界框的距离），则会被设置为正样本。$m_i$是FPN每层的最大回归距离。 这样大部分重叠的框（即模糊样本）会被分散到不同的FPN层，如果经过FPN分配之后还有一个位置出现两个框的情况，则选择较小的框作为回归的目标。FPN权值共享来减少参数。由于回归的值必须是正值，论文使用exp(x)。虽然共享参数，但是论文给每个FPN的Level设置一个s_i，exp(x*s_i)取代exp(x)，使之性能稍有提升。</p>
 <p><img src="https://raw.githubusercontent.com/wht6/image/master/img/polarmask2.png" alt></p>
 <p>此时还有一个问题是远离目标中心点的像素会产生大量低质量的框。</p>
 <p>因为设计了一个中心度，其作用并非改善这些低质量的框，而是直接删除。</p>
@@ -1101,7 +1101,7 @@ Polar\quad IOU=\frac{\sum_{i=1}^Nd_{min}}{\sum_{i=1}^Nd_{max}}</script><p><img s
 </main>
 
 
-<script src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 <script>
     MathJax.Hub.Config({
         tex2jax: {inlineMath: [['$', '$'], ['\(', '\)']]}
@@ -1394,6 +1394,21 @@ $(function () {
     <script src="/libs/instantpage/instantpage.js" type="module"></script>
     
 
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/ Relative)","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"left","width":100,"height":180},"mobile":{"show":false},"react":{"opacityDefault":0.7}});</script></body>
 
 </html>
