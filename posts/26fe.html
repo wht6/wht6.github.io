@@ -578,7 +578,7 @@
 <p>中心度目标的计算方法：</p>
 <script type="math/tex; mode=display">
 centerness^*=\sqrt{\frac{min(l^*,r^*)}{max(l^*,r^*)}\times \frac{min(t^*,b^*)}{max(t^*,b^*)}}</script><p>cennterness分支只有一层，与最终的分类并列。目的是希望像素学习一个正确的位置。在推断阶段，用centerness乘以类别得分来降低远离中心的预测框的得分，之后大概率会被NMS给剔除。centerness用的BCE损失，我觉得应该回归，但仔细想想分类也说的通，预测一个像素是不是中心点概率，对于正样本点其概率并不一定是1，而是centerness计算出来的，相当于一个软标签。</p>
-<h2 id="实现细节"><a href="#实现细节" class="headerlink" title="实现细节"></a>实现细节</h2><p>输入一个图像，预测一个正样本位置（候选实例中心）在每个角度上到实例轮廓的距离，组装之后形成最终的mask。网络框架基于FCOS。（看了PolarMask的框架后发现与FCOS几乎一样，似乎FCOS就是专门为PolarMask设计的）</p>
+<h2 id="实现细节"><a href="#实现细节" class="headerlink" title="实现细节"></a>实现细节</h2><p>输入一个图像，在每个角度上预测一个正样本位置（候选实例中心）到实例轮廓的距离，得到若干预测点，组装之后形成最终的mask。网络框架基于FCOS。（看了PolarMask的框架后发现与FCOS几乎一样，似乎FCOS就是专门为PolarMask设计的）</p>
 <p><img src="https://raw.githubusercontent.com/wht6/image/master/img/polarmask4.png" alt></p>
 <p>采样方式是以中心点开始，以固定角度间隔发射n条射线。（如果角度间隔是$10^\circ$，则一共得到36条射线，36个采样点。）因为角度已经预定义，所以只需考虑中心点与中心点到采样点的距离。</p>
 <p>中心点为目标的质心。（论文中还对质心和框心进行了对比，结论是质心优于框心）</p>
