@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="树莓派安装openwrt, Pytorch,DeepLearning,Image Segmentation,STM32">
+    <meta name="keywords" content="搭建ss服务器, Pytorch,DeepLearning,Image Segmentation,STM32">
     <meta name="description" content="专注学习,分享技术,分享知识">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>树莓派安装openwrt | WHT</title>
+    <title>搭建ss服务器 | WHT</title>
     <link rel="icon" type="image/png" href="/favicon_o.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -388,12 +388,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/1.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/7.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">树莓派安装openwrt</h1>
+                    <h1 class="description center-align post-title">搭建ss服务器</h1>
                 </div>
             </div>
         </div>
@@ -509,12 +509,12 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/%E5%B5%8C%E5%85%A5%E5%BC%8F/">
-                                <span class="chip bg-color">嵌入式</span>
+                            <a href="/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/">
+                                <span class="chip bg-color">服务器</span>
                             </a>
                         
-                            <a href="/tags/%E8%B7%AF%E7%94%B1%E5%99%A8/">
-                                <span class="chip bg-color">路由器</span>
+                            <a href="/tags/ss/">
+                                <span class="chip bg-color">ss</span>
                             </a>
                         
                     </div>
@@ -529,7 +529,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2021-06-06
+                    2021-06-20
                 </div>
                 
 
@@ -538,7 +538,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    551
+                    617
                 </div>
                 
 
@@ -555,18 +555,61 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="树莓派安装openwrt"><a href="#树莓派安装openwrt" class="headerlink" title="树莓派安装openwrt"></a>树莓派安装openwrt</h1><h2 id="写入镜像"><a href="#写入镜像" class="headerlink" title="写入镜像"></a>写入镜像</h2><p><a target="_blank" rel="noopener" href="https://mirrors.tuna.tsinghua.edu.cn/openwrt/releases/19.07.6/targets/brcm2708/bcm2709/">openwrt下载</a> 选择openwrt-19.07.6-brcm2708-bcm2709-rpi-2-ext4-factory.img.gz。</p>
-<p>SDFormatter格式化SD卡，Win32DiskManager将镜像写入SD卡。</p>
-<h2 id="硬件连接"><a href="#硬件连接" class="headerlink" title="硬件连接"></a>硬件连接</h2><p>硬件：树莓派3B+，SD卡，网线，读卡器，PC。</p>
-<p>第一步：用一根网线连接树莓派和PC。（目的是使之位于同一局域网）</p>
-<p>第二步：插入SD卡，启动树莓派。192.168.1.1访问路由管理界面。</p>
-<p>第三步：配置路由器无线功能。</p>
-<p>第四步：拔掉树莓派与PC之间的网线，将提供宽带的网线接入树莓派。</p>
-<p>第五步：PC或手机通过无线连接树莓派，192.168.1.1访问路由管理界面，进一步配置网络。</p>
-<h2 id="具体细节"><a href="#具体细节" class="headerlink" title="具体细节"></a>具体细节</h2><p>配置无线的时候，默认的mode不能改，改了之后会自动变成client模式，而非我们期望的master模式。（AP LAN分为master和client，master就是接入点，client就是无线站点）这个原因可能是默认的mode的频段是树莓派自身所支持的，其他频段可能不支持。</p>
-<p>我们配置无线的目的是使你的无线设备加入到当前局域网中，所以需要在AP和无线站点创建一条虚拟线路。现在的无线局域网都是基于802.11协议，我们需要配置的就是频段，模式，SSID，加密方式和密码。</p>
-<p>配置好AP之后，无线设备通过SSID访问AP，并通过密码连接AP，连接成功后无线设备和树莓派就在同一个局域网了，此时AP仅仅起到交换机的作用。如果宽带是类似校园网的登陆验证方式此时可以直接使用了。</p>
-<p>如果是拨号宽带，还需要配置路由器功能。首先配置网卡（eth0），pppoe模式，需要输入用户和密码，认证通过后运营商才会分配一个IP。除此之外，还要将有线接口和无线AP接口连接起来，然后开启局域网DHCP服务器，用于给局域网的设备分配内网地址(家用路由器NAT功能是自动开启的)。</p>
+                <h1 id="搭建ss服务器"><a href="#搭建ss服务器" class="headerlink" title="搭建ss服务器"></a>搭建ss服务器</h1><h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><p>首先需要有一台外网服务器和xshell等ssh远程连接工具。通过xshell连接服务器给定的ip和端口，登录验证，然后通过远程shell连接服务器，下面的配置过程一centos 7 x64为例。</p>
+<h2 id="配置ss"><a href="#配置ss" class="headerlink" title="配置ss"></a>配置ss</h2><pre class=" language-lang-shell"><code class="language-lang-shell"># 安装wget
+yum -y install wget
+# 从github上下载ss
+wget --no-check-certificate -O shadowsocks-all.sh https://raw.githubusercontent.com/teddysun/shadowsocks_install/master/shadowsocks-all.sh
+# 给予文件可执行权限
+chmod +x shadowsocks-all.sh
+# 开始安装
+./shadowsocks-all.sh 2>&1 | tee shadowsocks-all.log
+</code></pre>
+<p>安装的过程中会提示你选择哪个版本，选择 Shadowsocks-libev版本。</p>
+<p>然后是让你设定一个连接密码。</p>
+<p>接着设定一个监听的端口号。</p>
+<p>然后选择一种加密方式，这里我选择的是aes-256-gcm。</p>
+<p>接下来问你是否安装simeple-obfs，是y，然后选择tls。</p>
+<p>安装成功后会显示你的ss的所有配置信息。</p>
+<p>如果要修改配置，运行</p>
+<pre class=" language-lang-shell"><code class="language-lang-shell">bash shadowsocks-libev.sh
+</code></pre>
+<p>然后选择第8项：修改 Shadowsocks 配置即可重新设置 Shadowsocks 的密码、端口以及加密方式。</p>
+<p>选择第2项则是卸载ss。也可以运行</p>
+<pre class=" language-lang-shell"><code class="language-lang-shell">./shadowsocks-all.sh uninstall
+</code></pre>
+<p>来卸载。</p>
+<pre class=" language-lang-shell"><code class="language-lang-shell">/etc/init.d/shadowsocks-libev start | stop | restart | status # 启动、停止、重启、查看状态
+</code></pre>
+<p>/etc/shadowsocks-libev/config.json是ss的配置文件。</p>
+<h2 id="ss加速"><a href="#ss加速" class="headerlink" title="ss加速"></a>ss加速</h2><p>下载并执行91yun的一键安装锐速脚本：</p>
+<pre class=" language-lang-shell"><code class="language-lang-shell">wget -N --no-check-certificate https://github.com/91yun/serverspeeder/raw/master/serverspeeder.sh && bash serverspeeder.sh
+</code></pre>
+<p>但是这样直接安装的时候很可能出现内核版本不匹配的问题。因此需要修改系统内核为锐速支持的内核版本。</p>
+<p>centos 6支持的内核版本：2.6.32-504.3.3.el6.x86_64</p>
+<pre class=" language-lang-shell"><code class="language-lang-shell">rpm -ivh http://soft.91yun.org/ISO/Linux/CentOS/kernel/kernel-firmware-2.6.32-504.3.3.el6.noarch.rpm
+
+rpm -ivh http://soft.91yun.org/ISO/Linux/CentOS/kernel/kernel-2.6.32-504.3.3.el6.x86_64.rpm --force
+</code></pre>
+<p>centos 7支持的内核版本：3.10.0-229.1.2.el7.x86_64</p>
+<pre class=" language-lang-shell"><code class="language-lang-shell">rpm -ivh http://soft.91yun.org/ISO/Linux/CentOS/kernel/kernel-3.10.0-229.1.2.el7.x86_64.rpm --force
+</code></pre>
+<p>升级/降级系统内核后执行如下命令查看是否修改成功：</p>
+<pre class=" language-lang-shell"><code class="language-lang-shell">rpm -qa | grep kernel # 查看内核
+reboot
+uname -r # 再次查看内核
+</code></pre>
+<p>锐速加速常用的命令：</p>
+<pre class=" language-lang-shell"><code class="language-lang-shell">service serverSpeeder start #启动
+service serverSpeeder stop #停止
+service serverSpeeder reload #重新加载配置
+service serverSpeeder restart #重启
+service serverSpeeder status #状态
+service serverSpeeder stats #统计
+service serverSpeeder renewLic #更新许可文件
+service serverSpeeder update #更新
+chattr -i /serverspeeder/etc/apx* && /serverspeeder/bin/serverSpeeder.sh uninstall -f #卸载
+</code></pre>
 
                 
             </div>
@@ -593,7 +636,7 @@
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://wht6.github.io/posts/a37c.html">http://wht6.github.io/posts/a37c.html</a>
+                    <a href="http://wht6.github.io/posts/486.html">http://wht6.github.io/posts/486.html</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -631,12 +674,12 @@
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/%E5%B5%8C%E5%85%A5%E5%BC%8F/">
-                                    <span class="chip bg-color">嵌入式</span>
+                                <a href="/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/">
+                                    <span class="chip bg-color">服务器</span>
                                 </a>
                             
-                                <a href="/tags/%E8%B7%AF%E7%94%B1%E5%99%A8/">
-                                    <span class="chip bg-color">路由器</span>
+                                <a href="/tags/ss/">
+                                    <span class="chip bg-color">ss</span>
                                 </a>
                             
                         </div>
@@ -806,9 +849,10 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/posts/486.html">
                     <div class="card-image">
@@ -826,9 +870,9 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2021-06-20
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-06-20
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -837,6 +881,7 @@
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -859,12 +904,13 @@
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/posts/a6cd.html">
+                <a href="/posts/a37c.html">
                     <div class="card-image">
                         
-                        <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="域名系统DNS">
                         
-                        <span class="card-title">域名系统DNS</span>
+                        <img src="/medias/featureimages/1.jpg" class="responsive-img" alt="树莓派安装openwrt">
+                        
+                        <span class="card-title">树莓派安装openwrt</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -888,12 +934,12 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E7%BD%91%E7%BB%9C/">
-                        <span class="chip bg-color">网络</span>
+                    <a href="/tags/%E5%B5%8C%E5%85%A5%E5%BC%8F/">
+                        <span class="chip bg-color">嵌入式</span>
                     </a>
                     
-                    <a href="/tags/DNS/">
-                        <span class="chip bg-color">DNS</span>
+                    <a href="/tags/%E8%B7%AF%E7%94%B1%E5%99%A8/">
+                        <span class="chip bg-color">路由器</span>
                     </a>
                     
                 </div>
