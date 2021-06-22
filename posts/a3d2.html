@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="keywords" content="搭建ss服务器, Pytorch,DeepLearning,Image Segmentation,STM32">
+    <meta name="keywords" content="frp远程访问, Pytorch,DeepLearning,Image Segmentation,STM32">
     <meta name="description" content="专注学习,分享技术,分享知识">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -16,7 +16,7 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-    <title>搭建ss服务器 | WHT</title>
+    <title>frp远程访问 | WHT</title>
     <link rel="icon" type="image/png" href="/favicon_o.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
@@ -388,12 +388,12 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/11.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/14.jpg')">
     <div class="container" style="right: 0px;left: 0px;">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
-                    <h1 class="description center-align post-title">搭建ss服务器</h1>
+                    <h1 class="description center-align post-title">frp远程访问</h1>
                 </div>
             </div>
         </div>
@@ -509,12 +509,12 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/">
-                                <span class="chip bg-color">服务器</span>
+                            <a href="/tags/%E4%BB%A3%E7%90%86/">
+                                <span class="chip bg-color">代理</span>
                             </a>
                         
-                            <a href="/tags/ss/">
-                                <span class="chip bg-color">ss</span>
+                            <a href="/tags/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/">
+                                <span class="chip bg-color">内网穿透</span>
                             </a>
                         
                     </div>
@@ -529,7 +529,7 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-minus fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2021-06-20
+                    2021-06-22
                 </div>
                 
 
@@ -538,7 +538,7 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    617
+                    829
                 </div>
                 
 
@@ -555,60 +555,112 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="搭建ss服务器"><a href="#搭建ss服务器" class="headerlink" title="搭建ss服务器"></a>搭建ss服务器</h1><h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><p>首先需要有一台外网服务器和xshell等ssh远程连接工具。通过xshell连接服务器给定的ip和端口，登录验证，然后通过远程shell连接服务器，下面的配置过程一centos 7 x64为例。</p>
-<h2 id="配置ss"><a href="#配置ss" class="headerlink" title="配置ss"></a>配置ss</h2><pre class=" language-lang-shell"><code class="language-lang-shell"># 安装wget
-yum -y install wget
-# 从github上下载ss
-wget --no-check-certificate -O shadowsocks-all.sh https://raw.githubusercontent.com/teddysun/shadowsocks_install/master/shadowsocks-all.sh
-# 给予文件可执行权限
-chmod +x shadowsocks-all.sh
-# 开始安装
-./shadowsocks-all.sh 2>&1 | tee shadowsocks-all.log
+                <h1 id="frp远程访问"><a href="#frp远程访问" class="headerlink" title="frp远程访问"></a>frp远程访问</h1><h2 id="frp原理"><a href="#frp原理" class="headerlink" title="frp原理"></a>frp原理</h2><p>frp主要进行反向代理，将数据包定向转发，多用于内网穿透。</p>
+<p>下图以SSH为例，说明frp是如何实现内网穿透的。</p>
+<p><img src="https://raw.githubusercontent.com/wht6/image/master/img/yuanli.png" alt></p>
+<p>frp通过建立上图的三个通道，并把三个通道进行连通，即实现了ssh的内网穿透。</p>
+<p>具体步骤如下：</p>
+<p>1）frpc注册frps，两者建立TCP连接，frpc将端口映射信息发送给frps，frps根据端口映射信息建立连接池，监听固定端口的连接。</p>
+<p>2）位于因特网的ssh客户端向frps发送连接请求，frps向frpc发送请求信息，frpc收到后请求ssh服务端建立连接，若连接失败，则frpc通过frps向ssh客户端发送连接失败的信息，否则ssh服务端通过frpc和frps发送验证请求到ssh客户端。</p>
+<p>3）ssh客户端通过frps和frpc发送用户名和密码到ssh服务端，ssh服务段验证成功后返回连接成功的消息，并等待数据的发送，否则验证失败断开连接。</p>
+<h2 id="frp配置"><a href="#frp配置" class="headerlink" title="frp配置"></a>frp配置</h2><p><a target="_blank" rel="noopener" href="https://github.com/fatedier/frp/releases">frp下载地址</a></p>
+<p>下载之后解压：</p>
+<pre class=" language-lang-shell"><code class="language-lang-shell">tar -zxvf frp_0.34.3_linux_amd64.tar.gz
 </code></pre>
-<p>安装的过程中会提示你选择哪个版本，选择 Shadowsocks-libev版本。</p>
-<p>然后是让你设定一个连接密码。</p>
-<p>接着设定一个监听的端口号。</p>
-<p>然后选择一种加密方式，这里我选择的是aes-256-gcm。</p>
-<p>接下来问你是否安装simeple-obfs，是y，然后选择tls。</p>
-<p>安装成功后会显示你的ss的所有配置信息。</p>
-<p>如果要修改配置，运行</p>
-<pre class=" language-lang-shell"><code class="language-lang-shell">bash shadowsocks-libev.sh
-</code></pre>
-<p>然后选择第8项：修改 Shadowsocks 配置即可重新设置 Shadowsocks 的密码、端口以及加密方式。</p>
-<p>选择第2项则是卸载ss。也可以运行</p>
-<pre class=" language-lang-shell"><code class="language-lang-shell">./shadowsocks-all.sh uninstall
-</code></pre>
-<p>来卸载。</p>
-<pre class=" language-lang-shell"><code class="language-lang-shell">/etc/init.d/shadowsocks-libev start | stop | restart | status # 启动、停止、重启、查看状态
-</code></pre>
-<p>/etc/shadowsocks-libev/config.json是ss的配置文件。</p>
-<h2 id="ss加速"><a href="#ss加速" class="headerlink" title="ss加速"></a>ss加速</h2><p>下载并执行91yun的一键安装锐速脚本：</p>
-<pre class=" language-lang-shell"><code class="language-lang-shell">wget -N --no-check-certificate https://github.com/91yun/serverspeeder/raw/master/serverspeeder.sh && bash serverspeeder.sh
-</code></pre>
-<p>但是这样直接安装的时候很可能出现内核版本不匹配的问题。因此需要修改系统内核为锐速支持的内核版本。</p>
-<p>centos 6支持的内核版本：2.6.32-504.3.3.el6.x86_64</p>
-<pre class=" language-lang-shell"><code class="language-lang-shell">rpm -ivh http://soft.91yun.org/ISO/Linux/CentOS/kernel/kernel-firmware-2.6.32-504.3.3.el6.noarch.rpm
+<h3 id="配置frps"><a href="#配置frps" class="headerlink" title="配置frps"></a>配置frps</h3><p>修改配置文件frps.ini</p>
+<pre class=" language-lang-shell"><code class="language-lang-shell"> # 通用配置
+ [common]
+ # bind_addr = 0.0.0.0 # 指定监听的地址，默认监听所有网段
+ bind_port = 7000 # frps的监听端口，用于与frpc连接
 
-rpm -ivh http://soft.91yun.org/ISO/Linux/CentOS/kernel/kernel-2.6.32-504.3.3.el6.x86_64.rpm --force
+ dashboard_port = 7500 # frps的web控制面板的端口号，web界面用于查看和管理连接信息
+ dashboard_user = user # web控制面板的用户名
+ dashboard_pwd = pass # web控制面板的登陆密码
+
+ authentication_method = token # 口令验证
+ token = xxxxx # frpc连接时的验证密码
+
+ # max_pool_count = 100 # 连接池最大连接数量
 </code></pre>
-<p>centos 7支持的内核版本：3.10.0-229.1.2.el7.x86_64</p>
-<pre class=" language-lang-shell"><code class="language-lang-shell">rpm -ivh http://soft.91yun.org/ISO/Linux/CentOS/kernel/kernel-3.10.0-229.1.2.el7.x86_64.rpm --force
+<pre class=" language-lang-shell"><code class="language-lang-shell">./frps -c ./frps.ini # shell启动frps服务
 </code></pre>
-<p>升级/降级系统内核后执行如下命令查看是否修改成功：</p>
-<pre class=" language-lang-shell"><code class="language-lang-shell">rpm -qa | grep kernel # 查看内核
-reboot
-uname -r # 再次查看内核
+<p>通过浏览器输入（服务器IP:端口）可访问web控制面板。</p>
+<h3 id="配置frpc"><a href="#配置frpc" class="headerlink" title="配置frpc"></a>配置frpc</h3><p>修改配置文件frpc.ini</p>
+<pre class=" language-lang-shell"><code class="language-lang-shell"> [common]
+ server_addr = xx.xx.xx.xx # frps服务器的公网ip
+ authentication_method = token # 口令验证
+ token = xxxxx # frps连接密码 
+ server_port = 7000 # frps用于连接的服务端口
+
+ # ssh映射
+ [Fusion-ssh]
+ type = tcp
+ local_ip = 127.0.0.1 
+ local_port = 22
+ remote_port = 20022 
+
+
+ # rdp映射
+ [Fusion-rdp]
+ type = tcp
+ local_ip = 127.0.0.1
+ local_port = 3389
+ remote_port = 23389
 </code></pre>
-<p>锐速加速常用的命令：</p>
-<pre class=" language-lang-shell"><code class="language-lang-shell">service serverSpeeder start #启动
-service serverSpeeder stop #停止
-service serverSpeeder reload #重新加载配置
-service serverSpeeder restart #重启
-service serverSpeeder status #状态
-service serverSpeeder stats #统计
-service serverSpeeder renewLic #更新许可文件
-service serverSpeeder update #更新
-chattr -i /serverspeeder/etc/apx* && /serverspeeder/bin/serverSpeeder.sh uninstall -f #卸载
+<pre class=" language-lang-shell"><code class="language-lang-shell">./frps -c ./frps.ini # shell启动frpc
+</code></pre>
+<p>内网服务器开启ssh：</p>
+<pre class=" language-lang-shell"><code class="language-lang-shell">vim /etc/ssh/sshd_config # ssh的配置文件
+</code></pre>
+<p>修改30几行，permitrootlogin改成yes，允许root登录</p>
+<p>pubkeyauthentication改成yes,允许公钥认证</p>
+<pre class=" language-lang-shell"><code class="language-lang-shell">systemctl restart ssh # 或/etc/init.d/ssh restart 重启ssh服务
+update-rc.d ssh enable # 允许开机自启动ssh
+</code></pre>
+<p>此时，ssh客户端连接frps的20022端口，frps通过代理就可以访问ssh服务器的22端口，然后验证并建立连接。</p>
+<p>rdp是远程桌面。</p>
+<h3 id="配置frp自启动"><a href="#配置frp自启动" class="headerlink" title="配置frp自启动"></a>配置frp自启动</h3><pre class=" language-lang-shell"><code class="language-lang-shell">vim /lib/systemd/system/frps.service
+</code></pre>
+<pre class=" language-lang-shell"><code class="language-lang-shell">[Unit]
+Description=fraps service
+After=network.target network-online.target syslog.target
+Wants=network.target network-online.target
+
+[Service]
+Type=simple
+
+# 启动服务的命令（此处写你的frps的实际安装目录）
+ExecStart=/your/path/frps -c /your/path/frps.ini
+
+[Install]
+WantedBy=multi-user.target
+</code></pre>
+<pre class=" language-lang-shell"><code class="language-lang-shell">systemctl start frps # 开启
+systemctl enable frps # 自启动
+systemctl status frps # 状态
+</code></pre>
+<pre class=" language-lang-shell"><code class="language-lang-shell">vim /etc/systemd/system/frps.service # etc或lib都行
+</code></pre>
+<pre class=" language-lang-shell"><code class="language-lang-shell"> [Fusion]
+ Description=Frp Server Daemon
+ After=syslog.target network.target
+ Wants=network.target
+
+ [Service]
+ Type=simple
+ ExecStart=/usr/local/bin/frp/frpc -c /usr/local/bin/frp/frpc.ini # 修改为你的frpc实际安装目录
+ ExecStop=/usr/bin/killall frpc
+
+ RestartSec=1min #启动失败1分钟后再次启动
+ KillMode=control-group
+ Restart=always #重启控制：总是重启
+
+ [Install]
+ WantedBy=multi-user.target
+</code></pre>
+<pre class=" language-lang-shell"><code class="language-lang-shell">systemctl start frpc.service # 开启
+systemctl enable frpc.service # 自启动
+systemctl status frpc.service # 状态
 </code></pre>
 
                 
@@ -636,7 +688,7 @@ chattr -i /serverspeeder/etc/apx* && /serverspeeder/bin/serverSpeeder.sh uninsta
                     </i>
                 </span>
                 <span class="reprint-info">
-                    <a href="http://wht6.github.io/posts/486.html">http://wht6.github.io/posts/486.html</a>
+                    <a href="http://wht6.github.io/posts/a3d2.html">http://wht6.github.io/posts/a3d2.html</a>
                 </span>
             </div>
             <div class="reprint__notice">
@@ -674,12 +726,12 @@ chattr -i /serverspeeder/etc/apx* && /serverspeeder/bin/serverSpeeder.sh uninsta
                     
                         <div class="article-tag">
                             
-                                <a href="/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/">
-                                    <span class="chip bg-color">服务器</span>
+                                <a href="/tags/%E4%BB%A3%E7%90%86/">
+                                    <span class="chip bg-color">代理</span>
                                 </a>
                             
-                                <a href="/tags/ss/">
-                                    <span class="chip bg-color">ss</span>
+                                <a href="/tags/%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/">
+                                    <span class="chip bg-color">内网穿透</span>
                                 </a>
                             
                         </div>
@@ -849,9 +901,10 @@ chattr -i /serverspeeder/etc/apx* && /serverspeeder/bin/serverSpeeder.sh uninsta
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fas fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="far fa-dot-circle"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/posts/a3d2.html">
                     <div class="card-image">
@@ -868,9 +921,9 @@ chattr -i /serverspeeder/etc/apx* && /serverspeeder/bin/serverSpeeder.sh uninsta
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="far fa-clock fa-fw icon-date"></i>2021-06-22
-                        </span>
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-06-22
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fas fa-user fa-fw"></i>
@@ -879,6 +932,7 @@ chattr -i /serverspeeder/etc/apx* && /serverspeeder/bin/serverSpeeder.sh uninsta
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -901,12 +955,12 @@ chattr -i /serverspeeder/etc/apx* && /serverspeeder/bin/serverSpeeder.sh uninsta
                 下一篇&nbsp;<i class="fas fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/posts/a37c.html">
+                <a href="/posts/486.html">
                     <div class="card-image">
                         
-                        <img src="/medias/featureimages/10.jpg" class="responsive-img" alt="树莓派安装openwrt">
+                        <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="搭建ss服务器">
                         
-                        <span class="card-title">树莓派安装openwrt</span>
+                        <span class="card-title">搭建ss服务器</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -917,7 +971,7 @@ chattr -i /serverspeeder/etc/apx* && /serverspeeder/bin/serverSpeeder.sh uninsta
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="far fa-clock fa-fw icon-date"></i>2021-06-06
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-06-20
                             </span>
                         <span class="publish-author">
                             
@@ -930,12 +984,12 @@ chattr -i /serverspeeder/etc/apx* && /serverspeeder/bin/serverSpeeder.sh uninsta
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/%E5%B5%8C%E5%85%A5%E5%BC%8F/">
-                        <span class="chip bg-color">嵌入式</span>
+                    <a href="/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/">
+                        <span class="chip bg-color">服务器</span>
                     </a>
                     
-                    <a href="/tags/%E8%B7%AF%E7%94%B1%E5%99%A8/">
-                        <span class="chip bg-color">路由器</span>
+                    <a href="/tags/ss/">
+                        <span class="chip bg-color">ss</span>
                     </a>
                     
                 </div>
