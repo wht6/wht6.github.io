@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>go语句及其执行规则 | WHT</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="WHT,WHT's Blog" />
+  
+  <meta name="description" content="Don’t communicate by sharing memory; share memory by communicating.  &amp;nbsp; 从 Go 语言编程的角度解释，这句话的意思就是：不要通过共享数据来通讯，恰恰相反，要以通讯的方式共享数据。&amp;nbsp;我们已经知道，通道（也就是 channel）类型的值，可以被用来以通讯的方式共享数据。更具体地说，它一般被用来在不同的 goro">
+<meta property="og:type" content="article">
+<meta property="og:title" content="go语句及其执行规则">
+<meta property="og:url" content="http://wht6.github.io/posts/fd28.html">
+<meta property="og:site_name" content="WHT">
+<meta property="og:description" content="Don’t communicate by sharing memory; share memory by communicating.  &amp;nbsp; 从 Go 语言编程的角度解释，这句话的意思就是：不要通过共享数据来通讯，恰恰相反，要以通讯的方式共享数据。&amp;nbsp;我们已经知道，通道（也就是 channel）类型的值，可以被用来以通讯的方式共享数据。更具体地说，它一般被用来在不同的 goro">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/wht6/image/master/img/mpg_2022302.png">
+<meta property="article:published_time" content="2022-03-03T02:00:00.000Z">
+<meta property="article:modified_time" content="2022-03-03T01:55:46.622Z">
+<meta property="article:author" content="并指如刀">
+<meta property="article:tag" content="Go语言">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/wht6/image/master/img/mpg_2022302.png">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<script src="/js/pace.min.js"></script>
+
+  
+
+  
+  
+
+<style type="text/css" lang="css">
+    #loading-container{
+        position: fixed;
+        top: 0;
+        left: 0;
+        min-height: 100vh;
+        width: 100vw;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: #FFF;
+        text-align: center;
+        /* loader页面消失采用渐隐的方式*/
+        -webkit-transition: opacity 1s ease;
+        -moz-transition: opacity 1s ease;
+        -o-transition: opacity 1s ease;
+        transition: opacity 1s ease;
+    }
+    .loading-image{
+        width: 120px;
+        height: 50px;
+        transform: translate(-50%);
+    }
+    
+    .loading-image div:nth-child(2) {
+        -webkit-animation: pacman-balls 1s linear 0s infinite;
+        animation: pacman-balls 1s linear 0s infinite
+    }
+
+    .loading-image div:nth-child(3) {
+        -webkit-animation: pacman-balls 1s linear .33s infinite;
+        animation: pacman-balls 1s linear .33s infinite
+    }
+
+    .loading-image div:nth-child(4) {
+        -webkit-animation: pacman-balls 1s linear .66s infinite;
+        animation: pacman-balls 1s linear .66s infinite
+    }
+
+    .loading-image div:nth-child(5) {
+        -webkit-animation: pacman-balls 1s linear .99s infinite;
+        animation: pacman-balls 1s linear .99s infinite
+    }
+    
+   .loading-image div:first-of-type {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_up .5s 0s infinite;
+        animation: rotate_pacman_half_up .5s 0s infinite;
+    }
+    .loading-image div:nth-child(2) {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_down .5s 0s infinite;
+        animation: rotate_pacman_half_down .5s 0s infinite;
+        margin-top: -50px;
+    }
+    @-webkit-keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @-webkit-keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+
+    @keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+    
+    @-webkit-keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+
+    @keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+    
+   
+    .loading-image div:nth-child(3),
+    .loading-image div:nth-child(4),
+    .loading-image div:nth-child(5),
+    .loading-image div:nth-child(6){
+        background-color: #49b1f5;
+        width: 15px;
+        height: 15px;
+        border-radius: 100%;
+        margin: 2px;
+        width: 10px;
+        height: 10px;
+        position: absolute;
+        transform: translateY(-6.25px);
+        top: 25px;
+        left: 100px;
+    }
+    .loading-text{
+        margin-bottom: 20vh;
+        text-align: center;
+        color: #2c3e50;
+        font-size: 2rem;
+        box-sizing: border-box;
+        padding: 0 10px;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    @media only screen and (max-width: 500px) {
+         .loading-text{
+            font-size: 1.5rem;
+         }
+    }
+    .fadeout {
+        opacity: 0;
+        filter: alpha(opacity=0);
+    }
+    /* logo出现动画 */
+    @-webkit-keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);transform:translate3d(0,-100%,0)}100%{opacity:1;-webkit-transform:none;transform:none}}
+    @keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);}}
+ </style>
+ <script>
+(function () {
+    const loaded = function(){
+       setTimeout(function(){
+            const loader = document.getElementById("loading-container");
+            loader.className="fadeout" ;//使用渐隐的方法淡出loading page
+            // document.getElementById("body-wrap").style.display="flex";
+            setTimeout(function(){
+                loader.style.display="none";
+            },1000); 
+        },1000);//强制显示loading page 1s  
+    };
+    loaded();
+})()
+ </script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="WHT" type="application/atom+xml">
+</head>
+
+
+ <div id="loading-container">
+     <p class="loading-text">玩命加载中 . . . </p> 
+     <div class="loading-image">
+         <div></div>
+         <div></div>
+         <div></div>
+         <div></div> 
+         <div></div>
+     </div>
+ </div><body>
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">WHT&#39;s Blog</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a  href="/">
+                        <i class="fa fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    
+                    <a  href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>Archives</span>
+                    </a>
+                    
+                    <a  href="/about">
+                        <i class="fa fa-user"></i>
+                        <span>About</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/logo.png" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        WHT&#39;s Blog
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        一个专注运维开发的技术博客
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="WHT&#39;s Blog" target="_blank" href="//wht6.github.io">
+                            <i class="fa fa-home fa-2x"></i></a>
+                    
+                        <a title="Github" target="_blank" href="//github.com/wht6">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                        <a title="Weibo" target="_blank" href="//weibo.com/wht6">
+                            <i class="fa fa-weibo fa-2x"></i></a>
+                    
+                        <a title="Twitter" target="_blank" href="//twitter.com/wht6">
+                            <i class="fa fa-twitter fa-2x"></i></a>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="post-go语句及其执行规则" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="post-title" itemprop="name">
+      go语句及其执行规则
+    </h1>
+    <div class="post-title-bar">
+      <ul>
+          
+              <li>
+                  <i class="fa fa-book"></i>
+                  
+                      <a href="/categories/编程/">编程</a>
+                  
+              </li>
+          
+        <li>
+          <i class="fa fa-calendar"></i>  2022-03-03
+        </li>
+        <li>
+          <i class="fa fa-eye"></i>
+          <span id="busuanzi_value_page_pv"></span>
+        </li>
+      </ul>
+    </div>
+  
+
+          
+      </header>
+    
+    <div class="article-entry post-content" itemprop="articleBody">
+      
+            
+            <blockquote>
+<p>Don’t communicate by sharing memory; share memory by communicating.</p>
+</blockquote>
+<p>&nbsp;</p>
+<p>从 Go 语言编程的角度解释，这句话的意思就是：不要通过共享数据来通讯，恰恰相反，要以通讯的方式共享数据。<br>&nbsp;<br>我们已经知道，通道（也就是 channel）类型的值，可以被用来以通讯的方式共享数据。更具体地说，它一般被用来在不同的 goroutine 之间传递数据。那么 goroutine 到底代表着什么呢？<br>&nbsp;<br>简单来说，goroutine 代表着并发编程模型中的用户级线程。你可能已经知道，操作系统本身提供了进程和线程，这两种并发执行程序的工具。<br>&nbsp;</p>
+<h3 id="进程与线程"><a href="#进程与线程" class="headerlink" title="进程与线程"></a>进程与线程</h3><p>&nbsp;<br>进程，描述的就是程序的执行过程，是运行着的程序的代表。换句话说，一个进程其实就是某个程序运行时的一个产物。如果说静静地躺在那里的代码就是程序的话，那么奔跑着的、正在发挥着既有功能的代码就可以被称为进程。<br>&nbsp;<br>我们的电脑为什么可以同时运行那么多应用程序？我们的手机为什么可以有那么多 App 同时在后台刷新？这都是因为在它们的操作系统之上有多个代表着不同应用程序或 App 的进程在同时运行。<br>&nbsp;<br>再来说说线程。首先，线程总是在进程之内的，它可以被视为进程中运行着的控制流（或者说代码执行的流程）。<br>&nbsp;<br>一个进程至少会包含一个线程。如果一个进程只包含了一个线程，那么它里面的所有代码都只会被串行地执行。每个进程的第一个线程都会随着该进程的启动而被创建，它们可以被称为其所属进程的主线程。<br>&nbsp;<br>相对应的，如果一个进程中包含了多个线程，那么其中的代码就可以被并发地执行。除了进程的第一个线程之外，其他的线程都是由进程中已存在的线程创建出来的。<br>&nbsp;<br>也就是说，主线程之外的其他线程都只能由代码显式地创建和销毁。这需要我们在编写程序的时候进行手动控制，操作系统以及进程本身并不会帮我们下达这样的指令，它们只会忠实地执行我们的指令。<br>&nbsp;<br>不过，在 Go 程序当中，Go 语言的运行时（runtime）系统会帮助我们自动地创建和销毁系统级的线程。这里的系统级线程指的就是我们刚刚说过的操作系统提供的线程。<br>&nbsp;<br>而对应的用户级线程指的是架设在系统级线程之上的，由用户（或者说我们编写的程序）完全控制的代码执行流程。用户级线程的创建、销毁、调度、状态变更以及其中的代码和数据都完全需要我们的程序自己去实现和处理。<br>&nbsp;<br>这带来了很多优势，比如，因为它们的创建和销毁并不用通过操作系统去做，所以速度会很快，又比如，由于不用等着操作系统去调度它们的运行，所以往往会很容易控制并且可以很灵活。<br>&nbsp;<br>但是，劣势也是有的，最明显也最重要的一个劣势就是复杂。如果我们只使用了系统级线程，那么我们只要指明需要新线程执行的代码片段，并且下达创建或销毁线程的指令就好了，其他的一切具体实现都会由操作系统代劳。<br>&nbsp;<br>但是，如果使用用户级线程，我们就不得不既是指令下达者，又是指令执行者。我们必须全权负责与用户级线程有关的所有具体实现。<br>&nbsp;<br>操作系统不但不会帮忙，还会要求我们的具体实现必须与它正确地对接，否则用户级线程就无法被并发地，甚至正确地运行。毕竟我们编写的所有代码最终都需要通过操作系统才能在计算机上执行。这听起来就很麻烦，不是吗？<br>&nbsp;<br><strong>不过别担心，Go 语言不但有着独特的并发编程模型，以及用户级线程 goroutine，还拥有强大的用于调度 goroutine、对接系统级线程的调度器。</strong><br>&nbsp;<br>这个调度器是 Go 语言运行时系统的重要组成部分，它主要负责统筹调配 Go 并发编程模型中的三个主要元素，即：G（goroutine 的缩写）、P（processor 的缩写）和 M（machine 的缩写）。<br>&nbsp;<br>其中的 M 指代的就是系统级线程。而 P 指的是一种可以承载若干个 G，且能够使这些 G 适时地与 M 进行对接，并得到真正运行的中介。<br>&nbsp;<br>从宏观上说，G 和 M 由于 P 的存在可以呈现出多对多的关系。当一个正在与某个 M 对接并运行着的 G，需要因某个事件（比如等待 I/O 或锁的解除）而暂停运行的时候，调度器总会及时地发现，并把这个 G 与那个 M 分离开，以释放计算资源供那些等待运行的 G 使用。<br>&nbsp;<br>而当一个 G 需要恢复运行的时候，调度器又会尽快地为它寻找空闲的计算资源（包括 M）并安排运行。另外，当 M 不够用时，调度器会帮我们向操作系统申请新的系统级线程，而当某个 M 已无用时，调度器又会负责把它及时地销毁掉。<br>&nbsp;<br>正因为调度器帮助我们做了很多事，所以我们的 Go 程序才总是能高效地利用操作系统和计算机资源。程序中的所有 goroutine 也都会被充分地调度，其中的代码也都会被并发地运行，即使这样的 goroutine 有数以十万计，也仍然可以如此。<br>&nbsp;<br><img src="https://raw.githubusercontent.com/wht6/image/master/img/mpg_2022302.png" alt><br>&nbsp;<br>Go 语言实现了一套非常完善的运行时系统，保证了我们的程序在高并发的情况下依旧能够稳定、高效地运行。<br>&nbsp;</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"> </span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="number">10</span>; i++ &#123;</span><br><span class="line">		<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">			fmt.Println(i)</span><br><span class="line">		&#125;()</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>&nbsp;</p>
+<p>在<code>main</code>函数中写了一条<code>for</code>语句。这条<code>for</code>语句中的代码会迭代运行 10 次，并有一个局部变量<code>i</code>代表着当次迭代的序号，该序号是从<code>0</code>开始的。</p>
+<p>&nbsp;<br>在这条<code>for</code>语句中仅有一条<code>go</code>语句，这条<code>go</code>语句中也仅有一条语句。这条最里面的语句调用了<code>fmt.Println</code>函数并想要打印出变量<code>i</code>的值。<br>&nbsp;<br>这个程序很简单，三条语句逐条嵌套。我的具体问题是：这个命令源码文件被执行后会打印出什么内容？<br>&nbsp;<br>答案是：不会有任何内容被打印出来。<br>&nbsp;<br>与一个进程总会有一个主线程类似，每一个独立的 Go 程序在运行时也总会有一个主 goroutine。这个主 goroutine 会在 Go 程序的运行准备工作完成后被自动地启用，并不需要我们做任何手动的操作。<br>&nbsp;<br>想必你已经知道，每条<code>go</code>语句一般都会携带一个函数调用，这个被调用的函数常常被称为<code>go</code>函数。而主 goroutine 的<code>go</code>函数就是那个作为程序入口的<code>main</code>函数。<br>&nbsp;<br>一定要注意，<code>go</code>函数真正被执行的时间，总会与其所属的<code>go</code>语句被执行的时间不同。当程序执行到一条<code>go</code>语句的时候，Go 语言的运行时系统，会先试图从某个存放空闲的 G 的队列中获取一个 G（也就是 goroutine），它只有在找不到空闲 G 的情况下才会去创建一个新的 G。<br>&nbsp;<br>这也是为什么我总会说“启用”一个 goroutine，而不说“创建”一个 goroutine 的原因。已存在的 goroutine 总是会被优先复用。<br>&nbsp;<br>然而，创建 G 的成本也是非常低的。创建一个 G 并不会像新建一个进程或者一个系统级线程那样，必须通过操作系统的系统调用来完成，在 Go 语言的运行时系统内部就可以完全做到了，更何况一个 G 仅相当于为需要并发执行代码片段服务的上下文环境而已。<br>&nbsp;<br>在拿到了一个空闲的 G 之后，Go 语言运行时系统会用这个 G 去包装当前的那个<code>go</code>函数（或者说该函数中的那些代码），然后再把这个 G 追加到某个存放可运行的 G 的队列中。<br>&nbsp;<br>这类队列中的 G 总是会按照先入先出的顺序，很快地由运行时系统内部的调度器安排运行。虽然这会很快，但是由于上面所说的那些准备工作还是不可避免的，所以耗时还是存在的。<br>&nbsp;<br>因此，<code>go</code>函数的执行时间总是会明显滞后于它所属的<code>go</code>语句的执行时间。当然了，这里所说的“明显滞后”是对于计算机的 CPU 时钟和 Go 程序来说的。我们在大多数时候都不会有明显的感觉。<br>&nbsp;<br>在说明了原理之后，我们再来看这种原理下的表象。请记住，只要<code>go</code>语句本身执行完毕，Go 程序完全不会等待<code>go</code>函数的执行，它会立刻去执行后边的语句。这就是所谓的异步并发地执行。<br>&nbsp;<br>这里“后边的语句”指的一般是<code>for</code>语句中的下一个迭代。然而，当最后一个迭代运行的时候，这个“后边的语句”是不存在的。<br>&nbsp;<br>上面程序中的那条<code>for</code>语句会以很快的速度执行完毕。当它执行完毕时，那 10 个包装了<code>go</code>函数的 goroutine 往往还没有获得运行的机会。<br>&nbsp;<br>请注意，<code>go</code>函数中的那个对<code>fmt.Println</code>函数的调用是以<code>for</code>语句中的变量<code>i</code>作为参数的。你可以想象一下，如果当<code>for</code>语句执行完毕的时候，这些<code>go</code>函数都还没有执行，那么它们引用的变量<code>i</code>的值将会是什么？<br>&nbsp;<br>它们都会是<code>10</code>，对吗？那么这道题的答案会是“打印出 10 个<code>10</code>”，是这样吗？<br>&nbsp;<br>在确定最终的答案之前，你还需要知道一个与主 goroutine 有关的重要特性，即：一旦主 goroutine 中的代码（也就是<code>main</code>函数中的那些代码）执行完毕，当前的 Go 程序就会结束运行。<br>&nbsp;<br>如此一来，如果在 Go 程序结束的那一刻，还有 goroutine 未得到运行机会，那么它们就真的没有运行机会了，它们中的代码也就不会被执行了。<br>&nbsp;<br>我们刚才谈论过，当<code>for</code>语句的最后一个迭代运行的时候，其中的那条<code>go</code>语句即是最后一条语句。所以，在执行完这条<code>go</code>语句之后，主 goroutine 中的代码也就执行完了，Go 程序会立即结束运行。那么，如果这样的话，还会有任何内容被打印出来吗？<br>&nbsp;<br>严谨地讲，Go 语言并不会去保证这些 goroutine 会以怎样的顺序运行。由于主 goroutine 会与我们手动启用的其他 goroutine 一起接受调度，又因为调度器很可能会在 goroutine 中的代码只执行了一部分的时候暂停，以期所有的 goroutine 有更公平的运行机会。<br>&nbsp;<br>所以哪个 goroutine 先执行完、哪个 goroutine 后执行完往往是不可预知的，除非我们使用了某种 Go 语言提供的方式进行了人为干预。然而，在这段代码中，我们并没有进行任何人为干预。</p>
+<p>&nbsp;</p>
+<p>一旦主 goroutine 中的代码执行完毕，当前的 Go 程序就会结束运行，无论其他的 goroutine 是否已经在运行了。那么，怎样才能做到等其他的 goroutine 运行完毕之后，再让主 goroutine 结束运行呢？<br>&nbsp;<br>其实有很多办法可以做到这一点。其中，最简单粗暴的办法就是让主 goroutine“小睡”一会儿。<br>&nbsp;<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="number">10</span>; i++ &#123;</span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">		fmt.Println(i)</span><br><span class="line">	&#125;()</span><br><span class="line">&#125;</span><br><span class="line">time.Sleep(time.Millisecond * <span class="number">500</span>)</span><br></pre></td></tr></table></figure><br>&nbsp;</p>
+<p>在<code>for</code>语句的后边，我调用了<code>time</code>包的<code>Sleep</code>函数，并把<code>time.Millisecond * 500</code>的结果作为参数值传给了它。<code>time.Sleep</code>函数的功能就是让当前的 goroutine（在这里就是主 goroutine）暂停运行一段时间，直到到达指定的恢复运行时间。</p>
+<p>&nbsp;<br>我们可以把一个相对的时间传给该函数，就像我在这里传入的“500 毫秒”那样。<code>time.Sleep</code>函数会在被调用时用当前的绝对时间，再加上相对时间计算出在未来的恢复运行时间。显然，一旦到达恢复运行时间，当前的 goroutine 就会从“睡眠”中醒来，并开始继续执行后边的代码。<br>&nbsp;<br>这个办法是可行的，只要“睡眠”的时间不要太短就好。不过，问题恰恰就在这里，我们让主 goroutine“睡眠”多长时间才是合适的呢？如果“睡眠”太短，则很可能不足以让其他的 goroutine 运行完毕，而若“睡眠”太长则纯属浪费时间，这个时间就太难把握了。<br>&nbsp;<br>你是否想到了通道呢？我们先创建一个通道，它的长度应该与我们手动启用的 goroutine 的数量一致。在每个手动启用的 goroutine 即将运行完毕的时候，我们都要向该通道发送一个值。<br>&nbsp;<br>注意，这些发送表达式应该被放在它们的<code>go</code>函数体的最后面。对应的，我们还需要在<code>main</code>函数的最后从通道接收元素值，接收的次数也应该与手动启用的 goroutine 的数量保持一致。<br>&nbsp;<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	num := <span class="number">10</span></span><br><span class="line">	sign := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">struct</span>&#123;&#125;, num)</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; num; i++ &#123;</span><br><span class="line">		<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">			fmt.Println(i)</span><br><span class="line">			sign &lt;- <span class="keyword">struct</span>&#123;&#125;&#123;&#125;</span><br><span class="line">		&#125;()</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">for</span> j := <span class="number">0</span>; j &lt; num; j++ &#123;</span><br><span class="line">		&lt;-sign</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>&nbsp;</p>
+<p>其中有一个细节你需要注意。我在声明通道<code>sign</code>的时候是以<code>chan struct&#123;&#125;</code>作为其类型的。其中的类型字面量<code>struct&#123;&#125;</code>有些类似于空接口类型<code>interface&#123;&#125;</code>，它代表了既不包含任何字段也不拥有任何方法的空结构体类型。</p>
+<p>&nbsp;<br>注意，<code>struct&#123;&#125;</code>类型值的表示法只有一个，即：<code>struct&#123;&#125;&#123;&#125;</code>。并且，它占用的内存空间是<code>0</code>字节。确切地说，这个值在整个 Go 程序中永远都只会存在一份。虽然我们可以无数次地使用这个值字面量，但是用到的却都是同一个值。<br>&nbsp;<br>当我们仅仅把通道当作传递某种简单信号的介质的时候，用<code>struct&#123;&#125;</code>作为其元素类型是再好不过的了。<br>&nbsp;<br>有没有比使用通道更好的方法？如果你知道标准库中的代码包<code>sync</code>的话，那么可能会想到<code>sync.WaitGroup</code>类型。没错，这是一个更好的答案。<br>&nbsp;<br><strong>怎样让我们启用的多个 goroutine 按照既定的顺序运行？</strong><br>&nbsp;<br>怎样做到让从<code>0</code>到<code>9</code>这几个整数按照自然数的顺序打印出来？你可能会说，我不用 goroutine 不就可以了嘛。没错，这样是可以，但是如果我不考虑这样做呢。你应该怎么解决这个问题？<br>&nbsp;<br>首先，我们需要稍微改造一下<code>for</code>语句中的那个<code>go</code>函数，要让它接受一个<code>int</code>类型的参数，并在调用它的时候把变量<code>i</code>的值传进去。为了不改动这个<code>go</code>函数中的其他代码，我们可以把它的这个参数也命名为<code>i</code>。<br>&nbsp;<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="number">10</span>; i++ &#123;</span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">(i <span class="keyword">int</span>)</span></span> &#123;</span><br><span class="line">		fmt.Println(i)</span><br><span class="line">	&#125;(i)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>&nbsp;</p>
+<p>只有这样，Go 语言才能保证每个 goroutine 都可以拿到一个唯一的整数。其原因与<code>go</code>函数的执行时机有关。</p>
+<p>&nbsp;<br>我在前面已经讲过了。在<code>go</code>语句被执行时，我们传给<code>go</code>函数的参数<code>i</code>会先被求值，如此就得到了当次迭代的序号。之后，无论<code>go</code>函数会在什么时候执行，这个参数值都不会变。也就是说，<code>go</code>函数中调用的<code>fmt.Println</code>函数打印的一定会是那个当次迭代的序号。<br>&nbsp;<br>然后，我们在着手改造<code>for</code>语句中的<code>go</code>函数。<br>&nbsp;<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i := <span class="keyword">uint32</span>(<span class="number">0</span>); i &lt; <span class="number">10</span>; i++ &#123;</span><br><span class="line">	<span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">(i <span class="keyword">uint32</span>)</span></span> &#123;</span><br><span class="line">		fn := <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">			fmt.Println(i)</span><br><span class="line">		&#125;</span><br><span class="line">		trigger(i, fn)</span><br><span class="line">	&#125;(i)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>&nbsp;</p>
+<p>我在<code>go</code>函数中先声明了一个匿名的函数，并把它赋给了变量<code>fn</code>。这个匿名函数做的事情很简单，只是调用<code>fmt.Println</code>函数以打印<code>go</code>函数的参数<code>i</code>的值。</p>
+<p>&nbsp;<br>在这之后，我调用了一个名叫<code>trigger</code>的函数，并把<code>go</code>函数的参数<code>i</code>和刚刚声明的变量<code>fn</code>作为参数传给了它。注意，<code>for</code>语句声明的局部变量<code>i</code>和<code>go</code>函数的参数<code>i</code>的类型都变了，都由<code>int</code>变为了<code>uint32</code>。至于为什么，我一会儿再说。<br>&nbsp;<br>再来说<code>trigger</code>函数。该函数接受两个参数，一个是<code>uint32</code>类型的参数<code>i</code>, 另一个是<code>func()</code>类型的参数<code>fn</code>。你应该记得，<code>func()</code>代表的是既无参数声明也无结果声明的函数类型。<br>&nbsp;<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">trigger := <span class="function"><span class="keyword">func</span><span class="params">(i <span class="keyword">uint32</span>, fn <span class="keyword">func</span>()</span>)</span> &#123;</span><br><span class="line">	<span class="keyword">for</span> &#123;</span><br><span class="line">		<span class="keyword">if</span> n := atomic.LoadUint32(&amp;count); n == i &#123;</span><br><span class="line">			fn()</span><br><span class="line">			atomic.AddUint32(&amp;count, <span class="number">1</span>)</span><br><span class="line">			<span class="keyword">break</span></span><br><span class="line">		&#125;</span><br><span class="line">		time.Sleep(time.Nanosecond)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>&nbsp;</p>
+<p><code>trigger</code>函数会不断地获取一个名叫<code>count</code>的变量的值（提前声明变量<code>count</code>，默认值为0），并判断该值是否与参数<code>i</code>的值相同。如果相同，那么就立即调用<code>fn</code>代表的函数，然后把<code>count</code>变量的值加<code>1</code>，最后显式地退出当前的循环。否则，我们就先让当前的 goroutine“睡眠”一个纳秒再进入下一个迭代。</p>
+<p>&nbsp;<br>注意，我操作变量<code>count</code>的时候使用的都是原子操作。这是由于<code>trigger</code>函数会被多个 goroutine 并发地调用，所以它用到的非本地变量<code>count</code>，就被多个用户级线程共用了。因此，对它的操作就产生了竞态条件（race condition），破坏了程序的并发安全性。<br>&nbsp;<br>所以，我们总是应该对这样的操作加以保护，在<code>sync/atomic</code>包中声明了很多用于原子操作的函数。另外，由于我选用的原子操作函数对被操作的数值的类型有约束，所以我才对<code>count</code>以及相关的变量和参数的类型进行了统一的变更（由<code>int</code>变为了<code>uint32</code>）。<br>&nbsp;<br>纵观<code>count</code>变量、<code>trigger</code>函数以及改造后的<code>for</code>语句和<code>go</code>函数，我要做的是，让<code>count</code>变量成为一个信号，它的值总是下一个可以调用打印函数的<code>go</code>函数的序号。<br>&nbsp;<br>这个序号其实就是启用 goroutine 时，那个当次迭代的序号。也正因为如此，<code>go</code>函数实际的执行顺序才会与<code>go</code>语句的执行顺序完全一致。此外，这里的<code>trigger</code>函数实现了一种自旋（spinning）。除非发现条件已满足，否则它会不断地进行检查。<br>&nbsp;<br>最后要说的是，因为我依然想让主 goroutine 最后一个运行完毕，所以还需要加一行代码。不过既然有了<code>trigger</code>函数，我就没有再使用通道。<br>&nbsp;<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">trigger(<span class="number">10</span>, <span class="function"><span class="keyword">func</span><span class="params">()</span></span>&#123;&#125;)</span><br></pre></td></tr></table></figure><br>&nbsp;</p>
+<p>调用<code>trigger</code>函数完全可以达到相同的效果。由于当所有我手动启用的 goroutine 都运行完毕之后，<code>count</code>的值一定会是<code>10</code>，所以我就把<code>10</code>作为了第一个参数值。又由于我并不想打印这个<code>10</code>，所以我把一个什么都不做的函数作为了第二个参数值。</p>
+<p>&nbsp;<br>总之，通过上述的改造，我使得异步发起的<code>go</code>函数得到了同步地（或者说按照既定顺序地）执行，你也可以动手自己试一试，感受一下。</p>
+<p>&nbsp;<br>&nbsp;</p>
+<p>参考链接：<a target="_blank" rel="noopener" href="https://time.geekbang.org/column/intro/112">https://time.geekbang.org/column/intro/112</a></p>
+
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2022年03月03日 09:55</p>
+        <p>原始链接： <a class="post-url" href="/posts/fd28.html" title="go语句及其执行规则">http://wht6.github.io/posts/fd28.html</a></p>
+        <footer>
+            <a href="http://wht6.github.io">
+                <img src="/images/logo.png" alt="并指如刀">
+                并指如刀
+            </a>
+        </footer>
+    </div>
+</div>
+
+      
+        
+            
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;">赏</a>
+</div>
+
+<div id="reward" class="post-modal reward-lay">
+    <a class="close" href="javascript:;" id="reward-close">×</a>
+    <span class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我吃糖~
+        <i class="icon icon-quote-right"></i>
+    </span>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/images/wechat_code.jpg" alt="打赏二维码">
+        </div>
+        <div class="reward-select">
+            
+            <label class="reward-select-item checked" data-id="wechat" data-wechat="/images/wechat_code.jpg">
+                <img class="reward-select-item-wechat" src="/images/wechat.png" alt="微信">
+            </label>
+            
+            
+            <label class="reward-select-item" data-id="alipay" data-alipay="/images/alipay_code.jpg">
+                <img class="reward-select-item-alipay" src="/images/alipay.png" alt="支付宝">
+            </label>
+            
+        </div>
+    </div>
+</div>
+
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://wht6.github.io/posts/fd28.html&title=《go语句及其执行规则》 — WHT&pic=/images/featureimages/42.jpg" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://wht6.github.io/posts/fd28.html&title=《go语句及其执行规则》 — WHT&source=分享技术,分享知识,分享感悟" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://wht6.github.io/posts/fd28.html" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《go语句及其执行规则》 — WHT&url=http://wht6.github.io/posts/fd28.html&via=http://wht6.github.io" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://wht6.github.io/posts/fd28.html" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://wht6.github.io/posts/fd28.html" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/Go语言/" class="color5">Go语言</a>
+      
+  </li>
+
+        </ul>
+        
+    </footer>
+  </div>
+</article>
+
+
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B"><span class="post-toc-text">进程与线程</span></a></li></ol>
+        </nav>
+    </aside>
+    
+
+<nav id="article-nav">
+  
+    <a href="/posts/b742.html" id="article-nav-newer" class="article-nav-link-wrap">
+
+      <span class="article-nav-title">
+        <i class="fa fa-hand-o-left" aria-hidden="true"></i>
+        
+          Go语言的基本流程控制语句
+        
+      </span>
+    </a>
+  
+  
+    <a href="/posts/8fcc.html" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">Golang的指针</span>
+      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    </a>
+  
+</nav>
+
+
+
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2022 并指如刀<br>
+      </p>
+    </div>
+  </div>
+</footer>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "http://wht6.github.io",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 1
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
+</div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            <a class="category-link" href="/categories/Linux/">Linux</a><a class="category-link" href="/categories/%E4%B8%AA%E4%BA%BA%E5%85%B4%E8%B6%A3/">个人兴趣</a><a class="category-link" href="/categories/%E4%BA%91%E8%AE%A1%E7%AE%97/">云计算</a><a class="category-link" href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/">嵌入式</a><a class="category-link" href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a><a class="category-link" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a>
+        </div>
+        <div id="sidebar-menu-box-tags">
+            <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Go%E8%AF%AD%E8%A8%80/" style="font-size: 20px;">Go语言</a> <a href="/tags/Python%E8%AF%AD%E8%A8%80/" style="font-size: 16.67px;">Python语言</a> <a href="/tags/pytorch/" style="font-size: 10px;">pytorch</a> <a href="/tags/%E4%BB%A3%E7%90%86/" style="font-size: 10px;">代理</a> <a href="/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 10px;">包管理</a> <a href="/tags/%E5%AE%9E%E4%BE%8B%E5%88%86%E5%89%B2/" style="font-size: 13.33px;">实例分割</a> <a href="/tags/%E5%AE%B9%E5%99%A8/" style="font-size: 10px;">容器</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 13.33px;">工具</a> <a href="/tags/%E6%80%9D%E7%BB%B4/" style="font-size: 10px;">思维</a> <a href="/tags/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/" style="font-size: 16.67px;">文件系统</a> <a href="/tags/%E6%97%A5%E5%BF%97/" style="font-size: 10px;">日志</a> <a href="/tags/%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86/" style="font-size: 10px;">权限管理</a> <a href="/tags/%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86/" style="font-size: 10px;">用户管理</a> <a href="/tags/%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">磁盘管理</a> <a href="/tags/%E7%AE%A1%E9%81%93/" style="font-size: 10px;">管道</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">系统配置</a> <a href="/tags/%E7%BD%91%E7%AB%99/" style="font-size: 10px;">网站</a> <a href="/tags/%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/" style="font-size: 10px;">网站搭建</a> <a href="/tags/%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">网络配置</a> <a href="/tags/%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1/" style="font-size: 10px;">计划任务</a> <a href="/tags/%E8%B7%AF%E7%94%B1%E5%99%A8/" style="font-size: 10px;">路由器</a> <a href="/tags/%E8%BF%9B%E7%A8%8B/" style="font-size: 10px;">进程</a> <a href="/tags/%E9%81%93%E5%AE%B6/" style="font-size: 10px;">道家</a> <a href="/tags/%E9%87%8D%E5%AE%9A%E5%90%91/" style="font-size: 10px;">重定向</a> <a href="/tags/%E9%98%BF%E9%87%8C%E4%BA%91/" style="font-size: 13.33px;">阿里云</a>
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a  href="/">
+                    <i class="fa fa-home"></i><span>Home</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/archives">
+                    <i class="fa fa-archive"></i><span>Archives</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/about">
+                    <i class="fa fa-user"></i><span>About</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Go%E8%AF%AD%E8%A8%80/" style="font-size: 20px;">Go语言</a> <a href="/tags/Python%E8%AF%AD%E8%A8%80/" style="font-size: 16.67px;">Python语言</a> <a href="/tags/pytorch/" style="font-size: 10px;">pytorch</a> <a href="/tags/%E4%BB%A3%E7%90%86/" style="font-size: 10px;">代理</a> <a href="/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 10px;">包管理</a> <a href="/tags/%E5%AE%9E%E4%BE%8B%E5%88%86%E5%89%B2/" style="font-size: 13.33px;">实例分割</a> <a href="/tags/%E5%AE%B9%E5%99%A8/" style="font-size: 10px;">容器</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 13.33px;">工具</a> <a href="/tags/%E6%80%9D%E7%BB%B4/" style="font-size: 10px;">思维</a> <a href="/tags/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/" style="font-size: 16.67px;">文件系统</a> <a href="/tags/%E6%97%A5%E5%BF%97/" style="font-size: 10px;">日志</a> <a href="/tags/%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86/" style="font-size: 10px;">权限管理</a> <a href="/tags/%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86/" style="font-size: 10px;">用户管理</a> <a href="/tags/%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">磁盘管理</a> <a href="/tags/%E7%AE%A1%E9%81%93/" style="font-size: 10px;">管道</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">系统配置</a> <a href="/tags/%E7%BD%91%E7%AB%99/" style="font-size: 10px;">网站</a> <a href="/tags/%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/" style="font-size: 10px;">网站搭建</a> <a href="/tags/%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">网络配置</a> <a href="/tags/%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1/" style="font-size: 10px;">计划任务</a> <a href="/tags/%E8%B7%AF%E7%94%B1%E5%99%A8/" style="font-size: 10px;">路由器</a> <a href="/tags/%E8%BF%9B%E7%A8%8B/" style="font-size: 10px;">进程</a> <a href="/tags/%E9%81%93%E5%AE%B6/" style="font-size: 10px;">道家</a> <a href="/tags/%E9%87%8D%E5%AE%9A%E5%90%91/" style="font-size: 10px;">重定向</a> <a href="/tags/%E9%98%BF%E9%87%8C%E4%BA%91/" style="font-size: 13.33px;">阿里云</a>
+        </div>
+    </div>
+</div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+
+
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  
+<script src="/js/particles.js"></script>
+
+
+
+
+
+
+
+
+  
+<link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  
+<script src="/js/animate.js"></script>
+
+
+
+  
+<script src="/js/pop-img.js"></script>
+
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/ Relative)","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"left","width":100,"height":180},"mobile":{"show":false},"react":{"opacityDefault":0.7}});</script></body>
+</html>

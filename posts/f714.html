@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Linux网络管理 | WHT</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="WHT,WHT's Blog" />
+  
+  <meta name="description" content="Linux网络配置 传统上，Linux网络接口被枚举为eth0、eth1、eth2，eth表示以太网。现在的命令规则是以太网以en开头，WLAN接口以wl开头，WWLAN接口以ww开头，接着下一个字符表示适配器的类型，o表示板载，s表示热插拔，p表示PCI。 &#x2F;etc&#x2F;sysconfig&#x2F;network-scripts目录中是关于网卡的配置文件。（扩展：如果网卡配置文件未没保存就异常退出，这时候">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux网络管理">
+<meta property="og:url" content="http://wht6.github.io/posts/f714.html">
+<meta property="og:site_name" content="WHT">
+<meta property="og:description" content="Linux网络配置 传统上，Linux网络接口被枚举为eth0、eth1、eth2，eth表示以太网。现在的命令规则是以太网以en开头，WLAN接口以wl开头，WWLAN接口以ww开头，接着下一个字符表示适配器的类型，o表示板载，s表示热插拔，p表示PCI。 &#x2F;etc&#x2F;sysconfig&#x2F;network-scripts目录中是关于网卡的配置文件。（扩展：如果网卡配置文件未没保存就异常退出，这时候">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-11-11T02:00:00.000Z">
+<meta property="article:modified_time" content="2022-03-15T02:48:34.643Z">
+<meta property="article:author" content="并指如刀">
+<meta property="article:tag" content="网络配置">
+<meta name="twitter:card" content="summary">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<script src="/js/pace.min.js"></script>
+
+  
+
+  
+  
+
+<style type="text/css" lang="css">
+    #loading-container{
+        position: fixed;
+        top: 0;
+        left: 0;
+        min-height: 100vh;
+        width: 100vw;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: #FFF;
+        text-align: center;
+        /* loader页面消失采用渐隐的方式*/
+        -webkit-transition: opacity 1s ease;
+        -moz-transition: opacity 1s ease;
+        -o-transition: opacity 1s ease;
+        transition: opacity 1s ease;
+    }
+    .loading-image{
+        width: 120px;
+        height: 50px;
+        transform: translate(-50%);
+    }
+    
+    .loading-image div:nth-child(2) {
+        -webkit-animation: pacman-balls 1s linear 0s infinite;
+        animation: pacman-balls 1s linear 0s infinite
+    }
+
+    .loading-image div:nth-child(3) {
+        -webkit-animation: pacman-balls 1s linear .33s infinite;
+        animation: pacman-balls 1s linear .33s infinite
+    }
+
+    .loading-image div:nth-child(4) {
+        -webkit-animation: pacman-balls 1s linear .66s infinite;
+        animation: pacman-balls 1s linear .66s infinite
+    }
+
+    .loading-image div:nth-child(5) {
+        -webkit-animation: pacman-balls 1s linear .99s infinite;
+        animation: pacman-balls 1s linear .99s infinite
+    }
+    
+   .loading-image div:first-of-type {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_up .5s 0s infinite;
+        animation: rotate_pacman_half_up .5s 0s infinite;
+    }
+    .loading-image div:nth-child(2) {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_down .5s 0s infinite;
+        animation: rotate_pacman_half_down .5s 0s infinite;
+        margin-top: -50px;
+    }
+    @-webkit-keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @-webkit-keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+
+    @keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+    
+    @-webkit-keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+
+    @keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+    
+   
+    .loading-image div:nth-child(3),
+    .loading-image div:nth-child(4),
+    .loading-image div:nth-child(5),
+    .loading-image div:nth-child(6){
+        background-color: #49b1f5;
+        width: 15px;
+        height: 15px;
+        border-radius: 100%;
+        margin: 2px;
+        width: 10px;
+        height: 10px;
+        position: absolute;
+        transform: translateY(-6.25px);
+        top: 25px;
+        left: 100px;
+    }
+    .loading-text{
+        margin-bottom: 20vh;
+        text-align: center;
+        color: #2c3e50;
+        font-size: 2rem;
+        box-sizing: border-box;
+        padding: 0 10px;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    @media only screen and (max-width: 500px) {
+         .loading-text{
+            font-size: 1.5rem;
+         }
+    }
+    .fadeout {
+        opacity: 0;
+        filter: alpha(opacity=0);
+    }
+    /* logo出现动画 */
+    @-webkit-keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);transform:translate3d(0,-100%,0)}100%{opacity:1;-webkit-transform:none;transform:none}}
+    @keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);}}
+ </style>
+ <script>
+(function () {
+    const loaded = function(){
+       setTimeout(function(){
+            const loader = document.getElementById("loading-container");
+            loader.className="fadeout" ;//使用渐隐的方法淡出loading page
+            // document.getElementById("body-wrap").style.display="flex";
+            setTimeout(function(){
+                loader.style.display="none";
+            },1000); 
+        },1000);//强制显示loading page 1s  
+    };
+    loaded();
+})()
+ </script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="WHT" type="application/atom+xml">
+</head>
+
+
+ <div id="loading-container">
+     <p class="loading-text">玩命加载中 . . . </p> 
+     <div class="loading-image">
+         <div></div>
+         <div></div>
+         <div></div>
+         <div></div> 
+         <div></div>
+     </div>
+ </div><body>
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">WHT&#39;s Blog</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a  href="/">
+                        <i class="fa fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    
+                    <a  href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>Archives</span>
+                    </a>
+                    
+                    <a  href="/about">
+                        <i class="fa fa-user"></i>
+                        <span>About</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/logo.png" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        WHT&#39;s Blog
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        一个专注运维开发的技术博客
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="WHT&#39;s Blog" target="_blank" href="//wht6.github.io">
+                            <i class="fa fa-home fa-2x"></i></a>
+                    
+                        <a title="Github" target="_blank" href="//github.com/wht6">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                        <a title="Weibo" target="_blank" href="//weibo.com/wht6">
+                            <i class="fa fa-weibo fa-2x"></i></a>
+                    
+                        <a title="Twitter" target="_blank" href="//twitter.com/wht6">
+                            <i class="fa fa-twitter fa-2x"></i></a>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="post-Linux网络管理" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="post-title" itemprop="name">
+      Linux网络管理
+    </h1>
+    <div class="post-title-bar">
+      <ul>
+          
+              <li>
+                  <i class="fa fa-book"></i>
+                  
+                      <a href="/categories/Linux/">Linux</a>
+                  
+              </li>
+          
+        <li>
+          <i class="fa fa-calendar"></i>  2021-11-11
+        </li>
+        <li>
+          <i class="fa fa-eye"></i>
+          <span id="busuanzi_value_page_pv"></span>
+        </li>
+      </ul>
+    </div>
+  
+
+          
+      </header>
+    
+    <div class="article-entry post-content" itemprop="articleBody">
+      
+            
+            <hr>
+<h2 id="Linux网络配置"><a href="#Linux网络配置" class="headerlink" title="Linux网络配置"></a>Linux网络配置</h2><ul>
+<li>传统上，Linux网络接口被枚举为eth0、eth1、eth2，eth表示以太网。现在的命令规则是以太网以en开头，WLAN接口以wl开头，WWLAN接口以ww开头，接着下一个字符表示适配器的类型，o表示板载，s表示热插拔，p表示PCI。</li>
+<li>/etc/sysconfig/network-scripts目录中是关于网卡的配置文件。（扩展：如果网卡配置文件未没保存就异常退出，这时候会导致网卡不工作，原因是系统自动为你创建了一个备份文件.swap文件，这是个隐藏文件，你需要ls -a去查看到，然后rm -rf删除之。）</li>
+<li>网络管理器（NetworkManager）是一个动态网络的控制器与配置系统，作用是当网络设备可用时，保持设备和连接开启并激活。systemctl status NetworkManager是查看NetworkManager的运行状态，network是NetworkManager的一个子程序，查看network的状态用systemctl status network。</li>
+<li>查看主机上的所有网卡：nmcli device。n是网络，m是管理。</li>
+<li>用命令打开网卡配置的图形界面：nm-connection-editor，简易图形界面：nmtui。</li>
+<li>在配置网卡的时候先备份一下，cp /etc/sysconfig/network-scripts/ifcfg-ens33 .，备份到当前目录。</li>
+<li>配置网卡ens33，ONBOOT表示是否启动该设备，如果为no表示禁用该设备。BOOTPROTO表示启动的协议，协议有三种情况，dhcp自动、none手动和static静态，dhcp：dynamic host configuration protocal。IPADDR、NETMASK表示手动配置IP地址和子网掩码。GATEWAY表示手动配置网关地址。DNS表示域名服务器地址（正常是DNS1=xxx，DNS2=xxx）。NAME是网卡的名字。UUID是网卡的ID。</li>
+<li>查看IP。ip a。</li>
+<li>查看主机名。hostname。</li>
+<li>配置主机名。hostnamectl set-hostname wht.example.com，主机名是写在文件/etc/hostname中的，所以也可以用vim /etc/hostname来修改主机名。配置之后重启生效。</li>
+<li>查看网关。ip route。</li>
+<li>查看邻居。ip neigh。</li>
+<li>查看服务端口号。ss -tnl。t是tcp，n是number，l是list。</li>
+<li>扩展：systemctl stop firewall是临时关闭防火墙，开机会还原。systemctl disable firewall是禁用防火墙，开机不会还原。可以用systemctl status firewall查看防火墙的状态。selinux是安全内置防火墙，临时关闭使用setenforce 0，永久关闭vim /etc/sysconfig/selinux修改SELINUX为disabled。</li>
+<li>扩展：安装一些常用工具，上传下载工具lrzsz。sysstat。elinks。wget。net-tools。bash-completion。</li>
+<li>扩展：IP地址可以看做是总地址、全球地址，Mac地址可以看做是分段地址，局部地址。应用层数据：APDU，传输层数据：segment，网络层数据：packet，数据链路层数据：frame，物理层：bit DU。</li>
+</ul>
+<h2 id="交换机和路由器配置"><a href="#交换机和路由器配置" class="headerlink" title="交换机和路由器配置"></a>交换机和路由器配置</h2><ul>
+<li>下面以CPT（Cisco Packet Tracer）为例，介绍交换机2960的配置过程。</li>
+<li>VLAN（虚拟局域网），配置的方法是首先创建VLAN，VLAN的序号是0~1024。直接输入命令VLAN 10就创建了一个序号为10的VLAN。然后是接口与VLAN关联，F0/1~F0/10 VLAN10，表示将接口F0/1~F0/10加入VLAN 10。</li>
+<li>具体步骤：enable进入特权模式(exit退出)，config t进入配置模式(exit退出)，VLAN 10创建VLAN，interface fastethernet0/1(简写int f0/1)进入接口，switch access VLAN 10将接口加入VLAN。特权模式下show vlan可以查看vlan。（扩展：一个从未创建vlan的交换机连接的所有主机默认属于VLAN 1。）</li>
+<li>VLAN如果需要跨越交换机，需要设置trunk(干道)，truck是连接两台交换机的一条线缆，需要将线缆两端的接口配置为trunk口，trunk可以识别帧中的vlan标签，发送到确定的vlan。配置：int f0/3，然后switch mode trunk。扩展：vlan标签只存在于trunk线路，从交换机的trunk口出加vlan标签，进入一台交换机的turnk口，先识别vlan标签，再去除vlan标签。</li>
+<li>为什么需要网络层，只有物理层和数据链路层行不行？不行，原因是对于小的网络可以，但是网络一旦大了，广播域也会很大，交换机是透明的，如果有两万台主机，就相当于这两万台主机直接相连，同样也会有两万个mac地址，这带来了另一个问题，寻址不便，因为mac地址不是结构化的地址，想要所有的主机互联互通，就需要交换机的交换表存两万个地址。除此之外，还有安全问题，因为网络没有隔离，当然还有路由的问题，这么大的网络我的数据包怎么传过去也是个问题。</li>
+<li>路由器需要给接口配置本网段IP地址，路由器接口默认不通电，需要手动打开。命令行输入show ip route查看路由表。</li>
+<li>添加静态路由信息：ip route 192.168.2.0 255.255.255.0 f0/1。</li>
+</ul>
+<h3 id="扩展：虚拟机的网络配置"><a href="#扩展：虚拟机的网络配置" class="headerlink" title="扩展：虚拟机的网络配置"></a>扩展：虚拟机的网络配置</h3><ul>
+<li>虚拟机的网络，配置方法，首先在外边将虚拟机的网卡设置为NAT模式，然后虚拟机里边网卡设置为dhcp，获取ip后查看并记住这个IP和网关，然后更改网卡配置为静态IP，并设置成刚才dhcp设置的那个IP，再重启虚拟机的网络，ping网关测试。所有虚拟机都能通信之后，在你的真机上重启NAT模式的虚拟网卡，让他重新获取一个地址。</li>
+<li>真机上的虚拟机网卡代表的是真机的虚拟网络，注意此时，真机自己的硬件网卡会有一个不同的地址，并与这个虚拟网卡不在同一个网段。虚拟机会虚拟出一个虚拟的网关，这个网关可以共享主机的网络，但是没有网卡对应，也就是看不到，这个虚拟的网关就是你的虚拟机的网关。默认的NAT模式的虚拟网卡是vmnet8，这个vmnet8会同时虚拟出多个网卡，你有几个虚拟机就虚拟出几个网卡，同时为你的真机也虚拟出一个网卡，这些网卡都连接到一个看不见的NAT网关上，所以这些虚拟出来的网卡全部在一个网段中就对了。</li>
+<li>扩展：虚拟机复制粘贴失败，vmware tools灰色的解决方法。在虚拟机设置的CDDVD中映像文件选择vmware安装路径中自带的<code>linux.iso</code>文件，在虚拟机中重新挂载dev中的cdrom，因为只能以只读的方式挂载，所以要把压缩包复制出去在解压，然后运行里面的pl文件重新安装vmware tools。</li>
+</ul>
+<h3 id="域名解析"><a href="#域名解析" class="headerlink" title="域名解析"></a>域名解析</h3><ul>
+<li>hosts文件：Linux：/etc/hosts，Windows：C:\Windows\System32\drivers\etc\hosts。hosts文件是Linux系统上一个负责ip地址与域名快速解析的文件，hosts文件是DNS没出现之前就已经使用的方式。</li>
+<li>优先级：DNS缓存&gt;hosts文件&gt;DNS服务。DNS缓存在内存中，关机就没。</li>
+<li>配置DNS服务器地址，可以在 /etc/sysconfig/network-scripts/ifcfg-ens33里面配置，也可以在/etc/resolv.conf配置（真正起作用的是/etc/resolv.conf）。</li>
+</ul>
+
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2022年03月15日 10:48</p>
+        <p>原始链接： <a class="post-url" href="/posts/f714.html" title="Linux网络管理">http://wht6.github.io/posts/f714.html</a></p>
+        <footer>
+            <a href="http://wht6.github.io">
+                <img src="/images/logo.png" alt="并指如刀">
+                并指如刀
+            </a>
+        </footer>
+    </div>
+</div>
+
+      
+        
+            
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;">赏</a>
+</div>
+
+<div id="reward" class="post-modal reward-lay">
+    <a class="close" href="javascript:;" id="reward-close">×</a>
+    <span class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我吃糖~
+        <i class="icon icon-quote-right"></i>
+    </span>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/images/wechat_code.jpg" alt="打赏二维码">
+        </div>
+        <div class="reward-select">
+            
+            <label class="reward-select-item checked" data-id="wechat" data-wechat="/images/wechat_code.jpg">
+                <img class="reward-select-item-wechat" src="/images/wechat.png" alt="微信">
+            </label>
+            
+            
+            <label class="reward-select-item" data-id="alipay" data-alipay="/images/alipay_code.jpg">
+                <img class="reward-select-item-alipay" src="/images/alipay.png" alt="支付宝">
+            </label>
+            
+        </div>
+    </div>
+</div>
+
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://wht6.github.io/posts/f714.html&title=《Linux网络管理》 — WHT&pic=/images/featureimages/26.jpg" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://wht6.github.io/posts/f714.html&title=《Linux网络管理》 — WHT&source=分享技术,分享知识,分享感悟" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://wht6.github.io/posts/f714.html" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Linux网络管理》 — WHT&url=http://wht6.github.io/posts/f714.html&via=http://wht6.github.io" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://wht6.github.io/posts/f714.html" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://wht6.github.io/posts/f714.html" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/网络配置/" class="color5">网络配置</a>
+      
+  </li>
+
+        </ul>
+        
+    </footer>
+  </div>
+</article>
+
+
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Linux%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE"><span class="post-toc-text">Linux网络配置</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#%E4%BA%A4%E6%8D%A2%E6%9C%BA%E5%92%8C%E8%B7%AF%E7%94%B1%E5%99%A8%E9%85%8D%E7%BD%AE"><span class="post-toc-text">交换机和路由器配置</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#%E6%89%A9%E5%B1%95%EF%BC%9A%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%9A%84%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE"><span class="post-toc-text">扩展：虚拟机的网络配置</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#%E5%9F%9F%E5%90%8D%E8%A7%A3%E6%9E%90"><span class="post-toc-text">域名解析</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+    
+
+<nav id="article-nav">
+  
+    <a href="/posts/57c3.html" id="article-nav-newer" class="article-nav-link-wrap">
+
+      <span class="article-nav-title">
+        <i class="fa fa-hand-o-left" aria-hidden="true"></i>
+        
+          Linux文件服务
+        
+      </span>
+    </a>
+  
+  
+    <a href="/posts/5580.html" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">Linux日志管理</span>
+      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    </a>
+  
+</nav>
+
+
+
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2022 并指如刀<br>
+      </p>
+    </div>
+  </div>
+</footer>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "http://wht6.github.io",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 1
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
+</div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            <a class="category-link" href="/categories/Linux/">Linux</a><a class="category-link" href="/categories/%E4%B8%AA%E4%BA%BA%E5%85%B4%E8%B6%A3/">个人兴趣</a><a class="category-link" href="/categories/%E4%BA%91%E8%AE%A1%E7%AE%97/">云计算</a><a class="category-link" href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/">嵌入式</a><a class="category-link" href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a><a class="category-link" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a>
+        </div>
+        <div id="sidebar-menu-box-tags">
+            <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Go%E8%AF%AD%E8%A8%80/" style="font-size: 20px;">Go语言</a> <a href="/tags/Python%E8%AF%AD%E8%A8%80/" style="font-size: 16.67px;">Python语言</a> <a href="/tags/pytorch/" style="font-size: 10px;">pytorch</a> <a href="/tags/%E4%BB%A3%E7%90%86/" style="font-size: 10px;">代理</a> <a href="/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 10px;">包管理</a> <a href="/tags/%E5%AE%9E%E4%BE%8B%E5%88%86%E5%89%B2/" style="font-size: 13.33px;">实例分割</a> <a href="/tags/%E5%AE%B9%E5%99%A8/" style="font-size: 10px;">容器</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 13.33px;">工具</a> <a href="/tags/%E6%80%9D%E7%BB%B4/" style="font-size: 10px;">思维</a> <a href="/tags/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/" style="font-size: 16.67px;">文件系统</a> <a href="/tags/%E6%97%A5%E5%BF%97/" style="font-size: 10px;">日志</a> <a href="/tags/%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86/" style="font-size: 10px;">权限管理</a> <a href="/tags/%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86/" style="font-size: 10px;">用户管理</a> <a href="/tags/%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">磁盘管理</a> <a href="/tags/%E7%AE%A1%E9%81%93/" style="font-size: 10px;">管道</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">系统配置</a> <a href="/tags/%E7%BD%91%E7%AB%99/" style="font-size: 10px;">网站</a> <a href="/tags/%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/" style="font-size: 10px;">网站搭建</a> <a href="/tags/%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">网络配置</a> <a href="/tags/%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1/" style="font-size: 10px;">计划任务</a> <a href="/tags/%E8%B7%AF%E7%94%B1%E5%99%A8/" style="font-size: 10px;">路由器</a> <a href="/tags/%E8%BF%9B%E7%A8%8B/" style="font-size: 10px;">进程</a> <a href="/tags/%E9%81%93%E5%AE%B6/" style="font-size: 10px;">道家</a> <a href="/tags/%E9%87%8D%E5%AE%9A%E5%90%91/" style="font-size: 10px;">重定向</a> <a href="/tags/%E9%98%BF%E9%87%8C%E4%BA%91/" style="font-size: 13.33px;">阿里云</a>
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a  href="/">
+                    <i class="fa fa-home"></i><span>Home</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/archives">
+                    <i class="fa fa-archive"></i><span>Archives</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/about">
+                    <i class="fa fa-user"></i><span>About</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Go%E8%AF%AD%E8%A8%80/" style="font-size: 20px;">Go语言</a> <a href="/tags/Python%E8%AF%AD%E8%A8%80/" style="font-size: 16.67px;">Python语言</a> <a href="/tags/pytorch/" style="font-size: 10px;">pytorch</a> <a href="/tags/%E4%BB%A3%E7%90%86/" style="font-size: 10px;">代理</a> <a href="/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 10px;">包管理</a> <a href="/tags/%E5%AE%9E%E4%BE%8B%E5%88%86%E5%89%B2/" style="font-size: 13.33px;">实例分割</a> <a href="/tags/%E5%AE%B9%E5%99%A8/" style="font-size: 10px;">容器</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 13.33px;">工具</a> <a href="/tags/%E6%80%9D%E7%BB%B4/" style="font-size: 10px;">思维</a> <a href="/tags/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/" style="font-size: 16.67px;">文件系统</a> <a href="/tags/%E6%97%A5%E5%BF%97/" style="font-size: 10px;">日志</a> <a href="/tags/%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86/" style="font-size: 10px;">权限管理</a> <a href="/tags/%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86/" style="font-size: 10px;">用户管理</a> <a href="/tags/%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">磁盘管理</a> <a href="/tags/%E7%AE%A1%E9%81%93/" style="font-size: 10px;">管道</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">系统配置</a> <a href="/tags/%E7%BD%91%E7%AB%99/" style="font-size: 10px;">网站</a> <a href="/tags/%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/" style="font-size: 10px;">网站搭建</a> <a href="/tags/%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">网络配置</a> <a href="/tags/%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1/" style="font-size: 10px;">计划任务</a> <a href="/tags/%E8%B7%AF%E7%94%B1%E5%99%A8/" style="font-size: 10px;">路由器</a> <a href="/tags/%E8%BF%9B%E7%A8%8B/" style="font-size: 10px;">进程</a> <a href="/tags/%E9%81%93%E5%AE%B6/" style="font-size: 10px;">道家</a> <a href="/tags/%E9%87%8D%E5%AE%9A%E5%90%91/" style="font-size: 10px;">重定向</a> <a href="/tags/%E9%98%BF%E9%87%8C%E4%BA%91/" style="font-size: 13.33px;">阿里云</a>
+        </div>
+    </div>
+</div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+
+
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  
+<script src="/js/particles.js"></script>
+
+
+
+
+
+
+
+
+  
+<link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  
+<script src="/js/animate.js"></script>
+
+
+
+  
+<script src="/js/pop-img.js"></script>
+
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/ Relative)","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"left","width":100,"height":180},"mobile":{"show":false},"react":{"opacityDefault":0.7}});</script></body>
+</html>

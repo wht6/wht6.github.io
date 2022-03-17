@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Go语言的通道 | WHT</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="WHT,WHT's Blog" />
+  
+  <meta name="description" content="作为 Go 语言最有特色的数据类型，通道（channel）完全可以与 goroutine（也可称为 go 程）并驾齐驱，共同代表 Go 语言独有的并发编程模式和编程哲学。 &amp;nbsp; 01|通道的基础知识&amp;nbsp;通道类型的值本身就是并发安全的，这也是 Go 语言自带的、唯一一个可以满足并发安全性的类型。&amp;nbsp;在声明并初始化一个通道的时候，我们需要用到 Go 语言的内建函数make。就像">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go语言的通道">
+<meta property="og:url" content="http://wht6.github.io/posts/461c.html">
+<meta property="og:site_name" content="WHT">
+<meta property="og:description" content="作为 Go 语言最有特色的数据类型，通道（channel）完全可以与 goroutine（也可称为 go 程）并驾齐驱，共同代表 Go 语言独有的并发编程模式和编程哲学。 &amp;nbsp; 01|通道的基础知识&amp;nbsp;通道类型的值本身就是并发安全的，这也是 Go 语言自带的、唯一一个可以满足并发安全性的类型。&amp;nbsp;在声明并初始化一个通道的时候，我们需要用到 Go 语言的内建函数make。就像">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-02-28T03:00:00.000Z">
+<meta property="article:modified_time" content="2022-03-05T02:23:16.271Z">
+<meta property="article:author" content="并指如刀">
+<meta property="article:tag" content="Go语言">
+<meta name="twitter:card" content="summary">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<script src="/js/pace.min.js"></script>
+
+  
+
+  
+  
+
+<style type="text/css" lang="css">
+    #loading-container{
+        position: fixed;
+        top: 0;
+        left: 0;
+        min-height: 100vh;
+        width: 100vw;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: #FFF;
+        text-align: center;
+        /* loader页面消失采用渐隐的方式*/
+        -webkit-transition: opacity 1s ease;
+        -moz-transition: opacity 1s ease;
+        -o-transition: opacity 1s ease;
+        transition: opacity 1s ease;
+    }
+    .loading-image{
+        width: 120px;
+        height: 50px;
+        transform: translate(-50%);
+    }
+    
+    .loading-image div:nth-child(2) {
+        -webkit-animation: pacman-balls 1s linear 0s infinite;
+        animation: pacman-balls 1s linear 0s infinite
+    }
+
+    .loading-image div:nth-child(3) {
+        -webkit-animation: pacman-balls 1s linear .33s infinite;
+        animation: pacman-balls 1s linear .33s infinite
+    }
+
+    .loading-image div:nth-child(4) {
+        -webkit-animation: pacman-balls 1s linear .66s infinite;
+        animation: pacman-balls 1s linear .66s infinite
+    }
+
+    .loading-image div:nth-child(5) {
+        -webkit-animation: pacman-balls 1s linear .99s infinite;
+        animation: pacman-balls 1s linear .99s infinite
+    }
+    
+   .loading-image div:first-of-type {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_up .5s 0s infinite;
+        animation: rotate_pacman_half_up .5s 0s infinite;
+    }
+    .loading-image div:nth-child(2) {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_down .5s 0s infinite;
+        animation: rotate_pacman_half_down .5s 0s infinite;
+        margin-top: -50px;
+    }
+    @-webkit-keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @-webkit-keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+
+    @keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+    
+    @-webkit-keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+
+    @keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+    
+   
+    .loading-image div:nth-child(3),
+    .loading-image div:nth-child(4),
+    .loading-image div:nth-child(5),
+    .loading-image div:nth-child(6){
+        background-color: #49b1f5;
+        width: 15px;
+        height: 15px;
+        border-radius: 100%;
+        margin: 2px;
+        width: 10px;
+        height: 10px;
+        position: absolute;
+        transform: translateY(-6.25px);
+        top: 25px;
+        left: 100px;
+    }
+    .loading-text{
+        margin-bottom: 20vh;
+        text-align: center;
+        color: #2c3e50;
+        font-size: 2rem;
+        box-sizing: border-box;
+        padding: 0 10px;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    @media only screen and (max-width: 500px) {
+         .loading-text{
+            font-size: 1.5rem;
+         }
+    }
+    .fadeout {
+        opacity: 0;
+        filter: alpha(opacity=0);
+    }
+    /* logo出现动画 */
+    @-webkit-keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);transform:translate3d(0,-100%,0)}100%{opacity:1;-webkit-transform:none;transform:none}}
+    @keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);}}
+ </style>
+ <script>
+(function () {
+    const loaded = function(){
+       setTimeout(function(){
+            const loader = document.getElementById("loading-container");
+            loader.className="fadeout" ;//使用渐隐的方法淡出loading page
+            // document.getElementById("body-wrap").style.display="flex";
+            setTimeout(function(){
+                loader.style.display="none";
+            },1000); 
+        },1000);//强制显示loading page 1s  
+    };
+    loaded();
+})()
+ </script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="WHT" type="application/atom+xml">
+</head>
+
+
+ <div id="loading-container">
+     <p class="loading-text">玩命加载中 . . . </p> 
+     <div class="loading-image">
+         <div></div>
+         <div></div>
+         <div></div>
+         <div></div> 
+         <div></div>
+     </div>
+ </div><body>
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">WHT&#39;s Blog</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a  href="/">
+                        <i class="fa fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    
+                    <a  href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>Archives</span>
+                    </a>
+                    
+                    <a  href="/about">
+                        <i class="fa fa-user"></i>
+                        <span>About</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/logo.png" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        WHT&#39;s Blog
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        一个专注运维开发的技术博客
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="WHT&#39;s Blog" target="_blank" href="//wht6.github.io">
+                            <i class="fa fa-home fa-2x"></i></a>
+                    
+                        <a title="Github" target="_blank" href="//github.com/wht6">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                        <a title="Weibo" target="_blank" href="//weibo.com/wht6">
+                            <i class="fa fa-weibo fa-2x"></i></a>
+                    
+                        <a title="Twitter" target="_blank" href="//twitter.com/wht6">
+                            <i class="fa fa-twitter fa-2x"></i></a>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="post-Go语言的通道" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="post-title" itemprop="name">
+      Go语言的通道
+    </h1>
+    <div class="post-title-bar">
+      <ul>
+          
+              <li>
+                  <i class="fa fa-book"></i>
+                  
+                      <a href="/categories/编程/">编程</a>
+                  
+              </li>
+          
+        <li>
+          <i class="fa fa-calendar"></i>  2022-02-28
+        </li>
+        <li>
+          <i class="fa fa-eye"></i>
+          <span id="busuanzi_value_page_pv"></span>
+        </li>
+      </ul>
+    </div>
+  
+
+          
+      </header>
+    
+    <div class="article-entry post-content" itemprop="articleBody">
+      
+            
+            <p>作为 Go 语言最有特色的数据类型，通道（channel）完全可以与 goroutine（也可称为 go 程）并驾齐驱，共同代表 Go 语言独有的并发编程模式和编程哲学。</p>
+<p>&nbsp;</p>
+<h2 id="01-通道的基础知识"><a href="#01-通道的基础知识" class="headerlink" title="01|通道的基础知识"></a>01|通道的基础知识</h2><p>&nbsp;<br>通道类型的值本身就是并发安全的，这也是 Go 语言自带的、唯一一个可以满足并发安全性的类型。<br>&nbsp;<br>在声明并初始化一个通道的时候，我们需要用到 Go 语言的内建函数<code>make</code>。就像用<code>make</code>初始化切片那样，我们传给这个函数的第一个参数应该是代表了通道的具体类型的类型字面量。<br>&nbsp;<br>在声明一个通道类型变量的时候，我们首先要确定该通道类型的元素类型，这决定了我们可以通过这个通道传递什么类型的数据。<br>&nbsp;<br>比如，类型字面量<code>chan int</code>，其中的<code>chan</code>是表示通道类型的关键字，而<code>int</code>则说明了该通道类型的元素类型。又比如，<code>chan string</code>代表了一个元素类型为<code>string</code>的通道类型。<br>&nbsp;<br>在初始化通道的时候，<code>make</code>函数除了必须接收这样的类型字面量作为参数，还可以接收一个<code>int</code>类型的参数用于表示该通道的容量。所谓通道的容量，就是指通道最多可以缓存多少个元素值。由此，虽然这个参数是<code>int</code>类型的，但是它是不能小于<code>0</code>的。<br>&nbsp;<br>当容量为<code>0</code>时，我们可以称通道为非缓冲通道，也就是不带缓冲的通道。而当容量大于<code>0</code>时，我们可以称为缓冲通道，也就是带有缓冲的通道。非缓冲通道和缓冲通道有着不同的数据传递方式。<br>&nbsp;<br><strong>一个通道相当于一个先进先出（FIFO）的队列。也就是说，通道中的各个元素值都是严格地按照发送的顺序排列的，先被发送通道的元素值一定会先被接收。元素值的发送和接收都需要用到操作符<code>&lt;-</code>。我们也可以叫它接送操作符。一个左尖括号紧接着一个减号形象地代表了元素值的传输方向。</strong><br>&nbsp;</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"> </span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	ch1 := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">int</span>, <span class="number">3</span>)</span><br><span class="line">	ch1 &lt;- <span class="number">2</span></span><br><span class="line">	ch1 &lt;- <span class="number">1</span></span><br><span class="line">	ch1 &lt;- <span class="number">3</span></span><br><span class="line">	elem1 := &lt;-ch1</span><br><span class="line">	fmt.Printf(<span class="string">&quot;The first element received from channel ch1: %v\n&quot;</span>,</span><br><span class="line">		elem1)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>&nbsp;</p>
+<p>这里声明并初始化了一个元素类型为<code>int</code>、容量为<code>3</code>的通道<code>ch1</code>，并用三条语句，向该通道先后发送了三个元素值<code>2</code>、<code>1</code>和<code>3</code>。</p>
+<p>&nbsp;<br>这里的语句需要这样写：依次敲入通道变量的名称（比如<code>ch1</code>）、接送操作符<code>&lt;-</code>以及想要发送的元素值（比如<code>2</code>），并且这三者之间最好用空格进行分割。<br>&nbsp;<br>这显然表达了“这个元素值将被发送该通道”这个语义。由于该通道的容量为 3，所以，我可以在通道不包含任何元素值的时候，连续地向该通道发送三个值，此时这三个值都会被缓存在通道之中。<br>&nbsp;<br>当我们需要从通道接收元素值的时候，同样要用接送操作符<code>&lt;-</code>，只不过，这时需要把它写在变量名的左边，用于表达“要从该通道接收一个元素值”的语义。<br>&nbsp;<br>比如：<code>&lt;-ch1</code>，这也可以被叫做接收表达式。在一般情况下，接收表达式的结果将会是通道中的一个元素值。<br>&nbsp;<br>如果我们需要把如此得来的元素值存起来，那么在接收表达式的左边就需要依次添加赋值符号（<code>=</code>或<code>:=</code>）和用于存值的变量的名字。因此，语句<code>elem1 := &lt;-ch1</code>会将最先进入<code>ch1</code>的元素<code>2</code>接收来并存入变量<code>elem1</code>。<br>&nbsp;</p>
+<h3 id="通道的基本特性"><a href="#通道的基本特性" class="headerlink" title="通道的基本特性"></a>通道的基本特性</h3><p>&nbsp;<br>对通道的发送和接收操作的基本特性如下。<br>&nbsp;</p>
+<ol>
+<li>对于同一个通道，发送操作之间是互斥的，接收操作之间也是互斥的。</li>
+<li>发送操作和接收操作中对元素值的处理都是不可分割的。</li>
+<li>发送操作在完全完成之前会被阻塞。接收操作也是如此。<br>&nbsp;<br><strong>第一个基本特性。</strong> 在同一时刻，Go 语言的运行时系统（以下简称运行时系统）只会执行对同一个通道的任意个发送操作中的某一个。直到这个元素值被完全复制进该通道之后，其他针对该通道的发送操作才可能被执行。<br>&nbsp;<br>类似的，在同一时刻，运行时系统也只会执行，对同一个通道的任意个接收操作中的某一个。直到这个元素值完全被移出该通道之后，其他针对该通道的接收操作才可能被执行。即使这些操作是并发执行的也是如此。<br>&nbsp;<br>这里所谓的并发执行，你可以这样认为，多个代码块分别在不同的 goroutine 之中，并有机会在同一个时间段内被执行。<br>&nbsp;<br>另外，对于通道中的同一个元素值来说，发送操作和接收操作之间也是互斥的。例如，虽然会出现，正在被复制进通道但还未复制完成的元素值，但是这时它绝不会被想接收它的一方看到和取走。<br>&nbsp;<br><strong>这里要注意的一个细节是，元素值从外界进入通道时会被复制。更具体地说，进入通道的并不是在接收操作符右边的那个元素值，而是它的副本。</strong><br>&nbsp;<br>另一方面，元素值从通道进入外界时会被移动。这个移动操作实际上包含了两步，第一步是生成正在通道中的这个元素值的副本，并准备给到接收方，第二步是删除在通道中的这个元素值。<br>&nbsp;<br><strong>第二个基本特性。</strong> 这里的“不可分割”的意思是，它们处理元素值时都是一气呵成的，绝不会被打断。<br>&nbsp;<br>例如，发送操作要么还没复制元素值，要么已经复制完毕，绝不会出现只复制了一部分的情况。<br>&nbsp;<br>又例如，接收操作在准备好元素值的副本之后，一定会删除掉通道中的原值，绝不会出现通道中仍有残留的情况。<br>&nbsp;<br>这既是为了保证通道中元素值的完整性，也是为了保证通道操作的唯一性。对于通道中的同一个元素值来说，它只可能是某一个发送操作放入的，同时也只可能被某一个接收操作取出。<br>&nbsp;<br><strong>第三个基本特性。</strong> 一般情况下，发送操作包括了“复制元素值”和“放置副本到通道内部”这两个步骤。<br>&nbsp;<br>在这两个步骤完全完成之前，发起这个发送操作的那句代码会一直阻塞在那里。也就是说，在它之后的代码不会有执行的机会，直到这句代码的阻塞解除。<br>&nbsp;<br>更细致地说，在通道完成发送操作之后，运行时系统会通知这句代码所在的 goroutine，以使它去争取继续运行代码的机会。<br>&nbsp;<br>另外，接收操作通常包含了“复制通道内的元素值”“放置副本到接收方”“删掉原值”三个步骤。<br>&nbsp;<br>在所有这些步骤完全完成之前，发起该操作的代码也会一直阻塞，直到该代码所在的 goroutine 收到了运行时系统的通知并重新获得运行机会为止。<br>&nbsp;<br><strong>如此阻塞代码其实就是为了实现操作的互斥和元素值的完整。</strong><br>&nbsp;</li>
+</ol>
+<h3 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h3><p>&nbsp;<br><strong>发送操作和接收操作在什么时候可能被长时间的阻塞？</strong><br>&nbsp;<br>先说针对<strong>缓冲通道</strong>的情况。如果通道已满，那么对它的所有发送操作都会被阻塞，直到通道中有元素值被接收走。这时，通道会优先通知最早因此而等待的、那个发送操作所在的 goroutine，后者会再次执行发送操作。<br>&nbsp;<br>由于发送操作在这种情况下被阻塞后，它们所在的 goroutine 会顺序地进入通道内部的发送等待队列，所以通知的顺序总是公平的。<br>&nbsp;<br>相对的，如果通道已空，那么对它的所有接收操作都会被阻塞，直到通道中有新的元素值出现。这时，通道会通知最早等待的那个接收操作所在的 goroutine，并使它再次执行接收操作。<br>&nbsp;<br>因此而等待的、所有接收操作所在的 goroutine，都会按照先后顺序被放入通道内部的接收等待队列。<br>&nbsp;<br>对于<strong>非缓冲通道</strong>，情况要简单一些。无论是发送操作还是接收操作，一开始执行就会被阻塞，直到配对的操作也开始执行，才会继续传递。由此可见，非缓冲通道是在用同步的方式传递数据。也就是说，只有收发双方对接上了，数据才会被传递。<br>&nbsp;<br>并且，数据是直接从发送方复制到接收方的，中间并不会用非缓冲通道做中转。相比之下，缓冲通道则在用异步的方式传递数据。<br>&nbsp;<br>在大多数情况下，缓冲通道会作为收发双方的中间件。正如前文所述，元素值会先从发送方复制到缓冲通道，之后再由缓冲通道复制给接收方。但是，当发送操作在执行的时候发现空的通道中，正好有等待的接收操作，那么它会直接把元素值复制给接收方。<br>&nbsp;<br>特别说明一下，由于错误使用通道而造成的阻塞。<br>&nbsp;<br>对于值为<code>nil</code>的通道，不论它的具体类型是什么，对它的发送操作和接收操作都会永久地处于阻塞状态。它们所属的 goroutine 中的任何代码，都不再会被执行。<br>&nbsp;<br>注意，由于通道类型是引用类型，所以它的零值就是<code>nil</code>。换句话说，当我们只声明该类型的变量但没有用<code>make</code>函数对它进行初始化时，该变量的值就会是<code>nil</code>。我们一定不要忘记初始化通道！<br>&nbsp;<br><strong>发送操作和接收操作在什么时候会引发 panic？</strong><br>&nbsp;<br>对于一个已初始化，但并未关闭的通道来说，收发操作一定不会引发 panic。但是通道一旦关闭，再对它进行发送操作，就会引发 panic。<br>&nbsp;<br>另外，如果我们试图关闭一个已经关闭了的通道，也会引发 panic。注意，接收操作是可以感知到通道的关闭的，并能够安全退出。<br>&nbsp;<br>更具体地说，当我们把接收表达式的结果同时赋给两个变量时，第二个变量的类型就是一定<code>bool</code>类型。它的值如果为<code>false</code>就说明通道已经关闭，并且再没有元素值可取了。<br>&nbsp;<br>注意，如果通道关闭时，里面还有元素值未被取出，那么接收表达式的第一个结果，仍会是通道中的某一个元素值，而第二个结果值一定会是<code>true</code>。<br>&nbsp;<br>因此，通过接收表达式的第二个结果值，来判断通道是否关闭是可能有延时的。<br>&nbsp;<br>由于通道的收发操作有上述特性，所以除非有特殊的保障措施，我们千万不要让接收方关闭通道，而应当让发送方做这件事。</p>
+<p>&nbsp;</p>
+<p>通道的长度代表它当前包含的元素值的个数。当通道已满时，其长度会与容量相同。</p>
+<p>&nbsp;</p>
+<h2 id="02-通道的进阶使用"><a href="#02-通道的进阶使用" class="headerlink" title="02|通道的进阶使用"></a>02|通道的进阶使用</h2><p>&nbsp;</p>
+<h3 id="单向通道"><a href="#单向通道" class="headerlink" title="单向通道"></a>单向通道</h3><p>&nbsp;<br>所谓单向通道就是，只能发不能收，或者只能收不能发的通道。一个通道是双向的，还是单向的是由它的类型字面量体现的。<br>&nbsp;<br>还记得我们在上篇文章中说过的接收操作符<code>&lt;-</code>吗？如果我们把它用在通道的类型字面量中，那么它代表的就不是“发送”或“接收”的动作了，而是表示通道的方向。<br>&nbsp;<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> uselessChan = <span class="built_in">make</span>(<span class="keyword">chan</span>&lt;- <span class="keyword">int</span>, <span class="number">1</span>)</span><br></pre></td></tr></table></figure></p>
+<p>&nbsp;</p>
+<p><code>uselessChan</code>变量的类型是<code>chan&lt;- int</code>，容量是<code>1</code>。</p>
+<p>&nbsp;<br>请注意紧挨在关键字<code>chan</code>右边的那个<code>&lt;-</code>，这表示了这个通道是单向的，并且只能发而不能收。<br>&nbsp;<br>类似的，如果这个操作符紧挨在<code>chan</code>的左边，那么就说明该通道只能收不能发。所以，前者可以被简称为发送通道，后者可以被简称为接收通道。<br>&nbsp;<br>注意，与发送操作和接收操作对应，这里的“发”和“收”都是站在操作通道的代码的角度上说的。<br>&nbsp;<br>从上述变量的名字上你也能猜到，这样的通道是没用的。通道就是为了传递数据而存在的，声明一个只有一端（发送端或者接收端）能用的通道没有任何意义。那么，单向通道的用途究竟在哪儿呢？<br>&nbsp;<br>概括地说，单向通道最主要的用途就是约束其他代码的行为。<br>&nbsp;<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">SendInt</span><span class="params">(ch <span class="keyword">chan</span>&lt;- <span class="keyword">int</span>)</span></span> &#123;</span><br><span class="line">	ch &lt;- rand.Intn(<span class="number">1000</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>&nbsp;</p>
+<p>我用<code>func</code>关键字声明了一个叫做<code>SendInt</code>的函数。这个函数只接受一个<code>chan&lt;- int</code>类型的参数。在这个函数中的代码只能向参数<code>ch</code>发送元素值，而不能从它那里接收元素值。这就起到了约束函数行为的作用。</p>
+<p>&nbsp;<br>你可能会问，我自己写的函数自己肯定能确定操作通道的方式，为什么还要再约束？好吧，这个例子可能过于简单了。在实际场景中，这种约束一般会出现在接口类型声明中的某个方法定义上。请看这个叫<code>Notifier</code>的接口类型声明：<br>&nbsp;<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Notifier <span class="keyword">interface</span> &#123;</span><br><span class="line">	SendInt(ch <span class="keyword">chan</span>&lt;- <span class="keyword">int</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>&nbsp;</p>
+<p>在接口类型声明的花括号中，每一行都代表着一个方法的定义。接口中的方法定义与函数声明很类似，但是只包含了方法名称、参数列表和结果列表。</p>
+<p>&nbsp;<br>一个类型如果想成为一个接口类型的实现类型，那么就必须实现这个接口中定义的所有方法。因此，如果我们在某个方法的定义中使用了单向通道类型，那么就相当于在对它的所有实现做出约束。<br>&nbsp;<br>在这里，<code>Notifier</code>接口中的<code>SendInt</code>方法只会接受一个发送通道作为参数，所以，在该接口的所有实现类型中的<code>SendInt</code>方法都会受到限制。这种约束方式还是很有用的，尤其是在我们编写模板代码或者可扩展的程序库的时候。<br>&nbsp;<br>顺便说一下，我们在调用<code>SendInt</code>函数的时候，只需要把一个元素类型匹配的双向通道传给它就行了，没必要用发送通道，因为 Go 语言在这种情况下会自动地把双向通道转换为函数所需的单向通道。<br>&nbsp;<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">intChan1 := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">int</span>, <span class="number">3</span>)</span><br><span class="line">SendInt(intChan1)</span><br></pre></td></tr></table></figure><br>&nbsp;</p>
+<p>在另一个方面，我们还可以在函数声明的结果列表中使用单向通道。如下所示：</p>
+<p>&nbsp;<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">getIntChan</span><span class="params">()</span> &lt;-<span class="title">chan</span> <span class="title">int</span></span> &#123;</span><br><span class="line">	num := <span class="number">5</span></span><br><span class="line">	ch := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">int</span>, num)</span><br><span class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; num; i++ &#123;</span><br><span class="line">		ch &lt;- i</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">close</span>(ch)</span><br><span class="line">	<span class="keyword">return</span> ch</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>&nbsp;</p>
+<p>函数<code>getIntChan</code>会返回一个<code>&lt;-chan int</code>类型的通道，这就意味着得到该通道的程序，只能从通道中接收元素值。这实际上就是对函数调用方的一种约束了。</p>
+<p>&nbsp;<br>另外，我们在 Go 语言中还可以声明函数类型，如果我们在函数类型中使用了单向通道，那么就相等于在约束所有实现了这个函数类型的函数。<br>&nbsp;<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">intChan2 := getIntChan()</span><br><span class="line"><span class="keyword">for</span> elem := <span class="keyword">range</span> intChan2 &#123;</span><br><span class="line">	fmt.Printf(<span class="string">&quot;The element in intChan2: %v\n&quot;</span>, elem)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>&nbsp;</p>
+<p>我把调用<code>getIntChan</code>得到的结果值赋给了变量<code>intChan2</code>，然后用<code>for</code>语句循环地取出了该通道中的所有元素值，并打印出来。</p>
+<p>&nbsp;<br>这里的<code>for</code>语句也可以被称为带有<code>range</code>子句的<code>for</code>语句。它的用法我在后面讲<code>for</code>语句的时候专门说明。现在你只需要知道关于它的三件事。<br>&nbsp;</p>
+<ul>
+<li>一、这样一条<code>for</code>语句会不断地尝试从<code>intChan2</code>种取出元素值，即使<code>intChan2</code>被关闭，它也会在取出所有剩余的元素值之后再结束执行。</li>
+<li>二、当<code>intChan2</code>中没有元素值时，它会被阻塞在有<code>for</code>关键字的那一行，直到有新的元素值可取。</li>
+<li>三、假设<code>intChan2</code>的值为<code>nil</code>，那么它会被永远阻塞在有<code>for</code>关键字的那一行。</li>
+</ul>
+<p>&nbsp;</p>
+<p>这就是带<code>range</code>子句的<code>for</code>语句与通道的联用方式。不过，它是一种用途比较广泛的语句，还可以被用来从其他一些类型的值中获取元素。除此之外，Go 语言还有一种专门为了操作通道而存在的语句：<code>select</code>语句。<br>&nbsp;</p>
+<h3 id="select语句"><a href="#select语句" class="headerlink" title="select语句"></a>select语句</h3><p>&nbsp;</p>
+<h4 id="select语句与通道联用"><a href="#select语句与通道联用" class="headerlink" title="select语句与通道联用"></a>select语句与通道联用</h4><p>&nbsp;<br><code>select</code>语句只能与通道联用，它一般由若干个分支组成。每次执行这种语句的时候，一般只有一个分支中的代码会被运行。<br>&nbsp;<br><code>select</code>语句的分支分为两种，一种叫做候选分支，另一种叫做默认分支。候选分支总是以关键字<code>case</code>开头，后跟一个<code>case</code>表达式和一个冒号，然后我们可以从下一行开始写入当分支被选中时需要执行的语句。<br>&nbsp;<br>默认分支其实就是 default case，因为，当且仅当没有候选分支被选中时它才会被执行，所以它以关键字<code>default</code>开头并直接后跟一个冒号。同样的，我们可以在<code>default:</code>的下一行写入要执行的语句。<br>&nbsp;<br>由于<code>select</code>语句是专为通道而设计的，所以每个<code>case</code>表达式中都只能包含操作通道的表达式，比如接收表达式。<br>&nbsp;<br>当然，如果我们需要把接收表达式的结果赋给变量的话，还可以把这里写成赋值语句或者短变量声明。下面展示一个简单的例子。<br>&nbsp;<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 准备好几个通道。</span></span><br><span class="line">intChannels := [<span class="number">3</span>]<span class="keyword">chan</span> <span class="keyword">int</span>&#123;</span><br><span class="line">	<span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">int</span>, <span class="number">1</span>),</span><br><span class="line">	<span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">int</span>, <span class="number">1</span>),</span><br><span class="line">	<span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">int</span>, <span class="number">1</span>),</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 随机选择一个通道，并向它发送元素值。</span></span><br><span class="line">index := rand.Intn(<span class="number">3</span>)</span><br><span class="line">fmt.Printf(<span class="string">&quot;The index: %d\n&quot;</span>, index)</span><br><span class="line">intChannels[index] &lt;- index</span><br><span class="line"><span class="comment">// 哪一个通道中有可取的元素值，哪个对应的分支就会被执行。</span></span><br><span class="line"><span class="keyword">select</span> &#123;</span><br><span class="line"><span class="keyword">case</span> &lt;-intChannels[<span class="number">0</span>]:</span><br><span class="line">	fmt.Println(<span class="string">&quot;The first candidate case is selected.&quot;</span>)</span><br><span class="line"><span class="keyword">case</span> &lt;-intChannels[<span class="number">1</span>]:</span><br><span class="line">	fmt.Println(<span class="string">&quot;The second candidate case is selected.&quot;</span>)</span><br><span class="line"><span class="keyword">case</span> elem := &lt;-intChannels[<span class="number">2</span>]:</span><br><span class="line">	fmt.Printf(<span class="string">&quot;The third candidate case is selected, the element is %d.\n&quot;</span>, elem)</span><br><span class="line"><span class="keyword">default</span>:</span><br><span class="line">	fmt.Println(<span class="string">&quot;No candidate case is selected!&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>&nbsp;</p>
+<p>我先准备好了三个类型为<code>chan int</code>、容量为<code>1</code>的通道，并把它们存入了一个叫做<code>intChannels</code>的数组。</p>
+<p>&nbsp;<br>然后，我随机选择一个范围在 [0, 2] 的整数，把它作为索引在上述数组中选择一个通道，并向其中发送一个元素值。<br>&nbsp;<br>最后，我用一个包含了三个候选分支的<code>select</code>语句，分别尝试从上述三个通道中接收元素值，哪一个通道中有值，哪一个对应的候选分支就会被执行。后面还有一个默认分支，不过在这里它是不可能被选中的。<br>&nbsp;<br>在使用<code>select</code>语句的时候，我们首先需要注意下面几个事情。<br>&nbsp;</p>
+<ol>
+<li>如果像上述示例那样加入了默认分支，那么无论涉及通道操作的表达式是否有阻塞，<code>select</code>语句都不会被阻塞。如果那几个表达式都阻塞了，或者说都没有满足求值的条件，那么默认分支就会被选中并执行。</li>
+<li>如果没有加入默认分支，那么一旦所有的<code>case</code>表达式都没有满足求值条件，那么<code>select</code>语句就会被阻塞。直到至少有一个<code>case</code>表达式满足条件为止。</li>
+<li>还记得吗？我们可能会因为通道关闭了，而直接从通道接收到一个其元素类型的零值。所以，在很多时候，我们需要通过接收表达式的第二个结果值来判断通道是否已经关闭。一旦发现某个通道关闭了，我们就应该及时地屏蔽掉对应的分支或者采取其他措施。这对于程序逻辑和程序性能都是有好处的。</li>
+<li><code>select</code>语句只能对其中的每一个<code>case</code>表达式各求值一次。所以，如果我们想连续或定时地操作其中的通道的话，就往往需要通过在<code>for</code>语句中嵌入<code>select</code>语句的方式实现。但这时要注意，简单地在<code>select</code>语句的分支中使用<code>break</code>语句，只能结束当前的<code>select</code>语句的执行，而并不会对外层的<code>for</code>语句产生作用。这种错误的用法可能会让这个<code>for</code>语句无休止地运行下去。<br>&nbsp;</li>
+</ol>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">intChan := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">int</span>, <span class="number">1</span>)</span><br><span class="line"><span class="comment">// 一秒后关闭通道。</span></span><br><span class="line">time.AfterFunc(time.Second, <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="built_in">close</span>(intChan)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">select</span> &#123;</span><br><span class="line"><span class="keyword">case</span> _, ok := &lt;-intChan:</span><br><span class="line">	<span class="keyword">if</span> !ok &#123;</span><br><span class="line">		fmt.Println(<span class="string">&quot;The candidate case is closed.&quot;</span>)</span><br><span class="line">		<span class="keyword">break</span></span><br><span class="line">	&#125;</span><br><span class="line">	fmt.Println(<span class="string">&quot;The candidate case is selected.&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>&nbsp;</p>
+<p>我先声明并初始化了一个叫做<code>intChan</code>的通道，然后通过<code>time</code>包中的<code>AfterFunc</code>函数约定在一秒钟之后关闭该通道。</p>
+<p>&nbsp;<br>后面的<code>select</code>语句只有一个候选分支，我在其中利用接收表达式的第二个结果值对<code>intChan</code>通道是否已关闭做了判断，并在得到肯定结果后，通过<code>break</code>语句立即结束当前<code>select</code>语句的执行。<br>&nbsp;</p>
+<h4 id="select语句的分支选择规则"><a href="#select语句的分支选择规则" class="headerlink" title="select语句的分支选择规则"></a><strong><code>select</code>语句的分支选择规则</strong></h4><p>&nbsp;<br>规则如下面所示。<br>&nbsp;</p>
+<ol>
+<li>对于每一个<code>case</code>表达式，都至少会包含一个代表发送操作的发送表达式或者一个代表接收操作的接收表达式，同时也可能会包含其他的表达式。比如，如果<code>case</code>表达式是包含了接收表达式的短变量声明时，那么在赋值符号左边的就可以是一个或两个表达式，不过此处的表达式的结果必须是可以被赋值的。当这样的<code>case</code>表达式被求值时，它包含的多个表达式总会以从左到右的顺序被求值。</li>
+</ol>
+<ol>
+<li><code>select</code>语句包含的候选分支中的<code>case</code>表达式都会在该语句执行开始时先被求值，并且求值的顺序是依从代码编写的顺序从上到下的。结合上一条规则，在<code>select</code>语句开始执行时，排在最上边的候选分支中最左边的表达式会最先被求值，然后是它右边的表达式。仅当最上边的候选分支中的所有表达式都被求值完毕后，从上边数第二个候选分支中的表达式才会被求值，顺序同样是从左到右，然后是第三个候选分支、第四个候选分支，以此类推。</li>
+</ol>
+<ol>
+<li>对于每一个<code>case</code>表达式，如果其中的发送表达式或者接收表达式在被求值时，相应的操作正处于阻塞状态，那么对该<code>case</code>表达式的求值就是不成功的。在这种情况下，我们可以说，这个<code>case</code>表达式所在的候选分支是不满足选择条件的。</li>
+</ol>
+<ol>
+<li>仅当<code>select</code>语句中的所有<code>case</code>表达式都被求值完毕后，它才会开始选择候选分支。这时候，它只会挑选满足选择条件的候选分支执行。如果所有的候选分支都不满足选择条件，那么默认分支就会被执行。如果这时没有默认分支，那么<code>select</code>语句就会立即进入阻塞状态，直到至少有一个候选分支满足选择条件为止。一旦有一个候选分支满足选择条件，<code>select</code>语句（或者说它所在的 goroutine）就会被唤醒，这个候选分支就会被执行。</li>
+</ol>
+<ol>
+<li>如果<code>select</code>语句发现同时有多个候选分支满足选择条件，那么它就会用一种伪随机的算法在这些分支中选择一个并执行。注意，即使<code>select</code>语句是在被唤醒时发现的这种情况，也会这样做。</li>
+</ol>
+<ol>
+<li>一条<code>select</code>语句中只能够有一个默认分支。并且，默认分支只在无候选分支可选时才会被执行，这与它的编写位置无关。</li>
+</ol>
+<ol>
+<li><code>select</code>语句的每次执行，包括<code>case</code>表达式求值和分支选择，都是独立的。不过，至于它的执行是否是并发安全的，就要看其中的<code>case</code>表达式以及分支中，是否包含并发不安全的代码了。</li>
+</ol>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p>参考链接：<a target="_blank" rel="noopener" href="https://time.geekbang.org/column/intro/112">https://time.geekbang.org/column/intro/112</a></p>
+
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2022年03月05日 10:23</p>
+        <p>原始链接： <a class="post-url" href="/posts/461c.html" title="Go语言的通道">http://wht6.github.io/posts/461c.html</a></p>
+        <footer>
+            <a href="http://wht6.github.io">
+                <img src="/images/logo.png" alt="并指如刀">
+                并指如刀
+            </a>
+        </footer>
+    </div>
+</div>
+
+      
+        
+            
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;">赏</a>
+</div>
+
+<div id="reward" class="post-modal reward-lay">
+    <a class="close" href="javascript:;" id="reward-close">×</a>
+    <span class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我吃糖~
+        <i class="icon icon-quote-right"></i>
+    </span>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/images/wechat_code.jpg" alt="打赏二维码">
+        </div>
+        <div class="reward-select">
+            
+            <label class="reward-select-item checked" data-id="wechat" data-wechat="/images/wechat_code.jpg">
+                <img class="reward-select-item-wechat" src="/images/wechat.png" alt="微信">
+            </label>
+            
+            
+            <label class="reward-select-item" data-id="alipay" data-alipay="/images/alipay_code.jpg">
+                <img class="reward-select-item-alipay" src="/images/alipay.png" alt="支付宝">
+            </label>
+            
+        </div>
+    </div>
+</div>
+
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://wht6.github.io/posts/461c.html&title=《Go语言的通道》 — WHT&pic=/images/featureimages/37.jpg" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://wht6.github.io/posts/461c.html&title=《Go语言的通道》 — WHT&source=分享技术,分享知识,分享感悟" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://wht6.github.io/posts/461c.html" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Go语言的通道》 — WHT&url=http://wht6.github.io/posts/461c.html&via=http://wht6.github.io" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://wht6.github.io/posts/461c.html" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://wht6.github.io/posts/461c.html" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/Go语言/" class="color5">Go语言</a>
+      
+  </li>
+
+        </ul>
+        
+    </footer>
+  </div>
+</article>
+
+
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#01-%E9%80%9A%E9%81%93%E7%9A%84%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="post-toc-text">01|通道的基础知识</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#%E9%80%9A%E9%81%93%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%89%B9%E6%80%A7"><span class="post-toc-text">通道的基本特性</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#%E6%89%A9%E5%B1%95"><span class="post-toc-text">扩展</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#02-%E9%80%9A%E9%81%93%E7%9A%84%E8%BF%9B%E9%98%B6%E4%BD%BF%E7%94%A8"><span class="post-toc-text">02|通道的进阶使用</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#%E5%8D%95%E5%90%91%E9%80%9A%E9%81%93"><span class="post-toc-text">单向通道</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#select%E8%AF%AD%E5%8F%A5"><span class="post-toc-text">select语句</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#select%E8%AF%AD%E5%8F%A5%E4%B8%8E%E9%80%9A%E9%81%93%E8%81%94%E7%94%A8"><span class="post-toc-text">select语句与通道联用</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#select%E8%AF%AD%E5%8F%A5%E7%9A%84%E5%88%86%E6%94%AF%E9%80%89%E6%8B%A9%E8%A7%84%E5%88%99"><span class="post-toc-text">select语句的分支选择规则</span></a></li></ol></li></ol></li></ol>
+        </nav>
+    </aside>
+    
+
+<nav id="article-nav">
+  
+    <a href="/posts/24dd.html" id="article-nav-newer" class="article-nav-link-wrap">
+
+      <span class="article-nav-title">
+        <i class="fa fa-hand-o-left" aria-hidden="true"></i>
+        
+          Go语言的函数
+        
+      </span>
+    </a>
+  
+  
+    <a href="/posts/69aa.html" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">字典的操作和约束</span>
+      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    </a>
+  
+</nav>
+
+
+
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2022 并指如刀<br>
+      </p>
+    </div>
+  </div>
+</footer>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "http://wht6.github.io",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 1
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
+</div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            <a class="category-link" href="/categories/Linux/">Linux</a><a class="category-link" href="/categories/%E4%B8%AA%E4%BA%BA%E5%85%B4%E8%B6%A3/">个人兴趣</a><a class="category-link" href="/categories/%E4%BA%91%E8%AE%A1%E7%AE%97/">云计算</a><a class="category-link" href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/">嵌入式</a><a class="category-link" href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a><a class="category-link" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a>
+        </div>
+        <div id="sidebar-menu-box-tags">
+            <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Go%E8%AF%AD%E8%A8%80/" style="font-size: 20px;">Go语言</a> <a href="/tags/Python%E8%AF%AD%E8%A8%80/" style="font-size: 16.67px;">Python语言</a> <a href="/tags/pytorch/" style="font-size: 10px;">pytorch</a> <a href="/tags/%E4%BB%A3%E7%90%86/" style="font-size: 10px;">代理</a> <a href="/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 10px;">包管理</a> <a href="/tags/%E5%AE%9E%E4%BE%8B%E5%88%86%E5%89%B2/" style="font-size: 13.33px;">实例分割</a> <a href="/tags/%E5%AE%B9%E5%99%A8/" style="font-size: 10px;">容器</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 13.33px;">工具</a> <a href="/tags/%E6%80%9D%E7%BB%B4/" style="font-size: 10px;">思维</a> <a href="/tags/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/" style="font-size: 16.67px;">文件系统</a> <a href="/tags/%E6%97%A5%E5%BF%97/" style="font-size: 10px;">日志</a> <a href="/tags/%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86/" style="font-size: 10px;">权限管理</a> <a href="/tags/%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86/" style="font-size: 10px;">用户管理</a> <a href="/tags/%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">磁盘管理</a> <a href="/tags/%E7%AE%A1%E9%81%93/" style="font-size: 10px;">管道</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">系统配置</a> <a href="/tags/%E7%BD%91%E7%AB%99/" style="font-size: 10px;">网站</a> <a href="/tags/%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/" style="font-size: 10px;">网站搭建</a> <a href="/tags/%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">网络配置</a> <a href="/tags/%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1/" style="font-size: 10px;">计划任务</a> <a href="/tags/%E8%B7%AF%E7%94%B1%E5%99%A8/" style="font-size: 10px;">路由器</a> <a href="/tags/%E8%BF%9B%E7%A8%8B/" style="font-size: 10px;">进程</a> <a href="/tags/%E9%81%93%E5%AE%B6/" style="font-size: 10px;">道家</a> <a href="/tags/%E9%87%8D%E5%AE%9A%E5%90%91/" style="font-size: 10px;">重定向</a> <a href="/tags/%E9%98%BF%E9%87%8C%E4%BA%91/" style="font-size: 13.33px;">阿里云</a>
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a  href="/">
+                    <i class="fa fa-home"></i><span>Home</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/archives">
+                    <i class="fa fa-archive"></i><span>Archives</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/about">
+                    <i class="fa fa-user"></i><span>About</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Go%E8%AF%AD%E8%A8%80/" style="font-size: 20px;">Go语言</a> <a href="/tags/Python%E8%AF%AD%E8%A8%80/" style="font-size: 16.67px;">Python语言</a> <a href="/tags/pytorch/" style="font-size: 10px;">pytorch</a> <a href="/tags/%E4%BB%A3%E7%90%86/" style="font-size: 10px;">代理</a> <a href="/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 10px;">包管理</a> <a href="/tags/%E5%AE%9E%E4%BE%8B%E5%88%86%E5%89%B2/" style="font-size: 13.33px;">实例分割</a> <a href="/tags/%E5%AE%B9%E5%99%A8/" style="font-size: 10px;">容器</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 13.33px;">工具</a> <a href="/tags/%E6%80%9D%E7%BB%B4/" style="font-size: 10px;">思维</a> <a href="/tags/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/" style="font-size: 16.67px;">文件系统</a> <a href="/tags/%E6%97%A5%E5%BF%97/" style="font-size: 10px;">日志</a> <a href="/tags/%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86/" style="font-size: 10px;">权限管理</a> <a href="/tags/%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86/" style="font-size: 10px;">用户管理</a> <a href="/tags/%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">磁盘管理</a> <a href="/tags/%E7%AE%A1%E9%81%93/" style="font-size: 10px;">管道</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">系统配置</a> <a href="/tags/%E7%BD%91%E7%AB%99/" style="font-size: 10px;">网站</a> <a href="/tags/%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/" style="font-size: 10px;">网站搭建</a> <a href="/tags/%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">网络配置</a> <a href="/tags/%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1/" style="font-size: 10px;">计划任务</a> <a href="/tags/%E8%B7%AF%E7%94%B1%E5%99%A8/" style="font-size: 10px;">路由器</a> <a href="/tags/%E8%BF%9B%E7%A8%8B/" style="font-size: 10px;">进程</a> <a href="/tags/%E9%81%93%E5%AE%B6/" style="font-size: 10px;">道家</a> <a href="/tags/%E9%87%8D%E5%AE%9A%E5%90%91/" style="font-size: 10px;">重定向</a> <a href="/tags/%E9%98%BF%E9%87%8C%E4%BA%91/" style="font-size: 13.33px;">阿里云</a>
+        </div>
+    </div>
+</div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+
+
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  
+<script src="/js/particles.js"></script>
+
+
+
+
+
+
+
+
+  
+<link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  
+<script src="/js/animate.js"></script>
+
+
+
+  
+<script src="/js/pop-img.js"></script>
+
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/ Relative)","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"left","width":100,"height":180},"mobile":{"show":false},"react":{"opacityDefault":0.7}});</script></body>
+</html>

@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Linux用户权限 | WHT</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="WHT,WHT's Blog" />
+  
+  <meta name="description" content="基本权限UGO更改权限 权限的两个基本要素：权限对象和权限类型。 权限的对象有三类：u：用户，g：组，o：其他人。还有一个特殊对象a：all所有人。a&#x3D;u+g+o。 权限的类型有三种：读：r&#x3D;4，写：w&#x3D;2，执行：x&#x3D;1。在配置权限的时候可以用数字代替字母。u&#x3D;7代替u&#x3D;r+w+x，u&#x3D;6代替u&#x3D;r+w，u&#x3D;5代替u&#x3D;r+x。 授权时可以用符号授权，也可以用数字授权。 chmod u+r 1.tx">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux用户权限">
+<meta property="og:url" content="http://wht6.github.io/posts/187d.html">
+<meta property="og:site_name" content="WHT">
+<meta property="og:description" content="基本权限UGO更改权限 权限的两个基本要素：权限对象和权限类型。 权限的对象有三类：u：用户，g：组，o：其他人。还有一个特殊对象a：all所有人。a&#x3D;u+g+o。 权限的类型有三种：读：r&#x3D;4，写：w&#x3D;2，执行：x&#x3D;1。在配置权限的时候可以用数字代替字母。u&#x3D;7代替u&#x3D;r+w+x，u&#x3D;6代替u&#x3D;r+w，u&#x3D;5代替u&#x3D;r+x。 授权时可以用符号授权，也可以用数字授权。 chmod u+r 1.tx">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-10-25T02:00:00.000Z">
+<meta property="article:modified_time" content="2022-01-09T07:08:10.757Z">
+<meta property="article:author" content="并指如刀">
+<meta property="article:tag" content="权限管理">
+<meta name="twitter:card" content="summary">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<script src="/js/pace.min.js"></script>
+
+  
+
+  
+  
+
+<style type="text/css" lang="css">
+    #loading-container{
+        position: fixed;
+        top: 0;
+        left: 0;
+        min-height: 100vh;
+        width: 100vw;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: #FFF;
+        text-align: center;
+        /* loader页面消失采用渐隐的方式*/
+        -webkit-transition: opacity 1s ease;
+        -moz-transition: opacity 1s ease;
+        -o-transition: opacity 1s ease;
+        transition: opacity 1s ease;
+    }
+    .loading-image{
+        width: 120px;
+        height: 50px;
+        transform: translate(-50%);
+    }
+    
+    .loading-image div:nth-child(2) {
+        -webkit-animation: pacman-balls 1s linear 0s infinite;
+        animation: pacman-balls 1s linear 0s infinite
+    }
+
+    .loading-image div:nth-child(3) {
+        -webkit-animation: pacman-balls 1s linear .33s infinite;
+        animation: pacman-balls 1s linear .33s infinite
+    }
+
+    .loading-image div:nth-child(4) {
+        -webkit-animation: pacman-balls 1s linear .66s infinite;
+        animation: pacman-balls 1s linear .66s infinite
+    }
+
+    .loading-image div:nth-child(5) {
+        -webkit-animation: pacman-balls 1s linear .99s infinite;
+        animation: pacman-balls 1s linear .99s infinite
+    }
+    
+   .loading-image div:first-of-type {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_up .5s 0s infinite;
+        animation: rotate_pacman_half_up .5s 0s infinite;
+    }
+    .loading-image div:nth-child(2) {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_down .5s 0s infinite;
+        animation: rotate_pacman_half_down .5s 0s infinite;
+        margin-top: -50px;
+    }
+    @-webkit-keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @-webkit-keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+
+    @keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+    
+    @-webkit-keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+
+    @keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+    
+   
+    .loading-image div:nth-child(3),
+    .loading-image div:nth-child(4),
+    .loading-image div:nth-child(5),
+    .loading-image div:nth-child(6){
+        background-color: #49b1f5;
+        width: 15px;
+        height: 15px;
+        border-radius: 100%;
+        margin: 2px;
+        width: 10px;
+        height: 10px;
+        position: absolute;
+        transform: translateY(-6.25px);
+        top: 25px;
+        left: 100px;
+    }
+    .loading-text{
+        margin-bottom: 20vh;
+        text-align: center;
+        color: #2c3e50;
+        font-size: 2rem;
+        box-sizing: border-box;
+        padding: 0 10px;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    @media only screen and (max-width: 500px) {
+         .loading-text{
+            font-size: 1.5rem;
+         }
+    }
+    .fadeout {
+        opacity: 0;
+        filter: alpha(opacity=0);
+    }
+    /* logo出现动画 */
+    @-webkit-keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);transform:translate3d(0,-100%,0)}100%{opacity:1;-webkit-transform:none;transform:none}}
+    @keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);}}
+ </style>
+ <script>
+(function () {
+    const loaded = function(){
+       setTimeout(function(){
+            const loader = document.getElementById("loading-container");
+            loader.className="fadeout" ;//使用渐隐的方法淡出loading page
+            // document.getElementById("body-wrap").style.display="flex";
+            setTimeout(function(){
+                loader.style.display="none";
+            },1000); 
+        },1000);//强制显示loading page 1s  
+    };
+    loaded();
+})()
+ </script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="WHT" type="application/atom+xml">
+</head>
+
+
+ <div id="loading-container">
+     <p class="loading-text">玩命加载中 . . . </p> 
+     <div class="loading-image">
+         <div></div>
+         <div></div>
+         <div></div>
+         <div></div> 
+         <div></div>
+     </div>
+ </div><body>
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">WHT&#39;s Blog</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a  href="/">
+                        <i class="fa fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    
+                    <a  href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>Archives</span>
+                    </a>
+                    
+                    <a  href="/about">
+                        <i class="fa fa-user"></i>
+                        <span>About</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/logo.png" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        WHT&#39;s Blog
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        一个专注运维开发的技术博客
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="WHT&#39;s Blog" target="_blank" href="//wht6.github.io">
+                            <i class="fa fa-home fa-2x"></i></a>
+                    
+                        <a title="Github" target="_blank" href="//github.com/wht6">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                        <a title="Weibo" target="_blank" href="//weibo.com/wht6">
+                            <i class="fa fa-weibo fa-2x"></i></a>
+                    
+                        <a title="Twitter" target="_blank" href="//twitter.com/wht6">
+                            <i class="fa fa-twitter fa-2x"></i></a>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="post-Linux用户权限" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="post-title" itemprop="name">
+      Linux用户权限
+    </h1>
+    <div class="post-title-bar">
+      <ul>
+          
+              <li>
+                  <i class="fa fa-book"></i>
+                  
+                      <a href="/categories/Linux/">Linux</a>
+                  
+              </li>
+          
+        <li>
+          <i class="fa fa-calendar"></i>  2021-10-25
+        </li>
+        <li>
+          <i class="fa fa-eye"></i>
+          <span id="busuanzi_value_page_pv"></span>
+        </li>
+      </ul>
+    </div>
+  
+
+          
+      </header>
+    
+    <div class="article-entry post-content" itemprop="articleBody">
+      
+            
+            <h2 id="基本权限UGO"><a href="#基本权限UGO" class="headerlink" title="基本权限UGO"></a>基本权限UGO</h2><h3 id="更改权限"><a href="#更改权限" class="headerlink" title="更改权限"></a>更改权限</h3><ul>
+<li>权限的两个基本要素：权限对象和权限类型。</li>
+<li>权限的对象有三类：u：用户，g：组，o：其他人。还有一个特殊对象a：all所有人。a=u+g+o。</li>
+<li>权限的类型有三种：读：r=4，写：w=2，执行：x=1。在配置权限的时候可以用数字代替字母。u=7代替u=r+w+x，u=6代替u=r+w，u=5代替u=r+x。</li>
+<li>授权时可以用符号授权，也可以用数字授权。</li>
+<li>chmod u+r 1.txt，chmod是命令，中间是对象（u/g/o/a）赋值符（+/-/=）权限类型（r/w/x），最后是文件或目录（对目录下的所有文件授权需要加-R选项）。</li>
+<li>ll是查看文件属性详细信息的，如下：-rw-r—r—.  1  root  root  0  10月 23 16:39  file1。</li>
+<li>这个文件属性一共分为7段。第一个字段是类型和权限（11个字符），除去第一个字符（文件类型）与最后一个字符，剩下的9个字符分为三组，三个字符一组分别是属主u，属组g，其他人o。三个位置的字符分别对应rwx，如果某个位置是-，说明没有此权限。rw-r—r-表示主人可以读和写，组只能读，其他人也只能读，至于是哪个主哪个组在后边的字段中。</li>
+<li>第二个字段是文件链接的次数，链接就是创建快捷方式。</li>
+<li>第三个字段是属主。第四个字段是属组。与第一个字段中对应起来就是root拥有读和写的权限，root组只能读，其他人也只能读。</li>
+<li>第五个字段是文件的大小，单位是字节B。第6个字段是创建时间，第7个字段是文件名。</li>
+<li>chmod u=rx file1与chmod u-x file1，这两条命令中的含义是分别是为用户赋予读和执行的权限，对用户移除执行的权限。</li>
+<li>查看目录权限：ls -l -d /tmp/，查看目录的权限需要加-d选项，否则看到是目录里面的内容。</li>
+<li>清空权限：chmod a=- file1，一次性给ugo赋权：chmod ug=rw,o=r file1。</li>
+</ul>
+<h3 id="更改属主和属组"><a href="#更改属主和属组" class="headerlink" title="更改属主和属组"></a>更改属主和属组</h3><ul>
+<li>chown user02 /tmp/file1.txt，只更改属主</li>
+<li>chown user01.hr /tmp/file1.txt，同时更改属主与属组。</li>
+<li>chown .user02 /tmp/file1.txt，只更改属组。</li>
+<li>文件夹也可以授权，操作是一样的。但是如果要同时对文件夹下面的所有内容一块赋权，需要加-R，如：chown -R user01.hr /tmp/dir2020/。-R递归。</li>
+</ul>
+<h2 id="基本权限ACL"><a href="#基本权限ACL" class="headerlink" title="基本权限ACL"></a>基本权限ACL</h2><ul>
+<li>ACL（Access Control List）访问控制列表，限制用户对文件的访问，是对UGO的补充，或者说加强版。</li>
+<li>setfacl，f指代file。</li>
+<li>setfcal -m g:hr:rwx /home/file1，设置文件访问控制  -设置  对象:对象名:权限  文件</li>
+<li>getfacl /home/test.txt，查看文件的访问控制。</li>
+<li>给文件设置ACL之后，在查看文件详细属性，会发现第一个字段的最后一个字符由.变成+，这里的+就表示出来UGO基础权限，该文件还有附加权限。而且设置ACL之后，中间的9个ugo权限字符就显示的是叠加权限。</li>
+<li>setfacl -m o::rw /home/test.txt，给其他人设置读和写的权限。</li>
+<li>清除acl权限。setfcal  -x  u:alice  /home/test.txt。</li>
+<li>清空所有ACL权限。setfacl -b /home/test.txt。</li>
+<li>tip：反复输出结果。watch -n1 ‘ls -l /home/file1.txt’，每隔一秒输出一次引号中命令的结果，用此命令来查看文件权限的变化。</li>
+</ul>
+<h2 id="特殊权限"><a href="#特殊权限" class="headerlink" title="特殊权限"></a>特殊权限</h2><h3 id="特殊位suid"><a href="#特殊位suid" class="headerlink" title="特殊位suid"></a>特殊位suid</h3><ul>
+<li>suid是一个针对文件设置的权限，功能是使调用文件的用户，临时具备属主的权限。suid也是权限像rwx那样，不过它是一个特殊权限，加上这个权限之后，调用文件的用户就临时具备了属主的权限。</li>
+<li>通过一个案例来了解suid功能是怎么生效的。首先在/root下新建一个file1.txt，随便写入一些内容。普通用户是无法通过cat来查看文件内容的，/root也进不去。cat是一个应用程序文件，位置在/usr/bin/cat，我们通过ll查看该文件的详细信息可以看到cat的权限是：rwxr-xr-x，所有用户都有执行的权限，但是执行的身份不一样导致有些文件只有管理员能运行，而普通无法执行。接着，用suid对cat进行设置，chmod u+s /usr/bin/cat，文件权限变为：rwsr-xr-x，此时普通用户就临时具备了管理员身份，也就是普通用户临时提权。经过suid设置之后，普通用户就可以通过cat来查看/root/file1.txt。</li>
+<li>通过chmod u-s /bin/usr/cat来去除siud权限。</li>
+</ul>
+<h3 id="文件属性attr"><a href="#文件属性attr" class="headerlink" title="文件属性attr"></a>文件属性attr</h3><ul>
+<li>chattr用于配置文件的属性，其中i属性表示不能更改、重命名或删除，相当于把文件锁上了。</li>
+<li>lsattr用于查看文件的属性。</li>
+<li>chattr +i file100，给file100配置i属性，配置以后文件不能更改、重命名和删除。</li>
+<li>chattr -i file100，去除file100的i属性。</li>
+<li>出来i属性，还有许多别的属性，比如a属性表示只能对文件进行追加操作。通常会给日志加a属性。</li>
+</ul>
+<h3 id="进程掩码umask"><a href="#进程掩码umask" class="headerlink" title="进程掩码umask"></a>进程掩码umask</h3><ul>
+<li>新建文件、目录的默认权限都会受umask的影响，umask表示要减掉的权限。</li>
+<li>输入umask命令，查看当前用户的umask权限。然后你会发现是四个权限位，这里其实才是完整的权限位，完整的权限位：特殊位，属主位，属组位，其他位。（特殊位里边的421并不表示rwx，其中的4就是suid。）</li>
+<li>root用户，输入umask，结果是0022，这个0022就是root的umask，但是真正的默认权限并非0022，真正的默认权限的计算方式是0777-umask，也就是0777-0022=0755。所以在创建目录和文件的时候默认权限是755，但是我们看到文件默认是644，这是因为系统为了保护自己去掉了所有的执行权限。</li>
+<li>umask 0000，表示将进程掩码修改为0000，此时再创建文件默认权限就变成了0777和0666。</li>
+</ul>
+
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2022年01月09日 15:08</p>
+        <p>原始链接： <a class="post-url" href="/posts/187d.html" title="Linux用户权限">http://wht6.github.io/posts/187d.html</a></p>
+        <footer>
+            <a href="http://wht6.github.io">
+                <img src="/images/logo.png" alt="并指如刀">
+                并指如刀
+            </a>
+        </footer>
+    </div>
+</div>
+
+      
+        
+            
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;">赏</a>
+</div>
+
+<div id="reward" class="post-modal reward-lay">
+    <a class="close" href="javascript:;" id="reward-close">×</a>
+    <span class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我吃糖~
+        <i class="icon icon-quote-right"></i>
+    </span>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/images/wechat_code.jpg" alt="打赏二维码">
+        </div>
+        <div class="reward-select">
+            
+            <label class="reward-select-item checked" data-id="wechat" data-wechat="/images/wechat_code.jpg">
+                <img class="reward-select-item-wechat" src="/images/wechat.png" alt="微信">
+            </label>
+            
+            
+            <label class="reward-select-item" data-id="alipay" data-alipay="/images/alipay_code.jpg">
+                <img class="reward-select-item-alipay" src="/images/alipay.png" alt="支付宝">
+            </label>
+            
+        </div>
+    </div>
+</div>
+
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://wht6.github.io/posts/187d.html&title=《Linux用户权限》 — WHT&pic=/images/featureimages/18.jpg" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://wht6.github.io/posts/187d.html&title=《Linux用户权限》 — WHT&source=分享技术,分享知识,分享感悟" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://wht6.github.io/posts/187d.html" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Linux用户权限》 — WHT&url=http://wht6.github.io/posts/187d.html&via=http://wht6.github.io" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://wht6.github.io/posts/187d.html" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://wht6.github.io/posts/187d.html" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/权限管理/" class="color5">权限管理</a>
+      
+  </li>
+
+        </ul>
+        
+    </footer>
+  </div>
+</article>
+
+
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%9D%83%E9%99%90UGO"><span class="post-toc-text">基本权限UGO</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#%E6%9B%B4%E6%94%B9%E6%9D%83%E9%99%90"><span class="post-toc-text">更改权限</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#%E6%9B%B4%E6%94%B9%E5%B1%9E%E4%B8%BB%E5%92%8C%E5%B1%9E%E7%BB%84"><span class="post-toc-text">更改属主和属组</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%9D%83%E9%99%90ACL"><span class="post-toc-text">基本权限ACL</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#%E7%89%B9%E6%AE%8A%E6%9D%83%E9%99%90"><span class="post-toc-text">特殊权限</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#%E7%89%B9%E6%AE%8A%E4%BD%8Dsuid"><span class="post-toc-text">特殊位suid</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#%E6%96%87%E4%BB%B6%E5%B1%9E%E6%80%A7attr"><span class="post-toc-text">文件属性attr</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#%E8%BF%9B%E7%A8%8B%E6%8E%A9%E7%A0%81umask"><span class="post-toc-text">进程掩码umask</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+    
+
+<nav id="article-nav">
+  
+    <a href="/posts/630d.html" id="article-nav-newer" class="article-nav-link-wrap">
+
+      <span class="article-nav-title">
+        <i class="fa fa-hand-o-left" aria-hidden="true"></i>
+        
+          Linux进程管理
+        
+      </span>
+    </a>
+  
+  
+    <a href="/posts/e894.html" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">Linux用户管理</span>
+      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    </a>
+  
+</nav>
+
+
+
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2022 并指如刀<br>
+      </p>
+    </div>
+  </div>
+</footer>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "http://wht6.github.io",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 1
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
+</div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            <a class="category-link" href="/categories/Linux/">Linux</a><a class="category-link" href="/categories/%E4%B8%AA%E4%BA%BA%E5%85%B4%E8%B6%A3/">个人兴趣</a><a class="category-link" href="/categories/%E4%BA%91%E8%AE%A1%E7%AE%97/">云计算</a><a class="category-link" href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/">嵌入式</a><a class="category-link" href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a><a class="category-link" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a>
+        </div>
+        <div id="sidebar-menu-box-tags">
+            <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Go%E8%AF%AD%E8%A8%80/" style="font-size: 20px;">Go语言</a> <a href="/tags/Python%E8%AF%AD%E8%A8%80/" style="font-size: 16.67px;">Python语言</a> <a href="/tags/pytorch/" style="font-size: 10px;">pytorch</a> <a href="/tags/%E4%BB%A3%E7%90%86/" style="font-size: 10px;">代理</a> <a href="/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 10px;">包管理</a> <a href="/tags/%E5%AE%9E%E4%BE%8B%E5%88%86%E5%89%B2/" style="font-size: 13.33px;">实例分割</a> <a href="/tags/%E5%AE%B9%E5%99%A8/" style="font-size: 10px;">容器</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 13.33px;">工具</a> <a href="/tags/%E6%80%9D%E7%BB%B4/" style="font-size: 10px;">思维</a> <a href="/tags/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/" style="font-size: 16.67px;">文件系统</a> <a href="/tags/%E6%97%A5%E5%BF%97/" style="font-size: 10px;">日志</a> <a href="/tags/%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86/" style="font-size: 10px;">权限管理</a> <a href="/tags/%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86/" style="font-size: 10px;">用户管理</a> <a href="/tags/%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">磁盘管理</a> <a href="/tags/%E7%AE%A1%E9%81%93/" style="font-size: 10px;">管道</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">系统配置</a> <a href="/tags/%E7%BD%91%E7%AB%99/" style="font-size: 10px;">网站</a> <a href="/tags/%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/" style="font-size: 10px;">网站搭建</a> <a href="/tags/%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">网络配置</a> <a href="/tags/%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1/" style="font-size: 10px;">计划任务</a> <a href="/tags/%E8%B7%AF%E7%94%B1%E5%99%A8/" style="font-size: 10px;">路由器</a> <a href="/tags/%E8%BF%9B%E7%A8%8B/" style="font-size: 10px;">进程</a> <a href="/tags/%E9%81%93%E5%AE%B6/" style="font-size: 10px;">道家</a> <a href="/tags/%E9%87%8D%E5%AE%9A%E5%90%91/" style="font-size: 10px;">重定向</a> <a href="/tags/%E9%98%BF%E9%87%8C%E4%BA%91/" style="font-size: 13.33px;">阿里云</a>
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a  href="/">
+                    <i class="fa fa-home"></i><span>Home</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/archives">
+                    <i class="fa fa-archive"></i><span>Archives</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/about">
+                    <i class="fa fa-user"></i><span>About</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Go%E8%AF%AD%E8%A8%80/" style="font-size: 20px;">Go语言</a> <a href="/tags/Python%E8%AF%AD%E8%A8%80/" style="font-size: 16.67px;">Python语言</a> <a href="/tags/pytorch/" style="font-size: 10px;">pytorch</a> <a href="/tags/%E4%BB%A3%E7%90%86/" style="font-size: 10px;">代理</a> <a href="/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 10px;">包管理</a> <a href="/tags/%E5%AE%9E%E4%BE%8B%E5%88%86%E5%89%B2/" style="font-size: 13.33px;">实例分割</a> <a href="/tags/%E5%AE%B9%E5%99%A8/" style="font-size: 10px;">容器</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 13.33px;">工具</a> <a href="/tags/%E6%80%9D%E7%BB%B4/" style="font-size: 10px;">思维</a> <a href="/tags/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/" style="font-size: 16.67px;">文件系统</a> <a href="/tags/%E6%97%A5%E5%BF%97/" style="font-size: 10px;">日志</a> <a href="/tags/%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86/" style="font-size: 10px;">权限管理</a> <a href="/tags/%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86/" style="font-size: 10px;">用户管理</a> <a href="/tags/%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">磁盘管理</a> <a href="/tags/%E7%AE%A1%E9%81%93/" style="font-size: 10px;">管道</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">系统配置</a> <a href="/tags/%E7%BD%91%E7%AB%99/" style="font-size: 10px;">网站</a> <a href="/tags/%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/" style="font-size: 10px;">网站搭建</a> <a href="/tags/%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">网络配置</a> <a href="/tags/%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1/" style="font-size: 10px;">计划任务</a> <a href="/tags/%E8%B7%AF%E7%94%B1%E5%99%A8/" style="font-size: 10px;">路由器</a> <a href="/tags/%E8%BF%9B%E7%A8%8B/" style="font-size: 10px;">进程</a> <a href="/tags/%E9%81%93%E5%AE%B6/" style="font-size: 10px;">道家</a> <a href="/tags/%E9%87%8D%E5%AE%9A%E5%90%91/" style="font-size: 10px;">重定向</a> <a href="/tags/%E9%98%BF%E9%87%8C%E4%BA%91/" style="font-size: 13.33px;">阿里云</a>
+        </div>
+    </div>
+</div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+
+
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  
+<script src="/js/particles.js"></script>
+
+
+
+
+
+
+
+
+  
+<link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  
+<script src="/js/animate.js"></script>
+
+
+
+  
+<script src="/js/pop-img.js"></script>
+
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/ Relative)","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"left","width":100,"height":180},"mobile":{"show":false},"react":{"opacityDefault":0.7}});</script></body>
+</html>

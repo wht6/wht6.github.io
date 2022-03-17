@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Go的程序实体 | WHT</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="WHT,WHT's Blog" />
+  
+  <meta name="description" content="Go 语言中的程序实体包括变量、常量、函数、结构体和接口。 Go 语言是静态类型的编程语言，所以我们在声明变量或常量的时候，都需要指定它们的类型，或者给予足够的信息，这样才可以让 Go 语言能够推导出它们的类型。&amp;nbsp;在 Go 语言中，变量的类型可以是其预定义的那些类型，也可以是程序自定义的函数、结构体或接口。常量的合法类型不多，只能是那些 Go 语言预定义的基本类型。它的声明方式也更简单一">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go的程序实体">
+<meta property="og:url" content="http://wht6.github.io/posts/aea9.html">
+<meta property="og:site_name" content="WHT">
+<meta property="og:description" content="Go 语言中的程序实体包括变量、常量、函数、结构体和接口。 Go 语言是静态类型的编程语言，所以我们在声明变量或常量的时候，都需要指定它们的类型，或者给予足够的信息，这样才可以让 Go 语言能够推导出它们的类型。&amp;nbsp;在 Go 语言中，变量的类型可以是其预定义的那些类型，也可以是程序自定义的函数、结构体或接口。常量的合法类型不多，只能是那些 Go 语言预定义的基本类型。它的声明方式也更简单一">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/wht6/image/master/img/lexingtuid_2022224.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/wht6/image/master/img/chongshengm_2022224.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/wht6/image/master/img/duanyan_2022225.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/wht6/image/master/img/biemingqianz_2022225.png">
+<meta property="article:published_time" content="2022-02-24T02:00:00.000Z">
+<meta property="article:modified_time" content="2022-03-05T02:13:01.976Z">
+<meta property="article:author" content="并指如刀">
+<meta property="article:tag" content="Go语言">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/wht6/image/master/img/lexingtuid_2022224.png">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<script src="/js/pace.min.js"></script>
+
+  
+
+  
+  
+
+<style type="text/css" lang="css">
+    #loading-container{
+        position: fixed;
+        top: 0;
+        left: 0;
+        min-height: 100vh;
+        width: 100vw;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: #FFF;
+        text-align: center;
+        /* loader页面消失采用渐隐的方式*/
+        -webkit-transition: opacity 1s ease;
+        -moz-transition: opacity 1s ease;
+        -o-transition: opacity 1s ease;
+        transition: opacity 1s ease;
+    }
+    .loading-image{
+        width: 120px;
+        height: 50px;
+        transform: translate(-50%);
+    }
+    
+    .loading-image div:nth-child(2) {
+        -webkit-animation: pacman-balls 1s linear 0s infinite;
+        animation: pacman-balls 1s linear 0s infinite
+    }
+
+    .loading-image div:nth-child(3) {
+        -webkit-animation: pacman-balls 1s linear .33s infinite;
+        animation: pacman-balls 1s linear .33s infinite
+    }
+
+    .loading-image div:nth-child(4) {
+        -webkit-animation: pacman-balls 1s linear .66s infinite;
+        animation: pacman-balls 1s linear .66s infinite
+    }
+
+    .loading-image div:nth-child(5) {
+        -webkit-animation: pacman-balls 1s linear .99s infinite;
+        animation: pacman-balls 1s linear .99s infinite
+    }
+    
+   .loading-image div:first-of-type {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_up .5s 0s infinite;
+        animation: rotate_pacman_half_up .5s 0s infinite;
+    }
+    .loading-image div:nth-child(2) {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_down .5s 0s infinite;
+        animation: rotate_pacman_half_down .5s 0s infinite;
+        margin-top: -50px;
+    }
+    @-webkit-keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @-webkit-keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+
+    @keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+    
+    @-webkit-keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+
+    @keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+    
+   
+    .loading-image div:nth-child(3),
+    .loading-image div:nth-child(4),
+    .loading-image div:nth-child(5),
+    .loading-image div:nth-child(6){
+        background-color: #49b1f5;
+        width: 15px;
+        height: 15px;
+        border-radius: 100%;
+        margin: 2px;
+        width: 10px;
+        height: 10px;
+        position: absolute;
+        transform: translateY(-6.25px);
+        top: 25px;
+        left: 100px;
+    }
+    .loading-text{
+        margin-bottom: 20vh;
+        text-align: center;
+        color: #2c3e50;
+        font-size: 2rem;
+        box-sizing: border-box;
+        padding: 0 10px;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    @media only screen and (max-width: 500px) {
+         .loading-text{
+            font-size: 1.5rem;
+         }
+    }
+    .fadeout {
+        opacity: 0;
+        filter: alpha(opacity=0);
+    }
+    /* logo出现动画 */
+    @-webkit-keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);transform:translate3d(0,-100%,0)}100%{opacity:1;-webkit-transform:none;transform:none}}
+    @keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);}}
+ </style>
+ <script>
+(function () {
+    const loaded = function(){
+       setTimeout(function(){
+            const loader = document.getElementById("loading-container");
+            loader.className="fadeout" ;//使用渐隐的方法淡出loading page
+            // document.getElementById("body-wrap").style.display="flex";
+            setTimeout(function(){
+                loader.style.display="none";
+            },1000); 
+        },1000);//强制显示loading page 1s  
+    };
+    loaded();
+})()
+ </script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="WHT" type="application/atom+xml">
+</head>
+
+
+ <div id="loading-container">
+     <p class="loading-text">玩命加载中 . . . </p> 
+     <div class="loading-image">
+         <div></div>
+         <div></div>
+         <div></div>
+         <div></div> 
+         <div></div>
+     </div>
+ </div><body>
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">WHT&#39;s Blog</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a  href="/">
+                        <i class="fa fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    
+                    <a  href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>Archives</span>
+                    </a>
+                    
+                    <a  href="/about">
+                        <i class="fa fa-user"></i>
+                        <span>About</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/logo.png" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        WHT&#39;s Blog
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        一个专注运维开发的技术博客
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="WHT&#39;s Blog" target="_blank" href="//wht6.github.io">
+                            <i class="fa fa-home fa-2x"></i></a>
+                    
+                        <a title="Github" target="_blank" href="//github.com/wht6">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                        <a title="Weibo" target="_blank" href="//weibo.com/wht6">
+                            <i class="fa fa-weibo fa-2x"></i></a>
+                    
+                        <a title="Twitter" target="_blank" href="//twitter.com/wht6">
+                            <i class="fa fa-twitter fa-2x"></i></a>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="post-Go的程序实体" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="post-title" itemprop="name">
+      Go的程序实体
+    </h1>
+    <div class="post-title-bar">
+      <ul>
+          
+              <li>
+                  <i class="fa fa-book"></i>
+                  
+                      <a href="/categories/编程/">编程</a>
+                  
+              </li>
+          
+        <li>
+          <i class="fa fa-calendar"></i>  2022-02-24
+        </li>
+        <li>
+          <i class="fa fa-eye"></i>
+          <span id="busuanzi_value_page_pv"></span>
+        </li>
+      </ul>
+    </div>
+  
+
+          
+      </header>
+    
+    <div class="article-entry post-content" itemprop="articleBody">
+      
+            
+            <p><strong>Go 语言中的程序实体包括变量、常量、函数、结构体和接口。</strong> Go 语言是静态类型的编程语言，所以我们在声明变量或常量的时候，都需要指定它们的类型，或者给予足够的信息，这样才可以让 Go 语言能够推导出它们的类型。<br>&nbsp;<br>在 Go 语言中，变量的类型可以是其预定义的那些类型，也可以是程序自定义的函数、结构体或接口。常量的合法类型不多，只能是那些 Go 语言预定义的基本类型。它的声明方式也更简单一些。<br>&nbsp;</p>
+<h2 id="01-变量"><a href="#01-变量" class="headerlink" title="01|变量"></a>01|变量</h2><p>&nbsp;</p>
+<h3 id="声明变量的方式"><a href="#声明变量的方式" class="headerlink" title="声明变量的方式"></a>声明变量的方式</h3><p>&nbsp;<br>方式一：<br>&nbsp;<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"> </span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;flag&quot;</span></span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line">)</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> name <span class="keyword">string</span> <span class="comment">// [1]</span></span><br><span class="line">	flag.StringVar(&amp;name, <span class="string">&quot;name&quot;</span>, <span class="string">&quot;everyone&quot;</span>, <span class="string">&quot;The greeting object.&quot;</span>) <span class="comment">// [2]</span></span><br><span class="line">	flag.Parse()</span><br><span class="line">	fmt.Printf(<span class="string">&quot;Hello, %v!\n&quot;</span>, name)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>&nbsp;<br>方式二：<code>[1]</code>和<code>[2]</code>处代码合并:<br>&nbsp;<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> name = flag.String(<span class="string">&quot;name&quot;</span>, <span class="string">&quot;everyone&quot;</span>, <span class="string">&quot;The greeting object.&quot;</span>)</span><br></pre></td></tr></table></figure><br>&nbsp;</p>
+<p>注意，<code>flag.String</code>函数返回的结果值的类型是<code>*string</code>而不是<code>string</code>。类型<code>*string</code>代表的是字符串的指针类型，而不是字符串类型。因此，这里的变量<code>name</code>代表的是一个指向字符串值的指针。</p>
+<p>&nbsp;</p>
+<p>我们可以通过操作符<code>*</code>把这个指针指向的字符串值取出来了。因此，在这种情况下，那个被用来打印内容的函数调用就需要微调一下，把其中的参数<code>name</code>改为<code>*name</code>，即：<code>fmt.Printf(&quot;Hello, %v!\n&quot;, *name)</code>。</p>
+<p>&nbsp;</p>
+<p>方式三：</p>
+<p>&nbsp;<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">name := flag.String(<span class="string">&quot;name&quot;</span>, <span class="string">&quot;everyone&quot;</span>, <span class="string">&quot;The greeting object.&quot;</span>)</span><br></pre></td></tr></table></figure><br>&nbsp;</p>
+<h4 id="Go的类型推断"><a href="#Go的类型推断" class="headerlink" title="Go的类型推断"></a>Go的类型推断</h4><p>&nbsp;<br>第二种方式在声明变量<code>name</code>的同时，还为它赋了值，而这时声明中并没有显式指定<code>name</code>的类型。之前的变量声明语句是<code>var name string</code>。这里利用了 Go 语言自身的类型推断，而省去了对该变量的类型的声明。<br>&nbsp;<br>类型推断是一种编程语言在编译期自动解释表达式类型的能力。表达式类型就是对表达式进行求值后得到结果的类型。<br>&nbsp;<br>第三种类型推断的方式是短变量声明。我们只能在函数体内部使用短变量声明来代替<code>var</code>声明。在编写<code>if</code>、<code>for</code>或<code>switch</code>语句的时候，我们经常把它安插在初始化子句中，并用来声明一些临时的变量。而相比之下，第二种方式更加通用，它可以被用在任何地方。<br>&nbsp;<br><img src="https://raw.githubusercontent.com/wht6/image/master/img/lexingtuid_2022224.png" alt><br>&nbsp;<br>类型推断的一个好处是方便进行代码重构：<br>&nbsp;<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"> </span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">&quot;flag&quot;</span></span><br><span class="line">	<span class="string">&quot;fmt&quot;</span></span><br><span class="line">)</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	<span class="keyword">var</span> name = getTheFlag()</span><br><span class="line">	flag.Parse()</span><br><span class="line">	fmt.Printf(<span class="string">&quot;Hello, %v!\n&quot;</span>, *name)</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">getTheFlag</span><span class="params">()</span> *<span class="title">string</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> flag.String(<span class="string">&quot;name&quot;</span>, <span class="string">&quot;everyone&quot;</span>, <span class="string">&quot;The greeting object.&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>&nbsp;<br>我们可以用<code>getTheFlag</code>函数包裹（或者说包装）那个对<code>flag.String</code>函数的调用，并把其结果直接作为<code>getTheFlag</code>函数的结果，结果的类型是<code>*string</code>。</p>
+<p>&nbsp;</p>
+<p>这样一来，<code>var name =</code>右边的表达式，可以变为针对<code>getTheFlag</code>函数的调用表达式了。这实际上是对“声明并赋值<code>name</code>变量的那行代码”的重构。</p>
+<p>&nbsp;</p>
+<blockquote>
+<p>我们通常把不改变某个程序与外界的任何交互方式和规则，而只改变其内部实现”的代码修改方式，叫做对该程序的重构。重构的对象可以是一行代码、一个函数、一个功能模块，甚至一个软件系统。</p>
+</blockquote>
+<p>&nbsp;<br>我们不显式地指定变量<code>name</code>的类型，使得它可以被赋予任何类型的值。也就是说，变量<code>name</code>的类型可以在其初始化时，由其他程序动态地确定。<br>&nbsp;<br>在你改变<code>getTheFlag</code>函数的结果类型之后，Go 语言的编译器会在你再次构建该程序的时候，自动地更新变量<code>name</code>的类型。如果你使用过<code>Python</code>或<code>Ruby</code>这种动态类型的编程语言的话，一定会觉得这情景似曾相识。<br>&nbsp;<br>没错，通过这种类型推断，你可以体验到动态类型编程语言所带来的一部分优势，即程序灵活性的明显提升。但在那些编程语言中，这种提升可以说是用程序的可维护性和运行效率换来的。<br>&nbsp;<br>Go 语言是静态类型的，所以一旦在初始化变量时确定了它的类型，之后就不可能再改变。这就避免了在后面维护程序时的一些问题。另外，请记住，这种类型的确定是在编译期完成的，因此不会对程序的运行效率产生任何影响。<br>&nbsp;<br>Go 语言的类型推断可以明显提升程序的灵活性，使得代码重构变得更加容易，同时又不会给代码的维护带来额外负担（实际上，它恰恰可以避免散弹式的代码修改），更不会损失程序的运行效率。<br>&nbsp;<br>Go 语言的类型推断只应用在了对变量或常量的初始化方面。<br>&nbsp;</p>
+<h4 id="变量的重声明"><a href="#变量的重声明" class="headerlink" title="变量的重声明"></a>变量的重声明</h4><p>&nbsp;<br>这涉及了短变量声明。通过使用它，我们可以对同一个代码块中的变量进行重声明。<br>&nbsp;</p>
+<blockquote>
+<p>在 Go 语言中，代码块一般就是一个由花括号括起来的区域，里面可以包含表达式和语句。Go 语言本身以及我们编写的代码共同形成了一个非常大的代码块，也叫全域代码块。</p>
+<p>这主要体现在，只要是公开的全局变量，都可以被任何代码所使用。相对小一些的代码块是代码包，一个代码包可以包含许多子代码包，所以这样的代码块也可以很大。</p>
+<p>接下来，每个源码文件也都是一个代码块，每个函数也是一个代码块，每个<code>if</code>语句、<code>for</code>语句、<code>switch</code>语句和<code>select</code>语句都是一个代码块。甚至，<code>switch</code>或<code>select</code>语句中的<code>case</code>子句也都是独立的代码块。</p>
+<p>走个极端，我就在<code>main</code>函数中写一对紧挨着的花括号算不算一个代码块？当然也算，这甚至还有个名词，叫“空代码块”。</p>
+</blockquote>
+<p>&nbsp;<br>变量重声明的含义是对已经声明过的变量再次声明。变量重声明的前提条件如下。<br>&nbsp;</p>
+<ol>
+<li>由于变量的类型在其初始化时就已经确定了，所以对它再次声明时赋予的类型必须与其原本的类型相同，否则会产生编译错误。</li>
+<li>变量的重声明只可能发生在某一个代码块中。如果与当前的变量重名的是外层代码块中的变量，那么就是另外一种含义了，我在下一篇文章中会讲到。</li>
+<li>变量的重声明只有在使用短变量声明时才会发生，否则也无法通过编译。如果要在此处声明全新的变量，那么就应该使用包含关键字<code>var</code>的声明语句，但是这时就不能与同一个代码块中的任何变量有重名了。</li>
+<li>被“声明并赋值”的变量必须是多个，并且其中至少有一个是新的变量。这时我们才可以说对其中的旧变量进行了重声明。<br>&nbsp;<br>变量重声明其实算是一个语法糖（或者叫便利措施）。它允许我们在使用短变量声明时不用理会被赋值的多个变量中是否包含旧变量。<br>&nbsp;<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> err error</span><br><span class="line">n, err := io.WriteString(os.Stdout, <span class="string">&quot;Hello, everyone!\n&quot;</span>)</span><br></pre></td></tr></table></figure>
+&nbsp;<br>我使用短变量声明对新变量<code>n</code>和旧变量<code>err</code>进行了“声明并赋值”，这时也是对后者的重声明。<br>&nbsp;<h2 id="02-变量的作用域"><a href="#02-变量的作用域" class="headerlink" title="02|变量的作用域"></a>02|变量的作用域</h2>&nbsp;<br>一个代码块可以有若干个子代码块；但对于每个代码块，最多只会有一个直接包含它的代码块（后者可以简称为前者的外层代码块）。这种代码块的划分，也间接地决定了程序实体的作用域。<br>&nbsp;<br>一个程序实体被创造出来，是为了让别的代码引用的。那么，哪里的代码可以引用它呢，这就涉及了它的作用域。<br>&nbsp;<br>程序实体的访问权限有三种：包级私有的、模块级私有的和公开的。这其实就是 Go 语言在语言层面，依据代码块对程序实体作用域进行的定义。<br>&nbsp;<br><strong>一个程序实体的作用域总是会被限制在某个代码块中，而这个作用域最大的用处，就是对程序实体的访问权限的控制。</strong>对“高内聚，低耦合”这种程序设计思想的实践，恰恰可以从这里开始。<br>&nbsp;<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"> </span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">var</span> block = <span class="string">&quot;package&quot;</span></span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	block := <span class="string">&quot;function&quot;</span></span><br><span class="line">	&#123;</span><br><span class="line">		block := <span class="string">&quot;inner&quot;</span></span><br><span class="line">		fmt.Printf(<span class="string">&quot;The block is %s.\n&quot;</span>, block)</span><br><span class="line">	&#125;</span><br><span class="line">	fmt.Printf(<span class="string">&quot;The block is %s.\n&quot;</span>, block)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+&nbsp;<br>这个命令源码文件中有四个代码块，它们是：全域代码块、<code>main</code>包代表的代码块、<code>main</code>函数代表的代码块，以及在<code>main</code>函数中的一个用花括号包起来的代码块。<br>&nbsp;<br>运行后打印出的内容是：<br>&nbsp;<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">The block is inner.</span><br><span class="line">The block is function.</span><br></pre></td></tr></table></figure>
+&nbsp;<br>你可能会认为它无法通过编译，因为三处代码都声明了相同名称的变量。的确，声明重名的变量是无法通过编译的，用短变量声明对已有变量进行重声明除外，但这只是对于同一个代码块而言的。<br>&nbsp;<br>对于不同的代码块来说，其中的变量重名没什么大不了，照样可以通过编译。即使这些代码块有直接的嵌套关系也是如此，就像 demo10.go 中的<code>main</code>包代码块、<code>main</code>函数代码块和那个最内层的代码块那样。<br>&nbsp;<br>这样规定显然很方便也很合理，否则我们会每天为了选择变量名而烦恼。但是这会导致另外一个问题，我引用变量时到底用的是哪一个？<br>&nbsp;<br>这其实有一个很有画面感的查找过程。这个查找过程不只针对于变量，还适用于任何程序实体。如下面所示。<br>&nbsp;</li>
+</ol>
+<ul>
+<li>首先，代码引用变量的时候总会最优先查找当前代码块中的那个变量。注意，这里的“当前代码块”仅仅是引用变量的代码所在的那个代码块，并不包含任何子代码块。</li>
+<li>其次，如果当前代码块中没有声明以此为名的变量，那么程序会沿着代码块的嵌套关系，从直接包含当前代码块的那个代码块开始，一层一层地查找。</li>
+<li>一般情况下，程序会一直查到当前代码包代表的代码块。如果仍然找不到，那么 Go 语言的编译器就会报错了。</li>
+</ul>
+<p>&nbsp;<br>如果我们在当前源码文件中导入了其他代码包，那么引用其中的程序实体时，是需要以限定符为前缀的。所以程序在找代表变量未加限定符的名字（即标识符）的时候，是不会去被导入的代码包中查找的。<br>&nbsp;</p>
+<blockquote>
+<p>但有个特殊情况，如果我们把代码包导入语句写成<code>import . XXX</code>的形式（注意中间的那个“.”），那么就会让这个“XXX”包中公开的程序实体，被当前源码文件中的代码，视为当前代码包中的程序实体。</p>
+<p>比如，如果有代码包导入语句<code>import . fmt</code>，那么我们在当前源码文件中引用<code>fmt.Printf</code>函数的时候直接用<code>Printf</code>就可以了。在这个特殊情况下，程序在查找当前源码文件后会先去查用这种方式导入的那些代码包。</p>
+</blockquote>
+<p>&nbsp;<br><strong>不同代码块中的重名变量与变量重声明中的变量区别：</strong><br>&nbsp;<br>(<strong>为了方便描述，就把不同代码块中的重名变量叫做“可重名变量”吧。</strong>注意，在同一个代码块中不允许出现重名的变量，这违背了 Go 语言的语法。)<br>&nbsp;</p>
+<ol>
+<li>变量重声明中的变量一定是在某一个代码块内的。注意，这里的“某一个代码块内”并不包含它的任何子代码块，否则就变成了“多个代码块之间”。而可重名变量指的正是在多个代码块之间由相同的标识符代表的变量。</li>
+<li>变量重声明是对同一个变量的多次声明，这里的变量只有一个。而可重名变量中涉及的变量肯定是有多个的。</li>
+<li>不论对变量重声明多少次，其类型必须始终一致，具体遵从它第一次被声明时给定的类型。而可重名变量之间不存在类似的限制，它们的类型可以是任意的。</li>
+<li>如果可重名变量所在的代码块之间，存在直接或间接的嵌套关系，那么它们之间一定会存在“屏蔽”的现象。但是这种现象绝对不会在变量重声明的场景下出现。</li>
+</ol>
+<p>&nbsp;<br><img src="https://raw.githubusercontent.com/wht6/image/master/img/chongshengm_2022224.png" alt><br>&nbsp;<br>下面看一种特殊情况：<br>&nbsp;<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"> </span><br><span class="line"><span class="keyword">import</span> <span class="string">&quot;fmt&quot;</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">var</span> container = []<span class="keyword">string</span>&#123;<span class="string">&quot;zero&quot;</span>, <span class="string">&quot;one&quot;</span>, <span class="string">&quot;two&quot;</span>&#125;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	container := <span class="keyword">map</span>[<span class="keyword">int</span>]<span class="keyword">string</span>&#123;<span class="number">0</span>: <span class="string">&quot;zero&quot;</span>, <span class="number">1</span>: <span class="string">&quot;one&quot;</span>, <span class="number">2</span>: <span class="string">&quot;two&quot;</span>&#125;</span><br><span class="line">	fmt.Printf(<span class="string">&quot;The element is %q.\n&quot;</span>, container[<span class="number">1</span>])</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>&nbsp;</p>
+<p>这里有两个都叫做<code>container</code>的变量，分别位于<code>main</code>包代码块和<code>main</code>函数代码块。<code>main</code>包代码块中的变量是切片（slice）类型的，另一个是字典（map）类型的。在<code>main</code>函数的最后，我试图打印出<code>container</code>变量的值中索引为<code>1</code>的那个元素。<br>&nbsp;<br>如果你熟悉这两个类型肯定会知道，在它们的值上我们都可以施加索引表达式，比如<code>container[0]</code>。只要中括号里的整数在有效范围之内（这里是 [0, 2]），它就可以把值中的某一个元素取出来。<br>&nbsp;<br>如果<code>container</code>的类型不是数组、切片或字典类型，那么索引表达式就会引发编译错误。这正是利用 Go 语言语法，帮我们约束程序的一个例子；但是当我们想知道 container 确切类型的时候，利用索引表达式的方式就不够了。<br>&nbsp;<br>当可重名变量的值被转换成某个接口类型值，或者它们的类型本身就是接口类型的时候，严格的类型检查就很有必要了。<br>&nbsp;</p>
+<h2 id="03-变量的类型"><a href="#03-变量的类型" class="headerlink" title="03|变量的类型"></a>03|变量的类型</h2><p>&nbsp;</p>
+<h3 id="类型断言"><a href="#类型断言" class="headerlink" title="类型断言"></a>类型断言</h3><p>&nbsp;<br>接着上一段代码，怎么判断变量<code>container</code>的类型？<br>&nbsp;<br>答案是使用“类型断言”表达式。<br>&nbsp;<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">value, ok := <span class="keyword">interface</span>&#123;&#125;(container).([]<span class="keyword">string</span>)</span><br></pre></td></tr></table></figure><br>&nbsp;<br>在赋值符号的右边，是一个类型断言表达式。</p>
+<p>&nbsp;<br>它包括了用来把<code>container</code>变量的值转换为空接口值的<code>interface&#123;&#125;(container)</code>。以及一个用于判断前者的类型是否为切片类型 <code>[]string</code> 的 <code>.([]string)</code>。<br>&nbsp;<br>这个表达式的结果可以被赋给两个变量，在这里由<code>value</code>和<code>ok</code>代表。变量<code>ok</code>是布尔（bool）类型的，它将代表类型判断的结果，<code>true</code>或<code>false</code>。如果是<code>true</code>，那么被判断的值将会被自动转换为<code>[]string</code>类型的值，并赋给变量<code>value</code>，否则<code>value</code>将被赋予<code>nil</code>（即“空”）。<br>&nbsp;<br>顺便提一下，这里的<code>ok</code>也可以没有。也就是说，类型断言表达式的结果，可以只被赋给一个变量，在这里是<code>value</code>。<br>&nbsp;<br>但是这样的话，当判断为否时就会引发异常。这种异常在 Go 语言中被叫做<code>panic</code>，我把它翻译为运行时恐慌。因为它是一种在 Go 程序运行期间才会被抛出的异常，而“恐慌”二字是英文 Panic 的中文直译。除非显式地“恢复”这种“恐慌”，否则它会使 Go 程序崩溃并停止。所以，在一般情况下，我们还是应该使用带<code>ok</code>变量的写法。<br>&nbsp;<br>类型断言表达式的语法形式是<code>x.(T)</code>。其中的<code>x</code>代表要被判断类型的值。这个值当下的类型必须是接口类型的，不过具体是哪个接口类型其实是无所谓的。所以，当这里的<code>container</code>变量类型不是任何的接口类型时，我们就需要先把它转成某个接口类型的值。<br>&nbsp;<br>如果<code>container</code>是某个接口类型的，那么这个类型断言表达式就可以是<code>container.([]string)</code>。这样看是不是清晰一些了？<br>&nbsp;<br>在 Go 语言中，<code>interface&#123;&#125;</code>代表空接口，任何类型都是它的实现类型。任何类型的值都可以很方便地被转换成空接口的值就行了。<br>&nbsp;<br>这里的具体语法是<code>interface&#123;&#125;(x)</code>，例如前面展示的<code>interface&#123;&#125;(container)</code>。<br>&nbsp;<br>你可能会对这里的<code>&#123;&#125;</code>产生疑惑，为什么在关键字<code>interface</code>的右边还要加上这个东西？<br>&nbsp;<br>请记住，一对不包裹任何东西的花括号，除了可以代表空的代码块之外，还可以用于表示不包含任何内容的数据结构（或者说数据类型）。<br>&nbsp;<br>比如你今后肯定会遇到的<code>struct&#123;&#125;</code>，它就代表了不包含任何字段和方法的、空的结构体类型。<br>&nbsp;<br>而空接口<code>interface&#123;&#125;</code>则代表了不包含任何方法定义的、空的接口类型。<br>&nbsp;<br>当然了，对于一些集合类的数据类型来说，<code>&#123;&#125;</code>还可以用来表示其值不包含任何元素，比如空的切片值<code>[]string&#123;&#125;</code>，以及空的字典值<code>map[int]string&#123;&#125;</code>。<br>&nbsp;<br><img src="https://raw.githubusercontent.com/wht6/image/master/img/duanyan_2022225.png" alt><br>&nbsp;<br>我们再向答案的最右边看。圆括号中<code>[]string</code>是一个类型字面量。所谓类型字面量，就是用来表示数据类型本身的若干个字符。<br>&nbsp;<br>比如，<code>string</code>是表示字符串类型的字面量，<code>uint8</code>是表示 8 位无符号整数类型的字面量。<br>&nbsp;<br>再复杂一些的就是我们刚才提到的<code>[]string</code>，用来表示元素类型为<code>string</code>的切片类型，以及<code>map[int]string</code>，用来表示键类型为<code>int</code>、值类型为<code>string</code>的字典类型。还有更复杂的结构体类型字面量、接口类型字面量，等等。<br>&nbsp;</p>
+<h3 id="类型转换"><a href="#类型转换" class="headerlink" title="类型转换"></a>类型转换</h3><p>&nbsp;<br>类型转换的语法形式是<code>T(x)</code>。其中的<code>x</code>可以是一个变量，也可以是一个代表值的字面量（比如<code>1.23</code>和<code>struct&#123;&#125;</code>），还可以是一个表达式。<br>&nbsp;<br>注意，如果是表达式，那么该表达式的结果只能是一个值，而不能是多个值。在这个上下文中，<code>x</code>可以被叫做源值，它的类型就是源类型，而那个<code>T</code>代表的类型就是目标类型。<br>&nbsp;<br><strong>对于整数类型值、整数常量之间的类型转换，原则上只要源值在目标类型的可表示范围内就是合法的。</strong><br>&nbsp;<br>比如，之所以<code>uint8(255)</code>可以把无类型的常量<code>255</code>转换为<code>uint8</code>类型的值，是因为<code>255</code>在 [0, 255] 的范围内。<br>&nbsp;<br>但需要特别注意的是，源整数类型的可表示范围较大，而目标类型的可表示范围较小的情况，比如把值的类型从<code>int16</code>转换为<code>int8</code>。请看下面这段代码：<br>&nbsp;<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> srcInt = <span class="keyword">int16</span>(<span class="number">-255</span>)</span><br><span class="line">dstInt := <span class="keyword">int8</span>(srcInt)</span><br></pre></td></tr></table></figure><br>&nbsp;<br>变量<code>srcInt</code>的值是<code>int16</code>类型的<code>-255</code>，而变量<code>dstInt</code>的值是由前者转换而来的，类型是<code>int8</code>。<code>int16</code>类型的可表示范围可比<code>int8</code>类型大了不少。问题是，<code>dstInt</code>的值是多少？</p>
+<p>&nbsp;<br>首先你要知道，整数在 Go 语言以及计算机中都是以补码的形式存储的。这主要是为了简化计算机对整数的运算过程。补码其实就是原码各位求反再加 1。<br>&nbsp;<br>比如，<code>int16</code>类型的值<code>-255</code>的补码是<code>1111111100000001</code>。如果我们把该值转换为<code>int8</code>类型的值，那么 Go 语言会把在较高位置（或者说最左边位置）上的 8 位二进制数直接截掉，从而得到<code>00000001</code>。<br>&nbsp;<br>又由于其最左边一位是<code>0</code>，表示它是个正整数，以及正整数的补码就等于其原码，所以<code>dstInt</code>的值就是<code>1</code>。<br>&nbsp;<br>一定要记住，当整数值的类型的有效范围由宽变窄时，只需在补码形式下截掉一定数量的高位二进制数即可。<br>&nbsp;<br>类似的快刀斩乱麻规则还有：当把一个浮点数类型的值转换为整数类型值时，前者的小数部分会被全部截掉。<br>&nbsp;<br><strong>虽然直接把一个整数值转换为一个<code>string</code>类型的值是可行的，但值得关注的是，被转换的整数值应该可以代表一个有效的 Unicode 代码点，否则转换的结果将会是<code>&quot;�&quot;</code>（仅由高亮的问号组成的字符串值）。</strong><br>&nbsp;<br>字符<code>&#39;�&#39;</code>的 Unicode 代码点是<code>U+FFFD</code>。它是 Unicode 标准中定义的 Replacement Character，专用于替换那些未知的、不被认可的以及无法展示的字符。<br>&nbsp;<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">string</span>(<span class="number">-1</span>)</span><br></pre></td></tr></table></figure><br>&nbsp;<br>由于<code>-1</code>肯定无法代表一个有效的 Unicode 代码点，所以得到的总会是<code>&quot;�&quot;</code>。在实际工作中，我们在排查问题时可能会遇到<code>�</code>，你需要知道这可能是由于什么引起的。</p>
+<p>&nbsp;<br><strong><code>string</code>类型与各种切片类型之间的互转的。</strong><br>&nbsp;<br>一个值在从<code>string</code>类型向<code>[]byte</code>类型转换时代表着以 UTF-8 编码的字符串会被拆分成零散、独立的字节。<br>&nbsp;<br>除了与 ASCII 编码兼容的那部分字符集，以 UTF-8 编码的某个单一字节是无法代表一个字符的。<br>&nbsp;<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">string</span>([]<span class="keyword">byte</span>&#123;<span class="string">&#x27;\xe4&#x27;</span>, <span class="string">&#x27;\xbd&#x27;</span>, <span class="string">&#x27;\xa0&#x27;</span>, <span class="string">&#x27;\xe5&#x27;</span>, <span class="string">&#x27;\xa5&#x27;</span>, <span class="string">&#x27;\xbd&#x27;</span>&#125;) <span class="comment">// 你好</span></span><br></pre></td></tr></table></figure><br>&nbsp;<br>比如，UTF-8 编码的三个字节<code>\xe4</code>、<code>\xbd</code>和<code>\xa0</code>合在一起才能代表字符<code>&#39;你&#39;</code>，而<code>\xe5</code>、<code>\xa5</code>和<code>\xbd</code>合在一起才能代表字符<code>&#39;好&#39;</code>。</p>
+<p>&nbsp;<br>其次，一个值在从<code>string</code>类型向<code>[]rune</code>类型转换时代表着字符串会被拆分成一个个 Unicode 字符。<br>&nbsp;<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">string</span>([]<span class="keyword">rune</span>&#123;<span class="string">&#x27;\u4F60&#x27;</span>, <span class="string">&#x27;\u597D&#x27;</span>&#125;) <span class="comment">// 你好</span></span><br></pre></td></tr></table></figure><br>&nbsp;</p>
+<h3 id="别名类型和潜在类型"><a href="#别名类型和潜在类型" class="headerlink" title="别名类型和潜在类型"></a>别名类型和潜在类型</h3><p>&nbsp;<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> MyString = <span class="keyword">string</span></span><br></pre></td></tr></table></figure><br>&nbsp;<br>这条声明语句表示，<code>MyString</code>是<code>string</code>类型的别名类型。顾名思义，别名类型与其源类型的区别恐怕只是在名称上，它们是完全相同的。源类型与别名类型是一对概念，是两个对立的称呼。别名类型主要是为了代码重构而存在的。</p>
+<p>&nbsp;<br>Go 语言内建的基本类型中就存在两个别名类型。<code>byte</code>是<code>uint8</code>的别名类型，而<code>rune</code>是<code>int32</code>的别名类型。<br>&nbsp;<br>一定要注意，如果我这样声明：<br>&nbsp;<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> MyString2 <span class="keyword">string</span> <span class="comment">// 注意，这里没有等号。</span></span><br></pre></td></tr></table></figure><br>&nbsp;<br><code>MyString2</code>和<code>string</code>就是两个不同的类型了。这里的<code>MyString2</code>是一个新的类型，不同于其他任何类型。这种方式也可以被叫做对类型的再定义。我们刚刚把<code>string</code>类型再定义成了另外一个类型<code>MyString2</code>。</p>
+<p>&nbsp;<br><img src="https://raw.githubusercontent.com/wht6/image/master/img/biemingqianz_2022225.png" alt><br>&nbsp;<br>对于这里的类型再定义来说，<code>string</code>可以被称为<code>MyString2</code>的潜在类型。潜在类型的含义是，某个类型在本质上是哪个类型。<br>&nbsp;<br>潜在类型相同的不同类型的值之间是可以进行类型转换的。因此，<code>MyString2</code>类型的值与<code>string</code>类型的值可以使用类型转换表达式进行互转。<br>&nbsp;<br>但对于集合类的类型<code>[]MyString2</code>与<code>[]string</code>来说这样做却是不合法的，因为<code>[]MyString2</code>与<code>[]string</code>的潜在类型不同，分别是<code>[]MyString2</code>和<code>[]string</code>。另外，即使两个不同类型的潜在类型相同，它们的值之间也不能进行判等或比较，它们的变量之间也不能赋值。<br>&nbsp;<br>如果通过import . XXX这种方式导入的代码包中的变量与当前代码包中的变量重名了，那么 Go 语言是会把它们当做“可重名变量”看待还是会报错呢？<br>&nbsp;<br>这两个变量会成为“可重名变量”。虽然这两个变量在这种情况下的作用域都是当前代码包的当前文件，但是它们所处的代码块是不同的。<br>&nbsp;<br>当前文件中的变量处在该文件所代表的代码块中，而被导入的代码包中的变量却处在声明它的那个文件所代表的代码块中。当然，我们也可以说被导入的代码包所代表的代码块包含了这个变量。<br>&nbsp;<br>在当前文件中，本地的变量会“屏蔽”掉被导入的变量。</p>
+<p>&nbsp;<br>&nbsp;</p>
+<p>参考链接：<a target="_blank" rel="noopener" href="https://time.geekbang.org/column/intro/112">https://time.geekbang.org/column/intro/112</a></p>
+
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2022年03月05日 10:13</p>
+        <p>原始链接： <a class="post-url" href="/posts/aea9.html" title="Go的程序实体">http://wht6.github.io/posts/aea9.html</a></p>
+        <footer>
+            <a href="http://wht6.github.io">
+                <img src="/images/logo.png" alt="并指如刀">
+                并指如刀
+            </a>
+        </footer>
+    </div>
+</div>
+
+      
+        
+            
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;">赏</a>
+</div>
+
+<div id="reward" class="post-modal reward-lay">
+    <a class="close" href="javascript:;" id="reward-close">×</a>
+    <span class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我吃糖~
+        <i class="icon icon-quote-right"></i>
+    </span>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/images/wechat_code.jpg" alt="打赏二维码">
+        </div>
+        <div class="reward-select">
+            
+            <label class="reward-select-item checked" data-id="wechat" data-wechat="/images/wechat_code.jpg">
+                <img class="reward-select-item-wechat" src="/images/wechat.png" alt="微信">
+            </label>
+            
+            
+            <label class="reward-select-item" data-id="alipay" data-alipay="/images/alipay_code.jpg">
+                <img class="reward-select-item-alipay" src="/images/alipay.png" alt="支付宝">
+            </label>
+            
+        </div>
+    </div>
+</div>
+
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://wht6.github.io/posts/aea9.html&title=《Go的程序实体》 — WHT&pic=/images/featureimages/33.jpg" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://wht6.github.io/posts/aea9.html&title=《Go的程序实体》 — WHT&source=分享技术,分享知识,分享感悟" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://wht6.github.io/posts/aea9.html" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Go的程序实体》 — WHT&url=http://wht6.github.io/posts/aea9.html&via=http://wht6.github.io" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://wht6.github.io/posts/aea9.html" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://wht6.github.io/posts/aea9.html" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/Go语言/" class="color5">Go语言</a>
+      
+  </li>
+
+        </ul>
+        
+    </footer>
+  </div>
+</article>
+
+
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#01-%E5%8F%98%E9%87%8F"><span class="post-toc-text">01|变量</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#%E5%A3%B0%E6%98%8E%E5%8F%98%E9%87%8F%E7%9A%84%E6%96%B9%E5%BC%8F"><span class="post-toc-text">声明变量的方式</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Go%E7%9A%84%E7%B1%BB%E5%9E%8B%E6%8E%A8%E6%96%AD"><span class="post-toc-text">Go的类型推断</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#%E5%8F%98%E9%87%8F%E7%9A%84%E9%87%8D%E5%A3%B0%E6%98%8E"><span class="post-toc-text">变量的重声明</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#02-%E5%8F%98%E9%87%8F%E7%9A%84%E4%BD%9C%E7%94%A8%E5%9F%9F"><span class="post-toc-text">02|变量的作用域</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#03-%E5%8F%98%E9%87%8F%E7%9A%84%E7%B1%BB%E5%9E%8B"><span class="post-toc-text">03|变量的类型</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#%E7%B1%BB%E5%9E%8B%E6%96%AD%E8%A8%80"><span class="post-toc-text">类型断言</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2"><span class="post-toc-text">类型转换</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#%E5%88%AB%E5%90%8D%E7%B1%BB%E5%9E%8B%E5%92%8C%E6%BD%9C%E5%9C%A8%E7%B1%BB%E5%9E%8B"><span class="post-toc-text">别名类型和潜在类型</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+    
+
+<nav id="article-nav">
+  
+    <a href="/posts/4dc9.html" id="article-nav-newer" class="article-nav-link-wrap">
+
+      <span class="article-nav-title">
+        <i class="fa fa-hand-o-left" aria-hidden="true"></i>
+        
+          Golang的数组和切片
+        
+      </span>
+    </a>
+  
+  
+    <a href="/posts/1094.html" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">Go语言基础知识</span>
+      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    </a>
+  
+</nav>
+
+
+
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2022 并指如刀<br>
+      </p>
+    </div>
+  </div>
+</footer>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "http://wht6.github.io",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 1
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
+</div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            <a class="category-link" href="/categories/Linux/">Linux</a><a class="category-link" href="/categories/%E4%B8%AA%E4%BA%BA%E5%85%B4%E8%B6%A3/">个人兴趣</a><a class="category-link" href="/categories/%E4%BA%91%E8%AE%A1%E7%AE%97/">云计算</a><a class="category-link" href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/">嵌入式</a><a class="category-link" href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a><a class="category-link" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a>
+        </div>
+        <div id="sidebar-menu-box-tags">
+            <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Go%E8%AF%AD%E8%A8%80/" style="font-size: 20px;">Go语言</a> <a href="/tags/Python%E8%AF%AD%E8%A8%80/" style="font-size: 16.67px;">Python语言</a> <a href="/tags/pytorch/" style="font-size: 10px;">pytorch</a> <a href="/tags/%E4%BB%A3%E7%90%86/" style="font-size: 10px;">代理</a> <a href="/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 10px;">包管理</a> <a href="/tags/%E5%AE%9E%E4%BE%8B%E5%88%86%E5%89%B2/" style="font-size: 13.33px;">实例分割</a> <a href="/tags/%E5%AE%B9%E5%99%A8/" style="font-size: 10px;">容器</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 13.33px;">工具</a> <a href="/tags/%E6%80%9D%E7%BB%B4/" style="font-size: 10px;">思维</a> <a href="/tags/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/" style="font-size: 16.67px;">文件系统</a> <a href="/tags/%E6%97%A5%E5%BF%97/" style="font-size: 10px;">日志</a> <a href="/tags/%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86/" style="font-size: 10px;">权限管理</a> <a href="/tags/%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86/" style="font-size: 10px;">用户管理</a> <a href="/tags/%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">磁盘管理</a> <a href="/tags/%E7%AE%A1%E9%81%93/" style="font-size: 10px;">管道</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">系统配置</a> <a href="/tags/%E7%BD%91%E7%AB%99/" style="font-size: 10px;">网站</a> <a href="/tags/%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/" style="font-size: 10px;">网站搭建</a> <a href="/tags/%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">网络配置</a> <a href="/tags/%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1/" style="font-size: 10px;">计划任务</a> <a href="/tags/%E8%B7%AF%E7%94%B1%E5%99%A8/" style="font-size: 10px;">路由器</a> <a href="/tags/%E8%BF%9B%E7%A8%8B/" style="font-size: 10px;">进程</a> <a href="/tags/%E9%81%93%E5%AE%B6/" style="font-size: 10px;">道家</a> <a href="/tags/%E9%87%8D%E5%AE%9A%E5%90%91/" style="font-size: 10px;">重定向</a> <a href="/tags/%E9%98%BF%E9%87%8C%E4%BA%91/" style="font-size: 13.33px;">阿里云</a>
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a  href="/">
+                    <i class="fa fa-home"></i><span>Home</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/archives">
+                    <i class="fa fa-archive"></i><span>Archives</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/about">
+                    <i class="fa fa-user"></i><span>About</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Go%E8%AF%AD%E8%A8%80/" style="font-size: 20px;">Go语言</a> <a href="/tags/Python%E8%AF%AD%E8%A8%80/" style="font-size: 16.67px;">Python语言</a> <a href="/tags/pytorch/" style="font-size: 10px;">pytorch</a> <a href="/tags/%E4%BB%A3%E7%90%86/" style="font-size: 10px;">代理</a> <a href="/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 10px;">包管理</a> <a href="/tags/%E5%AE%9E%E4%BE%8B%E5%88%86%E5%89%B2/" style="font-size: 13.33px;">实例分割</a> <a href="/tags/%E5%AE%B9%E5%99%A8/" style="font-size: 10px;">容器</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 13.33px;">工具</a> <a href="/tags/%E6%80%9D%E7%BB%B4/" style="font-size: 10px;">思维</a> <a href="/tags/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/" style="font-size: 16.67px;">文件系统</a> <a href="/tags/%E6%97%A5%E5%BF%97/" style="font-size: 10px;">日志</a> <a href="/tags/%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86/" style="font-size: 10px;">权限管理</a> <a href="/tags/%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86/" style="font-size: 10px;">用户管理</a> <a href="/tags/%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">磁盘管理</a> <a href="/tags/%E7%AE%A1%E9%81%93/" style="font-size: 10px;">管道</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">系统配置</a> <a href="/tags/%E7%BD%91%E7%AB%99/" style="font-size: 10px;">网站</a> <a href="/tags/%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/" style="font-size: 10px;">网站搭建</a> <a href="/tags/%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">网络配置</a> <a href="/tags/%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1/" style="font-size: 10px;">计划任务</a> <a href="/tags/%E8%B7%AF%E7%94%B1%E5%99%A8/" style="font-size: 10px;">路由器</a> <a href="/tags/%E8%BF%9B%E7%A8%8B/" style="font-size: 10px;">进程</a> <a href="/tags/%E9%81%93%E5%AE%B6/" style="font-size: 10px;">道家</a> <a href="/tags/%E9%87%8D%E5%AE%9A%E5%90%91/" style="font-size: 10px;">重定向</a> <a href="/tags/%E9%98%BF%E9%87%8C%E4%BA%91/" style="font-size: 13.33px;">阿里云</a>
+        </div>
+    </div>
+</div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+
+
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  
+<script src="/js/particles.js"></script>
+
+
+
+
+
+
+
+
+  
+<link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  
+<script src="/js/animate.js"></script>
+
+
+
+  
+<script src="/js/pop-img.js"></script>
+
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/ Relative)","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"left","width":100,"height":180},"mobile":{"show":false},"react":{"opacityDefault":0.7}});</script></body>
+</html>

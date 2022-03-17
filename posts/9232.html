@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Linux磁盘管理 | WHT</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="WHT,WHT's Blog" />
+  
+  <meta name="description" content="磁盘简介 机械磁盘的一个扇区等于512个字节。 机械磁盘由盘片、磁头、盘片转轴和控制电机、磁头控制器、接口等部分组成。 SATA接口的磁盘在Linux中对应&#x2F;dev&#x2F;sda，&#x2F;dev是设备文件目录，sda是一个文件，s代表SATA就是串口（SCSI），d代表disk磁盘，a表示第一块。第二块就是&#x2F;dev&#x2F;sdb，第三块就是&#x2F;dev&#x2F;sdc。 分区方式有两种：MBR和GPT。MBR支持的最大磁盘容">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux磁盘管理">
+<meta property="og:url" content="http://wht6.github.io/posts/9232.html">
+<meta property="og:site_name" content="WHT">
+<meta property="og:description" content="磁盘简介 机械磁盘的一个扇区等于512个字节。 机械磁盘由盘片、磁头、盘片转轴和控制电机、磁头控制器、接口等部分组成。 SATA接口的磁盘在Linux中对应&#x2F;dev&#x2F;sda，&#x2F;dev是设备文件目录，sda是一个文件，s代表SATA就是串口（SCSI），d代表disk磁盘，a表示第一块。第二块就是&#x2F;dev&#x2F;sdb，第三块就是&#x2F;dev&#x2F;sdc。 分区方式有两种：MBR和GPT。MBR支持的最大磁盘容">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-10-29T02:00:00.000Z">
+<meta property="article:modified_time" content="2022-01-09T07:10:20.282Z">
+<meta property="article:author" content="并指如刀">
+<meta property="article:tag" content="磁盘管理">
+<meta name="twitter:card" content="summary">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<script src="/js/pace.min.js"></script>
+
+  
+
+  
+  
+
+<style type="text/css" lang="css">
+    #loading-container{
+        position: fixed;
+        top: 0;
+        left: 0;
+        min-height: 100vh;
+        width: 100vw;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: #FFF;
+        text-align: center;
+        /* loader页面消失采用渐隐的方式*/
+        -webkit-transition: opacity 1s ease;
+        -moz-transition: opacity 1s ease;
+        -o-transition: opacity 1s ease;
+        transition: opacity 1s ease;
+    }
+    .loading-image{
+        width: 120px;
+        height: 50px;
+        transform: translate(-50%);
+    }
+    
+    .loading-image div:nth-child(2) {
+        -webkit-animation: pacman-balls 1s linear 0s infinite;
+        animation: pacman-balls 1s linear 0s infinite
+    }
+
+    .loading-image div:nth-child(3) {
+        -webkit-animation: pacman-balls 1s linear .33s infinite;
+        animation: pacman-balls 1s linear .33s infinite
+    }
+
+    .loading-image div:nth-child(4) {
+        -webkit-animation: pacman-balls 1s linear .66s infinite;
+        animation: pacman-balls 1s linear .66s infinite
+    }
+
+    .loading-image div:nth-child(5) {
+        -webkit-animation: pacman-balls 1s linear .99s infinite;
+        animation: pacman-balls 1s linear .99s infinite
+    }
+    
+   .loading-image div:first-of-type {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_up .5s 0s infinite;
+        animation: rotate_pacman_half_up .5s 0s infinite;
+    }
+    .loading-image div:nth-child(2) {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_down .5s 0s infinite;
+        animation: rotate_pacman_half_down .5s 0s infinite;
+        margin-top: -50px;
+    }
+    @-webkit-keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @-webkit-keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+
+    @keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+    
+    @-webkit-keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+
+    @keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+    
+   
+    .loading-image div:nth-child(3),
+    .loading-image div:nth-child(4),
+    .loading-image div:nth-child(5),
+    .loading-image div:nth-child(6){
+        background-color: #49b1f5;
+        width: 15px;
+        height: 15px;
+        border-radius: 100%;
+        margin: 2px;
+        width: 10px;
+        height: 10px;
+        position: absolute;
+        transform: translateY(-6.25px);
+        top: 25px;
+        left: 100px;
+    }
+    .loading-text{
+        margin-bottom: 20vh;
+        text-align: center;
+        color: #2c3e50;
+        font-size: 2rem;
+        box-sizing: border-box;
+        padding: 0 10px;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    @media only screen and (max-width: 500px) {
+         .loading-text{
+            font-size: 1.5rem;
+         }
+    }
+    .fadeout {
+        opacity: 0;
+        filter: alpha(opacity=0);
+    }
+    /* logo出现动画 */
+    @-webkit-keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);transform:translate3d(0,-100%,0)}100%{opacity:1;-webkit-transform:none;transform:none}}
+    @keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);}}
+ </style>
+ <script>
+(function () {
+    const loaded = function(){
+       setTimeout(function(){
+            const loader = document.getElementById("loading-container");
+            loader.className="fadeout" ;//使用渐隐的方法淡出loading page
+            // document.getElementById("body-wrap").style.display="flex";
+            setTimeout(function(){
+                loader.style.display="none";
+            },1000); 
+        },1000);//强制显示loading page 1s  
+    };
+    loaded();
+})()
+ </script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="WHT" type="application/atom+xml">
+</head>
+
+
+ <div id="loading-container">
+     <p class="loading-text">玩命加载中 . . . </p> 
+     <div class="loading-image">
+         <div></div>
+         <div></div>
+         <div></div>
+         <div></div> 
+         <div></div>
+     </div>
+ </div><body>
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">WHT&#39;s Blog</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a  href="/">
+                        <i class="fa fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    
+                    <a  href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>Archives</span>
+                    </a>
+                    
+                    <a  href="/about">
+                        <i class="fa fa-user"></i>
+                        <span>About</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/logo.png" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        WHT&#39;s Blog
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        一个专注运维开发的技术博客
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="WHT&#39;s Blog" target="_blank" href="//wht6.github.io">
+                            <i class="fa fa-home fa-2x"></i></a>
+                    
+                        <a title="Github" target="_blank" href="//github.com/wht6">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                        <a title="Weibo" target="_blank" href="//weibo.com/wht6">
+                            <i class="fa fa-weibo fa-2x"></i></a>
+                    
+                        <a title="Twitter" target="_blank" href="//twitter.com/wht6">
+                            <i class="fa fa-twitter fa-2x"></i></a>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="post-Linux磁盘管理" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="post-title" itemprop="name">
+      Linux磁盘管理
+    </h1>
+    <div class="post-title-bar">
+      <ul>
+          
+              <li>
+                  <i class="fa fa-book"></i>
+                  
+                      <a href="/categories/Linux/">Linux</a>
+                  
+              </li>
+          
+        <li>
+          <i class="fa fa-calendar"></i>  2021-10-29
+        </li>
+        <li>
+          <i class="fa fa-eye"></i>
+          <span id="busuanzi_value_page_pv"></span>
+        </li>
+      </ul>
+    </div>
+  
+
+          
+      </header>
+    
+    <div class="article-entry post-content" itemprop="articleBody">
+      
+            
+            <hr>
+<h3 id="磁盘简介"><a href="#磁盘简介" class="headerlink" title="磁盘简介"></a>磁盘简介</h3><ul>
+<li>机械磁盘的一个扇区等于512个字节。</li>
+<li>机械磁盘由盘片、磁头、盘片转轴和控制电机、磁头控制器、接口等部分组成。</li>
+<li>SATA接口的磁盘在Linux中对应/dev/sda，/dev是设备文件目录，sda是一个文件，s代表SATA就是串口（SCSI），d代表disk磁盘，a表示第一块。第二块就是/dev/sdb，第三块就是/dev/sdc。</li>
+<li>分区方式有两种：MBR和GPT。MBR支持的最大磁盘容量是2T，最多支持划分4个主分区。MBR叫主引导记录，位于磁盘最前边，记录分区的结构信息。GPT支持大于2T的硬盘，支持128个主分区。</li>
+</ul>
+<h3 id="管理磁盘"><a href="#管理磁盘" class="headerlink" title="管理磁盘"></a>管理磁盘</h3><h4 id="查看磁盘分区"><a href="#查看磁盘分区" class="headerlink" title="查看磁盘分区"></a>查看磁盘分区</h4><ul>
+<li>管理磁盘流程：分区（MBR或者GPT），格式化/文件系统Filesystem，挂载mount。形象比喻，磁盘是毛坯房，通过分区分成不同的隔间，通过格式化放格子柜，文件系统用来记录和管理这些格子，而挂载就是给房子加个门，不然进不去，系统给它分配一个文件夹。</li>
+<li>查看磁盘。ll /dev/sd*。可以看到第一个字母是b，也就是文件类型是b，b代表block。</li>
+<li>磁盘是用第3个字母区分的，abcdefg…，分区是第四个数字区分的，1234…，例如，/dev/sda2是磁盘sda的第二个分区。</li>
+<li>第二种查看磁盘的方式。lsblk，列出块设备。</li>
+</ul>
+<h4 id="创建分区"><a href="#创建分区" class="headerlink" title="创建分区"></a>创建分区</h4><ul>
+<li>启动分区工具。fdisk /dev/sdb。</li>
+<li>进入回话模式。1）欢迎界面，n回车开始分区。2）问你是划分主分区还是扩展分区，p回车选择主分区。3）设置分区号。MBR分区只能划分四个分区。从小到大设置，方便理解。1回车。4）问你起始扇区的位置，每次默认都是从上个分区结束的地方开始划分，默认回车。【可以发现分区的时候并不是从0号扇区开始分的，而是从2048号扇区开始分的，因为前2048个扇区记录了MBR的信息】5）问你分区结束的扇区。可以写扇区号，但是没必要，有更简单的方法。直接写+2G回车，就是给分区分2G，它会自动帮你算扇区。6）告诉你完成了2G分区的记录，但未生效。w回车，表示确认保存分区信息并将分区列表写入磁盘，然后自动会退出分区工具。也可以继续n回车，表示继续进行分区。（没有分区的部分不能使用）</li>
+<li>刷新分区表。partprobe /dev/sdb。</li>
+<li>查看分区结果。fdisk -l /dev/sdb。lsblk。</li>
+</ul>
+<h4 id="创建文件系统"><a href="#创建文件系统" class="headerlink" title="创建文件系统"></a>创建文件系统</h4><ul>
+<li>创建文件系统/格式化：mkfs.ext4 /dev/sdb1，mk是mask，fs是文件系统，ext4是一种文件系统的类型（扩展文件系统第四代）。微软的文件系统叫NTFS，早期是FAT16、FAT32。</li>
+<li>块大小就是一个格子的大小，叫block，一个块=4096B。</li>
+</ul>
+<h4 id="挂载分区"><a href="#挂载分区" class="headerlink" title="挂载分区"></a>挂载分区</h4><ul>
+<li>mount -t ext4 /dev/sdb1 /mnt/disk1，-t是文件系统类型（可以省略，会自动识别系统文件系统类型），将sdb1挂载到/nmt/disk1目录下。/mnt/disk就是分区的门。</li>
+<li>df -hT，查看是否挂载成功。d是disk，f是free，h是显示单位，T是显示分区类型。</li>
+<li>/dev/sda是系统盘，默认挂载在/。我创建/mnt/disk1文件夹的时候，如果往这个文件夹中放东西，其实是放到sda系统盘里边，但是我把/dev/sdb1挂载到/mnt/disk1之后，再往这个文件夹中放东西就放到了磁盘sdb中，和sda没有任何关系。</li>
+<li>目录结构是统一的，都是从/开始，但是实际的存储内容在真实的硬盘上，所以磁盘的挂载点可以放在任何一个文件夹，文件夹一旦被挂载，数据就会存储到相应的磁盘中。</li>
+<li>fdisk属于MBR分区模式，最多划4个主分区，超过4个分区就要用到逻辑分区。单从存储文件上看主分区与逻辑分区没有区别，区别在于操作系统只能装到主分区上。</li>
+<li>想要划分4个以上的分区，就要放弃一个主分区，一般选第四个分区，然后把它划分为扩展分区。但是扩展分区不存数据，需要再将扩展分区划分成N个逻辑分区。只有4个分区号，但是我想要更多的分区，我就必须把一个分区设置成扩展分区，再在扩展分区中划分逻辑分区。扩展分区是为了扩展用的，不能直接格式化挂载存数据，需要在里边划分逻辑分区。</li>
+<li>按n，再按e，选择所有剩余空间划分成扩展分区。再按n，就直接问你逻辑分区的起始和结束了，这时候在设置逻辑分区。</li>
+<li>逻辑分区也需要格式化挂载才能用。</li>
+<li>umount /dev/sdb5 ，卸载分区。卸载之后可以再挂载到别的目录，因为不经过格式化所以文件还在。</li>
+<li>如果一个目录里面本来有文件，这个文件是存在sda中的，如果把新分区挂载到这个目录，原来的文件就看不见了，新分区把sda给挤掉了。如果在把这个分区卸载了，原来的文件就又出现了，这是因为，这个目录又自动被sda挂载。也就是说一个目录只能被一个分区挂载。</li>
+<li>上述挂载方式都是临时挂载，重启时候还要重新挂载。</li>
+</ul>
+<h2 id="逻辑卷LVM"><a href="#逻辑卷LVM" class="headerlink" title="逻辑卷LVM"></a>逻辑卷LVM</h2><ul>
+<li>普通的磁盘分区如果存满了，就无法向挂载到目录继续写入文件，而一个目录又无法挂载多个硬盘，也就是无法实现随意扩容，这在实际生产环境中可能是致命的。</li>
+<li>逻辑卷LVM是一种磁盘管理方式，特点是可以随意扩容，相当于把磁盘变成了抽象的分区。</li>
+<li>创建逻辑卷的流程：1）将物理硬盘变成物理卷。 2）将物理卷加入卷组。 3）在卷组中抽调空间，制作逻辑卷。 4）格式化。 5）挂载。</li>
+<li>只要卷组中有空间，逻辑卷就能够从卷组中抽调空间进行扩充，如果卷组中没有空间了，就需要购买新的物理硬盘变成物理卷加入到卷组。</li>
+<li>简称：物理卷（PV），卷组（VG），逻辑卷（LV）。</li>
+<li>步骤：1）pvcreate /dev/sdf，创建物理卷。2）vgcreate vg1 /dev/sdf，vg1是卷组名，sdf是成员。3）lvcreate -L 4G -n lv1 vg1，-L是大小，-n是逻辑卷的名字，vg1是所属的卷组。4）mkfs.ext4 /dev/vg1/lv1，格式化逻辑卷lv1，/dev/卷组名/逻辑卷名，这是标准命名方式。5）mkdir /mnt/lv1创建一个文件夹，mount /dev/vg1/lv1 /mnt/lv1将逻辑卷挂载到目录。</li>
+<li>pvs，查看所有物理卷，Fmt是版本，Attr是属性（a表示可用），PSize是大小，PFree是空闲</li>
+<li>给卷组扩容。先创建pv：pvcreate /dev/sdg，给指定的卷组扩容：vgextend vg1 /dev/sdg。</li>
+<li>vgs，查看所有卷组，#PV是物理卷的个数，#LV是逻辑卷的个数，VSize是卷组总的大小，VFree是卷组总的空闲。</li>
+<li>给逻辑卷扩容。1）LV扩容。lvextend -L  +4G /dev/vg1/lv1。2）刷新目录。resize2fs /dev/vg1/lv1，重置文件系统大小。</li>
+</ul>
+<h2 id="交换分区管理Swap"><a href="#交换分区管理Swap" class="headerlink" title="交换分区管理Swap"></a>交换分区管理Swap</h2><ul>
+<li>Swap分区即交换分区，也是一种普通分区，只是在功能上有些特殊。交换分区的作用是“提升”内存的容量，防止OOM（Out Of Memory）</li>
+<li>内存经常访问的数据会放入SWAP分区，这个行为是系统做的，人为是不干预的。相当于我把经常用的东西放到一起，方便我平时使用。</li>
+<li>SWAP分区通常大小设置为内存大小的2倍。</li>
+<li>free -m，查看SWAP分区。</li>
+<li>更改一个分区为SWAP分区。进入fdisk工具，按p查看已有分区，按t更改一个分区的ID，（swap分区对应的ID是82，可以按L查看所有ID），输入82，按w写入保存。</li>
+<li>partprobe /dev/sdc刷新，mkswap /dev/sdc1格式化交换分区，swapon /dev/sdc1挂载交换分区，free -m查看交换分区大小。</li>
+<li>（这里其实不改分区的ID，只执行后面的格式化挂载操作也是可以的）</li>
+<li>swapoff /dev/sdc2，卸载swap分区。</li>
+</ul>
+<h2 id="文件系统"><a href="#文件系统" class="headerlink" title="文件系统"></a>文件系统</h2><h3 id="文件系统-1"><a href="#文件系统-1" class="headerlink" title="文件系统"></a>文件系统</h3><ul>
+<li>文件系统的类型：Windows：FAT16、FAT32、NTFS。Linux：EXT3、EXT4、XFS。这些都是索引（index）文件系统。</li>
+<li>文件系统将磁盘分成一个个的小格子，这个小格子可以存也可以取，就像超市的储物柜。这个小格子叫块（block），每个块的大小是固定的4096字节，它的作用是存储文件的实际数据。</li>
+<li>一个大于4k的文件在存储是会占用多个块，一般情况下是一个块不够，依次存储到后面的块。但是有一种情况是，有些块存储数据之后又擦除数据了，这时候空闲块的分布是不连续的，在去存储一个大文件是可能会导致这个文件在实际存储位置上不连续，这就是文件碎片。文件碎片就是同一个文件在存储在不连续的存储位置，但是文件碎片对于实际使用是没有影响的。</li>
+<li>文件系统还需要一个东西去记录一个文件所有的块，它就是索引节点（inode）。每个文件有一个索引节点，一个inode的大小是128比特，它记录着文件的元数据（metadata），metadata就是文件属性，包括大小、权限、属主、属组、链接数、块数量、块的编号。</li>
+<li>文件系统还有一个东西是超级块(superblock)，记录了块和索引的总量，以及未使用与已使用的inode和block数量。</li>
+<li>每次使用mkfs.ext4命令格式化都创建了一个独立的文件系统，所以一台主机上往往不只一个文件系统。</li>
+<li>观察一个文件的inode信息：ll -i file1.txt，文件属性中的第一个数字就是inode号。</li>
+<li>查看一个分区可以存储inode的数量：df -i，Inode就是可以存储inode的总量。（ls -l | wc -l，查看目录下文件的数量）而inode的数量决定了文件存储到个数，只要文件个数满了，不论你的存储空间有没有占满都不能再新建文件了，但是只要block没有满就可以往已有的文件里继续写东西。</li>
+<li>总结：磁盘空间的限制取决于两方面，inode和block，inode决定了文件的数量，block决定了文件的大小。</li>
+</ul>
+<h3 id="文件链接"><a href="#文件链接" class="headerlink" title="文件链接"></a>文件链接</h3><ul>
+<li>软链接(symbolic link)，可以让我们快速的找到一个文件，Windows中叫快捷方式。软链接可以存在不同位置，通过访问软链接就能访问原来的文件（文件夹也是一样）。</li>
+<li>ln -s /file1 /root/桌面/file11，ln就是link，-s是symbolic，/file1是原文件，/root/桌面/file11是file1的软链接。ll查看软链接的文件属性会发现文件类型是l。修改和查看软链接就是修改和查看原文件。</li>
+<li>扩展（硬链接用的很少）：创建硬链接，ln /file2 /file2-h1，修改和查看硬链接同样是修改和查看原文件。但是硬链接与软链接的区别在于，如果删除原文件，软链接就没用了，读不到原来的文件内容，而硬链接还保留着原文件的内容，还可以读。可以针对目录做软链接，但是无法针对目录做硬链接。并且硬链接只能在同分区做。可以把硬链接看成文件同步。</li>
+</ul>
+<h3 id="RAID"><a href="#RAID" class="headerlink" title="RAID"></a>RAID</h3><h4 id="RAID简介"><a href="#RAID简介" class="headerlink" title="RAID简介"></a>RAID简介</h4><ul>
+<li>磁盘损坏会导致数据丢失，这在生产环境中是很严重的问题，RAID的出现解决了磁盘损坏的数据丢失问题，因为RAID的一个重要功能是自动备份。</li>
+<li>RAID除了自动备份之外，还能提升磁盘IO的读写速度。</li>
+<li>RAID（独立磁盘冗余阵列），类型上分为RAID0，RAID1，RAID5。</li>
+<li>RAID0，2块以上磁盘，数据分成n份存储到n块磁盘中，速度提升，但是没有备份容错。</li>
+<li>RAID1通常叫镜像集或镜像卷，2块磁盘，容量是50%。说白了就是一块磁盘是另一块磁盘的镜像。容错好，读写速度一般。</li>
+<li>RAID5至少3块磁盘，数据分成n-1份分别放入n-1块磁盘中，剩余的一块磁盘放这n-1份数据的校验信息，如果一块数据盘损坏了，通过校验公式可以逆推出原数据。</li>
+<li>扩展：热备盘，热备盘平时不放数据，当一块磁盘损坏的时候，热备盘会立即顶替上去。</li>
+<li>总结：核心数据用RAID1，重要数据用RAID5，不重要的数据用RAID0。</li>
+<li>RAID分为硬RAID和软RAID，硬RAID是需要RAID卡的，有自己的cpu，处理速度快，而软RAID是通过操作系统上的软件实现的。</li>
+</ul>
+<h4 id="软RAID5"><a href="#软RAID5" class="headerlink" title="软RAID5"></a>软RAID5</h4><ul>
+<li>创建RAID，mdadm -C /dev/md0 -l5 -n3 -x1 /dev/sd(b,c,d,e)，-C表示创建RAID，/dev/md0表示RAID设备，md0是起的名字，-l5表示RAID5（l是level的意思），-n表示RAID的成员数量，-x表示热备磁盘的数量。</li>
+<li>格式化：mkfs.ext4 /dev/md0，挂载：mount /dev/md0 /mnt/raid5。拷贝数据：cp -rf /etc/ /mnt/raid5/etc1。查看df -hT。</li>
+<li>查看RAID详细信息：mdadm -D /dev/md0。</li>
+<li>模拟磁盘损坏。mdadm /dev/md0  -f /dev/sdb -r /dev/sdb，-f表示强制，-r表示移除。另开一个窗口，输入命令 watch -n0.5 ‘mdadm -D /dev/md0 | tail -10’可以查看RAID自动恢复的过程。然后再去查看文件，ls /mnt/raid5发现文件未丢失。</li>
+</ul>
+
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2022年01月09日 15:10</p>
+        <p>原始链接： <a class="post-url" href="/posts/9232.html" title="Linux磁盘管理">http://wht6.github.io/posts/9232.html</a></p>
+        <footer>
+            <a href="http://wht6.github.io">
+                <img src="/images/logo.png" alt="并指如刀">
+                并指如刀
+            </a>
+        </footer>
+    </div>
+</div>
+
+      
+        
+            
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;">赏</a>
+</div>
+
+<div id="reward" class="post-modal reward-lay">
+    <a class="close" href="javascript:;" id="reward-close">×</a>
+    <span class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我吃糖~
+        <i class="icon icon-quote-right"></i>
+    </span>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/images/wechat_code.jpg" alt="打赏二维码">
+        </div>
+        <div class="reward-select">
+            
+            <label class="reward-select-item checked" data-id="wechat" data-wechat="/images/wechat_code.jpg">
+                <img class="reward-select-item-wechat" src="/images/wechat.png" alt="微信">
+            </label>
+            
+            
+            <label class="reward-select-item" data-id="alipay" data-alipay="/images/alipay_code.jpg">
+                <img class="reward-select-item-alipay" src="/images/alipay.png" alt="支付宝">
+            </label>
+            
+        </div>
+    </div>
+</div>
+
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://wht6.github.io/posts/9232.html&title=《Linux磁盘管理》 — WHT&pic=/images/featureimages/21.jpg" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://wht6.github.io/posts/9232.html&title=《Linux磁盘管理》 — WHT&source=分享技术,分享知识,分享感悟" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://wht6.github.io/posts/9232.html" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Linux磁盘管理》 — WHT&url=http://wht6.github.io/posts/9232.html&via=http://wht6.github.io" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://wht6.github.io/posts/9232.html" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://wht6.github.io/posts/9232.html" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/磁盘管理/" class="color5">磁盘管理</a>
+      
+  </li>
+
+        </ul>
+        
+    </footer>
+  </div>
+</article>
+
+
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#%E7%A3%81%E7%9B%98%E7%AE%80%E4%BB%8B"><span class="post-toc-text">磁盘简介</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#%E7%AE%A1%E7%90%86%E7%A3%81%E7%9B%98"><span class="post-toc-text">管理磁盘</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#%E6%9F%A5%E7%9C%8B%E7%A3%81%E7%9B%98%E5%88%86%E5%8C%BA"><span class="post-toc-text">查看磁盘分区</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#%E5%88%9B%E5%BB%BA%E5%88%86%E5%8C%BA"><span class="post-toc-text">创建分区</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#%E5%88%9B%E5%BB%BA%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F"><span class="post-toc-text">创建文件系统</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#%E6%8C%82%E8%BD%BD%E5%88%86%E5%8C%BA"><span class="post-toc-text">挂载分区</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#%E9%80%BB%E8%BE%91%E5%8D%B7LVM"><span class="post-toc-text">逻辑卷LVM</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#%E4%BA%A4%E6%8D%A2%E5%88%86%E5%8C%BA%E7%AE%A1%E7%90%86Swap"><span class="post-toc-text">交换分区管理Swap</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F"><span class="post-toc-text">文件系统</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F-1"><span class="post-toc-text">文件系统</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#%E6%96%87%E4%BB%B6%E9%93%BE%E6%8E%A5"><span class="post-toc-text">文件链接</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#RAID"><span class="post-toc-text">RAID</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#RAID%E7%AE%80%E4%BB%8B"><span class="post-toc-text">RAID简介</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#%E8%BD%AFRAID5"><span class="post-toc-text">软RAID5</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+    
+
+<nav id="article-nav">
+  
+    <a href="/posts/4f3f.html" id="article-nav-newer" class="article-nav-link-wrap">
+
+      <span class="article-nav-title">
+        <i class="fa fa-hand-o-left" aria-hidden="true"></i>
+        
+          Linux文件查找和压缩
+        
+      </span>
+    </a>
+  
+  
+    <a href="/posts/f2cd.html" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">Linux管道和重定向</span>
+      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    </a>
+  
+</nav>
+
+
+
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2022 并指如刀<br>
+      </p>
+    </div>
+  </div>
+</footer>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "http://wht6.github.io",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 1
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
+</div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            <a class="category-link" href="/categories/Linux/">Linux</a><a class="category-link" href="/categories/%E4%B8%AA%E4%BA%BA%E5%85%B4%E8%B6%A3/">个人兴趣</a><a class="category-link" href="/categories/%E4%BA%91%E8%AE%A1%E7%AE%97/">云计算</a><a class="category-link" href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/">嵌入式</a><a class="category-link" href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a><a class="category-link" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a>
+        </div>
+        <div id="sidebar-menu-box-tags">
+            <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Go%E8%AF%AD%E8%A8%80/" style="font-size: 20px;">Go语言</a> <a href="/tags/Python%E8%AF%AD%E8%A8%80/" style="font-size: 16.67px;">Python语言</a> <a href="/tags/pytorch/" style="font-size: 10px;">pytorch</a> <a href="/tags/%E4%BB%A3%E7%90%86/" style="font-size: 10px;">代理</a> <a href="/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 10px;">包管理</a> <a href="/tags/%E5%AE%9E%E4%BE%8B%E5%88%86%E5%89%B2/" style="font-size: 13.33px;">实例分割</a> <a href="/tags/%E5%AE%B9%E5%99%A8/" style="font-size: 10px;">容器</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 13.33px;">工具</a> <a href="/tags/%E6%80%9D%E7%BB%B4/" style="font-size: 10px;">思维</a> <a href="/tags/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/" style="font-size: 16.67px;">文件系统</a> <a href="/tags/%E6%97%A5%E5%BF%97/" style="font-size: 10px;">日志</a> <a href="/tags/%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86/" style="font-size: 10px;">权限管理</a> <a href="/tags/%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86/" style="font-size: 10px;">用户管理</a> <a href="/tags/%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">磁盘管理</a> <a href="/tags/%E7%AE%A1%E9%81%93/" style="font-size: 10px;">管道</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">系统配置</a> <a href="/tags/%E7%BD%91%E7%AB%99/" style="font-size: 10px;">网站</a> <a href="/tags/%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/" style="font-size: 10px;">网站搭建</a> <a href="/tags/%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">网络配置</a> <a href="/tags/%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1/" style="font-size: 10px;">计划任务</a> <a href="/tags/%E8%B7%AF%E7%94%B1%E5%99%A8/" style="font-size: 10px;">路由器</a> <a href="/tags/%E8%BF%9B%E7%A8%8B/" style="font-size: 10px;">进程</a> <a href="/tags/%E9%81%93%E5%AE%B6/" style="font-size: 10px;">道家</a> <a href="/tags/%E9%87%8D%E5%AE%9A%E5%90%91/" style="font-size: 10px;">重定向</a> <a href="/tags/%E9%98%BF%E9%87%8C%E4%BA%91/" style="font-size: 13.33px;">阿里云</a>
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a  href="/">
+                    <i class="fa fa-home"></i><span>Home</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/archives">
+                    <i class="fa fa-archive"></i><span>Archives</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/about">
+                    <i class="fa fa-user"></i><span>About</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Go%E8%AF%AD%E8%A8%80/" style="font-size: 20px;">Go语言</a> <a href="/tags/Python%E8%AF%AD%E8%A8%80/" style="font-size: 16.67px;">Python语言</a> <a href="/tags/pytorch/" style="font-size: 10px;">pytorch</a> <a href="/tags/%E4%BB%A3%E7%90%86/" style="font-size: 10px;">代理</a> <a href="/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 10px;">包管理</a> <a href="/tags/%E5%AE%9E%E4%BE%8B%E5%88%86%E5%89%B2/" style="font-size: 13.33px;">实例分割</a> <a href="/tags/%E5%AE%B9%E5%99%A8/" style="font-size: 10px;">容器</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 13.33px;">工具</a> <a href="/tags/%E6%80%9D%E7%BB%B4/" style="font-size: 10px;">思维</a> <a href="/tags/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/" style="font-size: 16.67px;">文件系统</a> <a href="/tags/%E6%97%A5%E5%BF%97/" style="font-size: 10px;">日志</a> <a href="/tags/%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86/" style="font-size: 10px;">权限管理</a> <a href="/tags/%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86/" style="font-size: 10px;">用户管理</a> <a href="/tags/%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">磁盘管理</a> <a href="/tags/%E7%AE%A1%E9%81%93/" style="font-size: 10px;">管道</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">系统配置</a> <a href="/tags/%E7%BD%91%E7%AB%99/" style="font-size: 10px;">网站</a> <a href="/tags/%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/" style="font-size: 10px;">网站搭建</a> <a href="/tags/%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">网络配置</a> <a href="/tags/%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1/" style="font-size: 10px;">计划任务</a> <a href="/tags/%E8%B7%AF%E7%94%B1%E5%99%A8/" style="font-size: 10px;">路由器</a> <a href="/tags/%E8%BF%9B%E7%A8%8B/" style="font-size: 10px;">进程</a> <a href="/tags/%E9%81%93%E5%AE%B6/" style="font-size: 10px;">道家</a> <a href="/tags/%E9%87%8D%E5%AE%9A%E5%90%91/" style="font-size: 10px;">重定向</a> <a href="/tags/%E9%98%BF%E9%87%8C%E4%BA%91/" style="font-size: 13.33px;">阿里云</a>
+        </div>
+    </div>
+</div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+
+
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  
+<script src="/js/particles.js"></script>
+
+
+
+
+
+
+
+
+  
+<link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  
+<script src="/js/animate.js"></script>
+
+
+
+  
+<script src="/js/pop-img.js"></script>
+
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/ Relative)","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"left","width":100,"height":180},"mobile":{"show":false},"react":{"opacityDefault":0.7}});</script></body>
+</html>

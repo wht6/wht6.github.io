@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>bytes包与字节串操作 | WHT</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="WHT,WHT's Blog" />
+  
+  <meta name="description" content="bytes.Buffer基础知识&amp;nbsp; strings包和bytes包可以说是一对孪生兄弟，它们在 API 方面非常的相似。单从它们提供的函数的数量和功能上讲，差别可以说是微乎其微。&amp;nbsp;只不过，strings包主要面向的是 Unicode 字符和经过 UTF-8 编码的字符串，而bytes包面对的则主要是字节和字节切片。&amp;nbsp;bytes.Buffer类型的用途主要是作为字节序列">
+<meta property="og:type" content="article">
+<meta property="og:title" content="bytes包与字节串操作">
+<meta property="og:url" content="http://wht6.github.io/posts/b956.html">
+<meta property="og:site_name" content="WHT">
+<meta property="og:description" content="bytes.Buffer基础知识&amp;nbsp; strings包和bytes包可以说是一对孪生兄弟，它们在 API 方面非常的相似。单从它们提供的函数的数量和功能上讲，差别可以说是微乎其微。&amp;nbsp;只不过，strings包主要面向的是 Unicode 字符和经过 UTF-8 编码的字符串，而bytes包面对的则主要是字节和字节切片。&amp;nbsp;bytes.Buffer类型的用途主要是作为字节序列">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-03-13T02:00:00.000Z">
+<meta property="article:modified_time" content="2022-03-13T06:58:59.023Z">
+<meta property="article:author" content="并指如刀">
+<meta property="article:tag" content="Go语言">
+<meta name="twitter:card" content="summary">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<script src="/js/pace.min.js"></script>
+
+  
+
+  
+  
+
+<style type="text/css" lang="css">
+    #loading-container{
+        position: fixed;
+        top: 0;
+        left: 0;
+        min-height: 100vh;
+        width: 100vw;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: #FFF;
+        text-align: center;
+        /* loader页面消失采用渐隐的方式*/
+        -webkit-transition: opacity 1s ease;
+        -moz-transition: opacity 1s ease;
+        -o-transition: opacity 1s ease;
+        transition: opacity 1s ease;
+    }
+    .loading-image{
+        width: 120px;
+        height: 50px;
+        transform: translate(-50%);
+    }
+    
+    .loading-image div:nth-child(2) {
+        -webkit-animation: pacman-balls 1s linear 0s infinite;
+        animation: pacman-balls 1s linear 0s infinite
+    }
+
+    .loading-image div:nth-child(3) {
+        -webkit-animation: pacman-balls 1s linear .33s infinite;
+        animation: pacman-balls 1s linear .33s infinite
+    }
+
+    .loading-image div:nth-child(4) {
+        -webkit-animation: pacman-balls 1s linear .66s infinite;
+        animation: pacman-balls 1s linear .66s infinite
+    }
+
+    .loading-image div:nth-child(5) {
+        -webkit-animation: pacman-balls 1s linear .99s infinite;
+        animation: pacman-balls 1s linear .99s infinite
+    }
+    
+   .loading-image div:first-of-type {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_up .5s 0s infinite;
+        animation: rotate_pacman_half_up .5s 0s infinite;
+    }
+    .loading-image div:nth-child(2) {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_down .5s 0s infinite;
+        animation: rotate_pacman_half_down .5s 0s infinite;
+        margin-top: -50px;
+    }
+    @-webkit-keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @-webkit-keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+
+    @keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+    
+    @-webkit-keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+
+    @keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+    
+   
+    .loading-image div:nth-child(3),
+    .loading-image div:nth-child(4),
+    .loading-image div:nth-child(5),
+    .loading-image div:nth-child(6){
+        background-color: #49b1f5;
+        width: 15px;
+        height: 15px;
+        border-radius: 100%;
+        margin: 2px;
+        width: 10px;
+        height: 10px;
+        position: absolute;
+        transform: translateY(-6.25px);
+        top: 25px;
+        left: 100px;
+    }
+    .loading-text{
+        margin-bottom: 20vh;
+        text-align: center;
+        color: #2c3e50;
+        font-size: 2rem;
+        box-sizing: border-box;
+        padding: 0 10px;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    @media only screen and (max-width: 500px) {
+         .loading-text{
+            font-size: 1.5rem;
+         }
+    }
+    .fadeout {
+        opacity: 0;
+        filter: alpha(opacity=0);
+    }
+    /* logo出现动画 */
+    @-webkit-keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);transform:translate3d(0,-100%,0)}100%{opacity:1;-webkit-transform:none;transform:none}}
+    @keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);}}
+ </style>
+ <script>
+(function () {
+    const loaded = function(){
+       setTimeout(function(){
+            const loader = document.getElementById("loading-container");
+            loader.className="fadeout" ;//使用渐隐的方法淡出loading page
+            // document.getElementById("body-wrap").style.display="flex";
+            setTimeout(function(){
+                loader.style.display="none";
+            },1000); 
+        },1000);//强制显示loading page 1s  
+    };
+    loaded();
+})()
+ </script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="WHT" type="application/atom+xml">
+</head>
+
+
+ <div id="loading-container">
+     <p class="loading-text">玩命加载中 . . . </p> 
+     <div class="loading-image">
+         <div></div>
+         <div></div>
+         <div></div>
+         <div></div> 
+         <div></div>
+     </div>
+ </div><body>
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">WHT&#39;s Blog</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a  href="/">
+                        <i class="fa fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    
+                    <a  href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>Archives</span>
+                    </a>
+                    
+                    <a  href="/about">
+                        <i class="fa fa-user"></i>
+                        <span>About</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/logo.png" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        WHT&#39;s Blog
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        一个专注运维开发的技术博客
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="WHT&#39;s Blog" target="_blank" href="//wht6.github.io">
+                            <i class="fa fa-home fa-2x"></i></a>
+                    
+                        <a title="Github" target="_blank" href="//github.com/wht6">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                        <a title="Weibo" target="_blank" href="//weibo.com/wht6">
+                            <i class="fa fa-weibo fa-2x"></i></a>
+                    
+                        <a title="Twitter" target="_blank" href="//twitter.com/wht6">
+                            <i class="fa fa-twitter fa-2x"></i></a>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="post-bytes包与字节串操作" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="post-title" itemprop="name">
+      bytes包与字节串操作
+    </h1>
+    <div class="post-title-bar">
+      <ul>
+          
+              <li>
+                  <i class="fa fa-book"></i>
+                  
+                      <a href="/categories/编程/">编程</a>
+                  
+              </li>
+          
+        <li>
+          <i class="fa fa-calendar"></i>  2022-03-13
+        </li>
+        <li>
+          <i class="fa fa-eye"></i>
+          <span id="busuanzi_value_page_pv"></span>
+        </li>
+      </ul>
+    </div>
+  
+
+          
+      </header>
+    
+    <div class="article-entry post-content" itemprop="articleBody">
+      
+            
+            <h3 id="bytes-Buffer基础知识"><a href="#bytes-Buffer基础知识" class="headerlink" title="bytes.Buffer基础知识"></a><code>bytes.Buffer</code>基础知识</h3><p>&nbsp;</p>
+<p><code>strings</code>包和<code>bytes</code>包可以说是一对孪生兄弟，它们在 API 方面非常的相似。单从它们提供的函数的数量和功能上讲，差别可以说是微乎其微。<br>&nbsp;<br><strong>只不过，<code>strings</code>包主要面向的是 Unicode 字符和经过 UTF-8 编码的字符串，而<code>bytes</code>包面对的则主要是字节和字节切片。</strong><br>&nbsp;<br><code>bytes.Buffer</code>类型的用途主要是作为字节序列的缓冲区。与<code>strings.Builder</code>类型一样，<code>bytes.Buffer</code>也是开箱即用的。<br>&nbsp;<br>但不同的是，<code>strings.Builder</code>只能拼接和导出字符串，而<code>bytes.Buffer</code>不但可以拼接、截断其中的字节序列，以各种形式导出其中的内容，还可以顺序地读取其中的子序列。<br>&nbsp;<br>可以说，<code>bytes.Buffer</code>是集读、写功能于一身的数据类型。当然了，这些也基本上都是作为一个缓冲区应该拥有的功能。<br>&nbsp;<br>在内部，<code>bytes.Buffer</code>类型同样是使用字节切片作为内容容器的。并且，与<code>strings.Reader</code>类型类似，<code>bytes.Buffer</code>有一个<code>int</code>类型的字段，用于代表已读字节的计数，可以简称为已读计数。<br>&nbsp;<br>不过，这里的已读计数就无法通过<code>bytes.Buffer</code>提供的方法计算出来了。<br>&nbsp;<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> buffer1 bytes.Buffer</span><br><span class="line">contents := <span class="string">&quot;Simple byte buffer for marshaling data.&quot;</span></span><br><span class="line">fmt.Printf(<span class="string">&quot;Writing contents %q ...\n&quot;</span>, contents)</span><br><span class="line">buffer1.WriteString(contents)</span><br><span class="line">fmt.Printf(<span class="string">&quot;The length of buffer: %d\n&quot;</span>, buffer1.Len())</span><br><span class="line">fmt.Printf(<span class="string">&quot;The capacity of buffer: %d\n&quot;</span>, buffer1.Cap())</span><br></pre></td></tr></table></figure><br>&nbsp;</p>
+<p>我先声明了一个<code>bytes.Buffer</code>类型的变量<code>buffer1</code>，并写入了一个字符串。然后，我想打印出这个<code>bytes.Buffer</code>类型的值（以下简称<code>Buffer</code>值）的长度和容量。在运行这段代码之后，我们将会看到如下的输出：</p>
+<p>&nbsp;<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Writing contents &quot;Simple byte buffer for marshaling data.&quot; ...</span><br><span class="line">The length of buffer: 39</span><br><span class="line">The capacity of buffer: 64</span><br></pre></td></tr></table></figure><br>&nbsp;</p>
+<p>乍一看这没什么问题。长度<code>39</code>和容量<code>64</code>的含义看起来与我们已知的概念是一致的。我向缓冲区中写入了一个长度为<code>39</code>的字符串，所以<code>buffer1</code>的长度就是<code>39</code>。</p>
+<p>&nbsp;<br>根据切片的自动扩容策略，<code>64</code>这个数字也是合理的。另外，可以想象，这时的已读计数的值应该是<code>0</code>，这是因为我还没有调用任何用于读取其中内容的方法。<br>&nbsp;<br>可实际上，与<code>strings.Reader</code>类型的<code>Len</code>方法一样，<code>buffer1</code>的<code>Len</code>方法返回的也是内容容器中未被读取部分的长度，而不是其中已存内容的总长度（以下简称内容长度）。示例如下：<br>&nbsp;<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">p1 := <span class="built_in">make</span>([]<span class="keyword">byte</span>, <span class="number">7</span>)</span><br><span class="line">n, _ := buffer1.Read(p1)</span><br><span class="line">fmt.Printf(<span class="string">&quot;%d bytes were read. (call Read)\n&quot;</span>, n)</span><br><span class="line">fmt.Printf(<span class="string">&quot;The length of buffer: %d\n&quot;</span>, buffer1.Len())</span><br><span class="line">fmt.Printf(<span class="string">&quot;The capacity of buffer: %d\n&quot;</span>, buffer1.Cap())</span><br></pre></td></tr></table></figure><br>&nbsp;</p>
+<p>当我从<code>buffer1</code>中读取一部分内容，并用它们填满长度为<code>7</code>的字节切片<code>p1</code>之后，<code>buffer1</code>的<code>Len</code>方法返回的结果值也会随即发生变化。如果运行这段代码，我们会发现，这个缓冲区的长度已经变为了<code>32</code>。</p>
+<p>&nbsp;<br>另外，因为我们并没有再向该缓冲区中写入任何内容，所以它的容量会保持不变，仍是<code>64</code>。<br>&nbsp;<br><strong>总之，在这里，你需要记住的是，<code>Buffer</code>值的长度是未读内容的长度，而不是已存内容的总长度。</strong> 它与在当前值之上的读操作和写操作都有关系，并会随着这两种操作的进行而改变，它可能会变得更小，也可能会变得更大。<br>&nbsp;<br>而<code>Buffer</code>值的容量指的是它的内容容器（也就是那个字节切片）的容量，它只与在当前值之上的写操作有关，并会随着内容的写入而不断增长。<br>&nbsp;<br>再说已读计数。由于<code>strings.Reader</code>还有一个<code>Size</code>方法可以给出内容长度的值，所以我们用内容长度减去未读部分的长度，就可以很方便地得到它的已读计数。<br>&nbsp;<br>然而，<code>bytes.Buffer</code>类型却没有这样一个方法，它只有<code>Cap</code>方法。可是<code>Cap</code>方法提供的是内容容器的容量，也不是内容长度。<br>&nbsp;<br>并且，这里的内容容器容量在很多时候都与内容长度不相同。因此，没有了现成的计算公式，只要遇到稍微复杂些的情况，我们就很难估算出<code>Buffer</code>值的已读计数。<br>&nbsp;<br>一旦理解了已读计数这个概念，并且能够在读写的过程中，实时地获得已读计数和内容长度的值，我们就可以很直观地了解到当前<code>Buffer</code>值各种方法的行为了。不过，很可惜，这两个数字我们都无法直接拿到。<br>&nbsp;<br>虽然，我们无法直接得到一个<code>Buffer</code>值的已读计数，并且有时候也很难估算它，但是我们绝对不能就此作罢，而应该通过研读<code>bytes.Buffer</code>和文档和源码，去探究已读计数在其中起到的关键作用。<br>&nbsp;<br>否则，我们想用好<code>bytes.Buffer</code>的意愿，恐怕就不会那么容易实现了。<br>&nbsp;<br>下面的这个问题，如果你认真地阅读了<code>bytes.Buffer</code>的源码之后，就可以很好地回答出来。<br>&nbsp;<br><strong><code>bytes.Buffer</code>类型的值记录的已读计数，在其中起到了怎样的作用？</strong><br>&nbsp;<br><code>bytes.Buffer</code>中的已读计数的大致功用如下所示。<br>&nbsp;</p>
+<ol>
+<li>读取内容时，相应方法会依据已读计数找到未读部分，并在读取后更新计数。</li>
+<li>写入内容时，如需扩容，相应方法会根据已读计数实现扩容策略。</li>
+<li>截断内容时，相应方法截掉的是已读计数代表索引之后的未读部分。</li>
+<li>读回退时，相应方法需要用已读计数记录回退点。</li>
+<li>重置内容时，相应方法会把已读计数置为0。</li>
+<li>导出内容时，相应方法只会导出已读计数代表的索引之后的未读部分。</li>
+<li>获取长度时，相应方法会依据已读计数和内容容器的长度，计算未读部分的长度并返回。</li>
+</ol>
+<p>&nbsp;<br>通过上面的典型回答，我们已经能够体会到已读计数在<code>bytes.Buffer</code>类型，及其方法中的重要性了。没错，<code>bytes.Buffer</code>的绝大多数方法都用到了已读计数，而且都是非用不可。<br>&nbsp;<br><strong>在读取内容的时候</strong>，相应方法会先根据已读计数，判断一下内容容器中是否还有未读的内容。如果有，那么它就会从已读计数代表的索引处开始读取。<br>&nbsp;<br><strong>在读取完成后</strong>，它还会及时地更新已读计数。也就是说，它会记录一下又有多少个字节被读取了。<strong>这里所说的相应方法包括了所有名称以<code>Read</code>开头的方法，以及<code>Next</code>方法和<code>WriteTo</code>方法。</strong><br>&nbsp;<br><strong>在写入内容的时候</strong>，绝大多数的相应方法都会先检查当前的内容容器，是否有足够的容量容纳新的内容。如果没有，那么它们就会对内容容器进行扩容。<br>&nbsp;<br><strong>在扩容的时候</strong>，方法会在必要时，依据已读计数找到未读部分，并把其中的内容拷贝到扩容后内容容器的头部位置。<br>&nbsp;<br>然后，方法将会把已读计数的值置为<code>0</code>，以表示下一次读取需要从内容容器的第一个字节开始。<strong>用于写入内容的相应方法，包括了所有名称以<code>Write</code>开头的方法，以及<code>ReadFrom</code>方法。</strong><br>&nbsp;<br><strong>用于截断内容的方法<code>Truncate</code>，会让很多对<code>bytes.Buffer</code>不太了解的程序开发者迷惑。</strong> 它会接受一个<code>int</code>类型的参数，这个参数的值代表了：在截断时需要保留头部的多少个字节。<br>&nbsp;<br>不过，需要注意的是，这里说的头部指的并不是内容容器的头部，而是其中的未读部分的头部。头部的起始索引正是由已读计数的值表示的。因此，在这种情况下，已读计数的值再加上参数值后得到的和，就是内容容器新的总长度。<br>&nbsp;<br><strong>在<code>bytes.Buffer</code>中，用于读回退的方法有<code>UnreadByte</code>和<code>UnreadRune</code>。</strong> 这两个方法分别用于回退一个字节和回退一个 Unicode 字符。调用它们一般都是为了退回在上一次被读取内容末尾的那个分隔符，或者为重新读取前一个字节或字符做准备。<br>&nbsp;<br>不过，退回的前提是，在调用它们之前的那一个操作必须是“读取”，并且是成功的读取，否则这些方法就只能忽略后续操作并返回一个非<code>nil</code>的错误值。<br>&nbsp;<br><code>UnreadByte</code>方法的做法比较简单，把已读计数的值减<code>1</code>就好了。而<code>UnreadRune</code>方法需要从已读计数中减去的，是上一次被读取的 Unicode 字符所占用的字节数。<br>&nbsp;<br>这个字节数由<code>bytes.Buffer</code>的另一个字段负责存储，它在这里的有效取值范围是 [1, 4]。只有<code>ReadRune</code>方法才会把这个字段的值设定在此范围之内。<br>&nbsp;<br>由此可见，只有紧接在调用<code>ReadRune</code>方法之后，对<code>UnreadRune</code>方法的调用才能够成功完成。该方法明显比<code>UnreadByte</code>方法的适用面更窄。<br>&nbsp;<br>我在前面说过，<code>bytes.Buffer</code>的<code>Len</code>方法返回的是内容容器中未读部分的长度，而不是其中已存内容的总长度（即：内容长度）。<br>&nbsp;<br>而该类型的<code>Bytes</code>方法和<code>String</code>方法的行为，与<code>Len</code>方法是保持一致的。前两个方法只会去访问未读部分中的内容，并返回相应的结果值。<br>&nbsp;<br>在我们剖析了所有的相关方法之后，可以这样来总结：在已读计数代表的索引之前的那些内容，永远都是已经被读过的，它们几乎没有机会再次被读取。<br>&nbsp;<br>不过，这些已读内容所在的内存空间可能会被存入新的内容。这一般都是由于重置或者扩充内容容器导致的。这时，已读计数一定会被置为<code>0</code>，从而再次指向内容容器中的第一个字节。这有时候也是为了避免内存分配和重用内存空间。<br>&nbsp;<br><strong>bytes.Buffer的扩容策略是怎样的？</strong><br>&nbsp;<br><code>Buffer</code>值既可以被手动扩容，也可以进行自动扩容。并且，这两种扩容方式的策略是基本一致的。所以，除非我们完全确定后续内容所需的字节数，否则让<code>Buffer</code>值自动去扩容就好了。<br>&nbsp;<br>在扩容的时候，<code>Buffer</code>值中相应的代码（以下简称扩容代码）会<strong>先判断内容容器的剩余容量</strong>，是否可以满足调用方的要求，或者是否足够容纳新的内容。<br>&nbsp;<br><strong>如果可以，那么扩容代码会在当前的内容容器之上，进行长度扩充。</strong><br>&nbsp;<br>更具体地说，如果内容容器的容量与其长度的差，大于或等于另需的字节数，那么扩容代码就会通过切片操作对原有的内容容器的长度进行扩充，就像下面这样：<br>&nbsp;<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">b.buf = b.buf[:length+need]</span><br></pre></td></tr></table></figure><br>&nbsp;</p>
+<p><strong>反之，如果内容容器的剩余容量不够了，那么扩容代码可能就会用新的内容容器去替代原有的内容容器，从而实现扩容。</strong></p>
+<p>&nbsp;<br>不过，这里还有一步优化。<br>&nbsp;<br><strong>如果当前内容容器的容量的一半，仍然大于或等于其现有长度再加上另需的字节数的和</strong>，即：<br>&nbsp;<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cap</span>(b.buf)/<span class="number">2</span> &gt;= <span class="built_in">len</span>(b.buf)+need</span><br></pre></td></tr></table></figure><br>&nbsp;</p>
+<p>那么，扩容代码就会复用现有的内容容器，并把容器中的未读内容拷贝到它的头部位置。</p>
+<p>&nbsp;<br>这也意味着其中的已读内容，将会全部被未读内容和之后的新内容覆盖掉。<br>&nbsp;<br>这样的复用预计可以至少节省掉一次后续的扩容所带来的内存分配，以及若干字节的拷贝。<br>&nbsp;<br><strong>若这一步优化未能达成</strong>，也就是说，当前内容容器的容量小于新长度的二倍。<br>&nbsp;<br>那么，扩容代码就只能再创建一个新的内容容器，并把原有容器中的未读内容拷贝进去，最后再用新的容器替换掉原有的容器。这个新容器的容量将会等于原有容量的二倍再加上另需字节数的和。<br>&nbsp;</p>
+<blockquote>
+<p>新容器的容量 =2* 原有容量 + 所需字节数</p>
+</blockquote>
+<p>&nbsp;<br>通过上面这些步骤，对内容容器的扩充基本上就完成了。不过，为了内部数据的一致性，以及避免原有的已读内容可能造成的数据混乱，扩容代码还会把已读计数置为<code>0</code>，并再对内容容器做一下切片操作，以掩盖掉原有的已读内容。<br>&nbsp;<br>顺便说一下，对于处在零值状态的<code>Buffer</code>值来说，如果第一次扩容时的另需字节数不大于<code>64</code>，那么该值就会基于一个预先定义好的、长度为<code>64</code>的字节数组来创建内容容器。<br>&nbsp;<br>在这种情况下，这个内容容器的容量就是<code>64</code>。这样做的目的是为了让<code>Buffer</code>值在刚被真正使用的时候就可以快速地做好准备。<br>&nbsp;<br><strong>bytes.Buffer中的哪些方法可能会造成内容的泄露？</strong><br>&nbsp;<br>首先明确一点，什么叫内容泄露？这里所说的内容泄露是指，使用<code>Buffer</code>值的一方通过某种非标准的（或者说不正式的）方式，得到了本不该得到的内容。<br>&nbsp;<br>比如说，我通过调用<code>Buffer</code>值的某个用于读取内容的方法，得到了一部分未读内容。我应该，也只应该通过这个方法的结果值，拿到在那一时刻<code>Buffer</code>值中的未读内容。<br>&nbsp;<br>但是，在这个<code>Buffer</code>值又有了一些新内容之后，我却可以通过当时得到的结果值，直接获得新的内容，而不需要再次调用相应的方法。<br>&nbsp;<br>这就是典型的非标准读取方式。这种读取方式是不应该存在的，即使存在，我们也不应该使用。因为它是在无意中（或者说一不小心）暴露出来的，其行为很可能是不稳定的。<br>&nbsp;<br>在<code>bytes.Buffer</code>中，<code>Bytes</code>方法和<code>Next</code>方法都可能会造成内容的泄露。原因在于，它们都把基于内容容器的切片直接返回给了方法的调用方。<br>&nbsp;<br>我们都知道，通过切片，我们可以直接访问和操纵它的底层数组。不论这个切片是基于某个数组得来的，还是通过对另一个切片做切片操作获得的，都是如此。<br>&nbsp;<br>在这里，<code>Bytes</code>方法和<code>Next</code>方法返回的字节切片，都是通过对内容容器做切片操作得到的。也就是说，它们与内容容器共用了同一个底层数组，起码在一段时期之内是这样的。<br>&nbsp;<br>以<code>Bytes</code>方法为例。它会返回在调用那一刻其所属值中的所有未读内容。示例代码如下：<br>&nbsp;</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">contents := <span class="string">&quot;ab&quot;</span></span><br><span class="line">buffer1 := bytes.NewBufferString(contents)</span><br><span class="line">fmt.Printf(<span class="string">&quot;The capacity of new buffer with contents %q: %d\n&quot;</span>,</span><br><span class="line"> contents, buffer1.Cap()) <span class="comment">// 内容容器的容量为：8。</span></span><br><span class="line">unreadBytes := buffer1.Bytes()</span><br><span class="line">fmt.Printf(<span class="string">&quot;The unread bytes of the buffer: %v\n&quot;</span>, unreadBytes) <span class="comment">// 未读内容为：[97 98]。</span></span><br></pre></td></tr></table></figure>
+<p>&nbsp;</p>
+<p>我用字符串值<code>&quot;ab&quot;</code>初始化了一个<code>Buffer</code>值，由变量<code>buffer1</code>代表，并打印了当时该值的一些状态。</p>
+<p>&nbsp;<br>你可能会有疑惑，我只在这个<code>Buffer</code>值中放入了一个长度为<code>2</code>的字符串值，但为什么该值的容量却变为了<code>8</code>。<br>&nbsp;<br>虽然这与我们当前的主题无关，但是我可以提示你一下：你可以去阅读<code>runtime</code>包中一个名叫<code>stringtoslicebyte</code>的函数，答案就在其中。<br>&nbsp;<br>接着说<code>buffer1</code>。我又向该值写入了字符串值<code>&quot;cdefg&quot;</code>，此时，其容量仍然是<code>8</code>。我在前面通过调用<code>buffer1</code>的<code>Bytes</code>方法得到的结果值<code>unreadBytes</code>，包含了在那时其中的所有未读内容。<br>&nbsp;<br>但是，由于这个结果值与<code>buffer1</code>的内容容器在此时还共用着同一个底层数组，所以，我只需通过简单的再切片操作，就可以利用这个结果值拿到<code>buffer1</code>在此时的所有未读内容。如此一来，<code>buffer1</code>的新内容就被泄露出来了。<br>&nbsp;<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">buffer1.WriteString(<span class="string">&quot;cdefg&quot;</span>)</span><br><span class="line">fmt.Printf(<span class="string">&quot;The capacity of buffer: %d\n&quot;</span>, buffer1.Cap()) <span class="comment">// 内容容器的容量仍为：8。</span></span><br><span class="line">unreadBytes = unreadBytes[:<span class="built_in">cap</span>(unreadBytes)]</span><br><span class="line">fmt.Printf(<span class="string">&quot;The unread bytes of the buffer: %v\n&quot;</span>, unreadBytes) <span class="comment">// 基于前面获取到的结果值可得，未读内容为：[97 98 99 100 101 102 103 0]。</span></span><br></pre></td></tr></table></figure><br>&nbsp;</p>
+<p>如果我当时把<code>unreadBytes</code>的值传到了外界，那么外界就可以通过该值操纵<code>buffer1</code>的内容了，就像下面这样：</p>
+<p>&nbsp;<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">unreadBytes[<span class="built_in">len</span>(unreadBytes)<span class="number">-2</span>] = <span class="keyword">byte</span>(<span class="string">&#x27;X&#x27;</span>) <span class="comment">// &#x27;X&#x27;的 ASCII 编码为 88。</span></span><br><span class="line">fmt.Printf(<span class="string">&quot;The unread bytes of the buffer: %v\n&quot;</span>, buffer1.Bytes()) <span class="comment">// 未读内容变为了：[97 98 99 100 101 102 88]。</span></span><br></pre></td></tr></table></figure><br>&nbsp;</p>
+<p>现在，你应该能够体会到，这里的内容泄露可能造成的严重后果了吧？对于<code>Buffer</code>值的<code>Next</code>方法，也存在相同的问题。</p>
+<p>&nbsp;<br>不过，如果经过扩容，<code>Buffer</code>值的内容容器或者它的底层数组被重新设定了，那么之前的内容泄露问题就无法再进一步发展了。<br>&nbsp;<br>&nbsp;</p>
+<p>参考链接：<a target="_blank" rel="noopener" href="https://time.geekbang.org/column/intro/112">https://time.geekbang.org/column/intro/112</a></p>
+
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2022年03月13日 14:58</p>
+        <p>原始链接： <a class="post-url" href="/posts/b956.html" title="bytes包与字节串操作">http://wht6.github.io/posts/b956.html</a></p>
+        <footer>
+            <a href="http://wht6.github.io">
+                <img src="/images/logo.png" alt="并指如刀">
+                并指如刀
+            </a>
+        </footer>
+    </div>
+</div>
+
+      
+        
+            
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;">赏</a>
+</div>
+
+<div id="reward" class="post-modal reward-lay">
+    <a class="close" href="javascript:;" id="reward-close">×</a>
+    <span class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我吃糖~
+        <i class="icon icon-quote-right"></i>
+    </span>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/images/wechat_code.jpg" alt="打赏二维码">
+        </div>
+        <div class="reward-select">
+            
+            <label class="reward-select-item checked" data-id="wechat" data-wechat="/images/wechat_code.jpg">
+                <img class="reward-select-item-wechat" src="/images/wechat.png" alt="微信">
+            </label>
+            
+            
+            <label class="reward-select-item" data-id="alipay" data-alipay="/images/alipay_code.jpg">
+                <img class="reward-select-item-alipay" src="/images/alipay.png" alt="支付宝">
+            </label>
+            
+        </div>
+    </div>
+</div>
+
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://wht6.github.io/posts/b956.html&title=《bytes包与字节串操作》 — WHT&pic=/images/featureimages/57.jpg" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://wht6.github.io/posts/b956.html&title=《bytes包与字节串操作》 — WHT&source=分享技术,分享知识,分享感悟" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://wht6.github.io/posts/b956.html" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《bytes包与字节串操作》 — WHT&url=http://wht6.github.io/posts/b956.html&via=http://wht6.github.io" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://wht6.github.io/posts/b956.html" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://wht6.github.io/posts/b956.html" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/Go语言/" class="color5">Go语言</a>
+      
+  </li>
+
+        </ul>
+        
+    </footer>
+  </div>
+</article>
+
+
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#bytes-Buffer%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="post-toc-text">bytes.Buffer基础知识</span></a></li></ol>
+        </nav>
+    </aside>
+    
+
+<nav id="article-nav">
+  
+    <a href="/posts/865e.html" id="article-nav-newer" class="article-nav-link-wrap">
+
+      <span class="article-nav-title">
+        <i class="fa fa-hand-o-left" aria-hidden="true"></i>
+        
+          Docker的基本概念和命令
+        
+      </span>
+    </a>
+  
+  
+    <a href="/posts/9a3b.html" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">深入类和对象</span>
+      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    </a>
+  
+</nav>
+
+
+
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2022 并指如刀<br>
+      </p>
+    </div>
+  </div>
+</footer>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "http://wht6.github.io",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 1
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
+</div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            <a class="category-link" href="/categories/Linux/">Linux</a><a class="category-link" href="/categories/%E4%B8%AA%E4%BA%BA%E5%85%B4%E8%B6%A3/">个人兴趣</a><a class="category-link" href="/categories/%E4%BA%91%E8%AE%A1%E7%AE%97/">云计算</a><a class="category-link" href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/">嵌入式</a><a class="category-link" href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a><a class="category-link" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a>
+        </div>
+        <div id="sidebar-menu-box-tags">
+            <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Go%E8%AF%AD%E8%A8%80/" style="font-size: 20px;">Go语言</a> <a href="/tags/Python%E8%AF%AD%E8%A8%80/" style="font-size: 16.67px;">Python语言</a> <a href="/tags/pytorch/" style="font-size: 10px;">pytorch</a> <a href="/tags/%E4%BB%A3%E7%90%86/" style="font-size: 10px;">代理</a> <a href="/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 10px;">包管理</a> <a href="/tags/%E5%AE%9E%E4%BE%8B%E5%88%86%E5%89%B2/" style="font-size: 13.33px;">实例分割</a> <a href="/tags/%E5%AE%B9%E5%99%A8/" style="font-size: 10px;">容器</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 13.33px;">工具</a> <a href="/tags/%E6%80%9D%E7%BB%B4/" style="font-size: 10px;">思维</a> <a href="/tags/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/" style="font-size: 16.67px;">文件系统</a> <a href="/tags/%E6%97%A5%E5%BF%97/" style="font-size: 10px;">日志</a> <a href="/tags/%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86/" style="font-size: 10px;">权限管理</a> <a href="/tags/%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86/" style="font-size: 10px;">用户管理</a> <a href="/tags/%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">磁盘管理</a> <a href="/tags/%E7%AE%A1%E9%81%93/" style="font-size: 10px;">管道</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">系统配置</a> <a href="/tags/%E7%BD%91%E7%AB%99/" style="font-size: 10px;">网站</a> <a href="/tags/%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/" style="font-size: 10px;">网站搭建</a> <a href="/tags/%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">网络配置</a> <a href="/tags/%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1/" style="font-size: 10px;">计划任务</a> <a href="/tags/%E8%B7%AF%E7%94%B1%E5%99%A8/" style="font-size: 10px;">路由器</a> <a href="/tags/%E8%BF%9B%E7%A8%8B/" style="font-size: 10px;">进程</a> <a href="/tags/%E9%81%93%E5%AE%B6/" style="font-size: 10px;">道家</a> <a href="/tags/%E9%87%8D%E5%AE%9A%E5%90%91/" style="font-size: 10px;">重定向</a> <a href="/tags/%E9%98%BF%E9%87%8C%E4%BA%91/" style="font-size: 13.33px;">阿里云</a>
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a  href="/">
+                    <i class="fa fa-home"></i><span>Home</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/archives">
+                    <i class="fa fa-archive"></i><span>Archives</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/about">
+                    <i class="fa fa-user"></i><span>About</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Go%E8%AF%AD%E8%A8%80/" style="font-size: 20px;">Go语言</a> <a href="/tags/Python%E8%AF%AD%E8%A8%80/" style="font-size: 16.67px;">Python语言</a> <a href="/tags/pytorch/" style="font-size: 10px;">pytorch</a> <a href="/tags/%E4%BB%A3%E7%90%86/" style="font-size: 10px;">代理</a> <a href="/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 10px;">包管理</a> <a href="/tags/%E5%AE%9E%E4%BE%8B%E5%88%86%E5%89%B2/" style="font-size: 13.33px;">实例分割</a> <a href="/tags/%E5%AE%B9%E5%99%A8/" style="font-size: 10px;">容器</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 13.33px;">工具</a> <a href="/tags/%E6%80%9D%E7%BB%B4/" style="font-size: 10px;">思维</a> <a href="/tags/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/" style="font-size: 16.67px;">文件系统</a> <a href="/tags/%E6%97%A5%E5%BF%97/" style="font-size: 10px;">日志</a> <a href="/tags/%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86/" style="font-size: 10px;">权限管理</a> <a href="/tags/%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86/" style="font-size: 10px;">用户管理</a> <a href="/tags/%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">磁盘管理</a> <a href="/tags/%E7%AE%A1%E9%81%93/" style="font-size: 10px;">管道</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">系统配置</a> <a href="/tags/%E7%BD%91%E7%AB%99/" style="font-size: 10px;">网站</a> <a href="/tags/%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/" style="font-size: 10px;">网站搭建</a> <a href="/tags/%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">网络配置</a> <a href="/tags/%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1/" style="font-size: 10px;">计划任务</a> <a href="/tags/%E8%B7%AF%E7%94%B1%E5%99%A8/" style="font-size: 10px;">路由器</a> <a href="/tags/%E8%BF%9B%E7%A8%8B/" style="font-size: 10px;">进程</a> <a href="/tags/%E9%81%93%E5%AE%B6/" style="font-size: 10px;">道家</a> <a href="/tags/%E9%87%8D%E5%AE%9A%E5%90%91/" style="font-size: 10px;">重定向</a> <a href="/tags/%E9%98%BF%E9%87%8C%E4%BA%91/" style="font-size: 13.33px;">阿里云</a>
+        </div>
+    </div>
+</div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+
+
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  
+<script src="/js/particles.js"></script>
+
+
+
+
+
+
+
+
+  
+<link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  
+<script src="/js/animate.js"></script>
+
+
+
+  
+<script src="/js/pop-img.js"></script>
+
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/ Relative)","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"left","width":100,"height":180},"mobile":{"show":false},"react":{"opacityDefault":0.7}});</script></body>
+</html>

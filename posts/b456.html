@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>bufio包中的数据类型 | WHT</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="WHT,WHT's Blog" />
+  
+  <meta name="description" content="bufio是“buffered I&#x2F;O”的缩写。顾名思义，这个代码包中的程序实体实现的 I&#x2F;O 操作都内置了缓冲区。 &amp;nbsp; bufio包中的数据类型主要有：&amp;nbsp;  Reader； Scanner； Writer和ReadWriter。  &amp;nbsp;与io包中的数据类型类似，这些类型的值也都需要在初始化的时候，包装一个或多个简单 I&#x2F;O 接口类型的值。&amp;nbsp;（这里的简单 I&#x2F;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="bufio包中的数据类型">
+<meta property="og:url" content="http://wht6.github.io/posts/b456.html">
+<meta property="og:site_name" content="WHT">
+<meta property="og:description" content="bufio是“buffered I&#x2F;O”的缩写。顾名思义，这个代码包中的程序实体实现的 I&#x2F;O 操作都内置了缓冲区。 &amp;nbsp; bufio包中的数据类型主要有：&amp;nbsp;  Reader； Scanner； Writer和ReadWriter。  &amp;nbsp;与io包中的数据类型类似，这些类型的值也都需要在初始化的时候，包装一个或多个简单 I&#x2F;O 接口类型的值。&amp;nbsp;（这里的简单 I&#x2F;">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/wht6/image/master/img/bufio_2022317.png">
+<meta property="article:published_time" content="2022-03-17T12:00:00.000Z">
+<meta property="article:modified_time" content="2022-03-17T07:23:04.957Z">
+<meta property="article:author" content="并指如刀">
+<meta property="article:tag" content="Go语言">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/wht6/image/master/img/bufio_2022317.png">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<script src="/js/pace.min.js"></script>
+
+  
+
+  
+  
+
+<style type="text/css" lang="css">
+    #loading-container{
+        position: fixed;
+        top: 0;
+        left: 0;
+        min-height: 100vh;
+        width: 100vw;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: #FFF;
+        text-align: center;
+        /* loader页面消失采用渐隐的方式*/
+        -webkit-transition: opacity 1s ease;
+        -moz-transition: opacity 1s ease;
+        -o-transition: opacity 1s ease;
+        transition: opacity 1s ease;
+    }
+    .loading-image{
+        width: 120px;
+        height: 50px;
+        transform: translate(-50%);
+    }
+    
+    .loading-image div:nth-child(2) {
+        -webkit-animation: pacman-balls 1s linear 0s infinite;
+        animation: pacman-balls 1s linear 0s infinite
+    }
+
+    .loading-image div:nth-child(3) {
+        -webkit-animation: pacman-balls 1s linear .33s infinite;
+        animation: pacman-balls 1s linear .33s infinite
+    }
+
+    .loading-image div:nth-child(4) {
+        -webkit-animation: pacman-balls 1s linear .66s infinite;
+        animation: pacman-balls 1s linear .66s infinite
+    }
+
+    .loading-image div:nth-child(5) {
+        -webkit-animation: pacman-balls 1s linear .99s infinite;
+        animation: pacman-balls 1s linear .99s infinite
+    }
+    
+   .loading-image div:first-of-type {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_up .5s 0s infinite;
+        animation: rotate_pacman_half_up .5s 0s infinite;
+    }
+    .loading-image div:nth-child(2) {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_down .5s 0s infinite;
+        animation: rotate_pacman_half_down .5s 0s infinite;
+        margin-top: -50px;
+    }
+    @-webkit-keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @-webkit-keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+
+    @keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+    
+    @-webkit-keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+
+    @keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+    
+   
+    .loading-image div:nth-child(3),
+    .loading-image div:nth-child(4),
+    .loading-image div:nth-child(5),
+    .loading-image div:nth-child(6){
+        background-color: #49b1f5;
+        width: 15px;
+        height: 15px;
+        border-radius: 100%;
+        margin: 2px;
+        width: 10px;
+        height: 10px;
+        position: absolute;
+        transform: translateY(-6.25px);
+        top: 25px;
+        left: 100px;
+    }
+    .loading-text{
+        margin-bottom: 20vh;
+        text-align: center;
+        color: #2c3e50;
+        font-size: 2rem;
+        box-sizing: border-box;
+        padding: 0 10px;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    @media only screen and (max-width: 500px) {
+         .loading-text{
+            font-size: 1.5rem;
+         }
+    }
+    .fadeout {
+        opacity: 0;
+        filter: alpha(opacity=0);
+    }
+    /* logo出现动画 */
+    @-webkit-keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);transform:translate3d(0,-100%,0)}100%{opacity:1;-webkit-transform:none;transform:none}}
+    @keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);}}
+ </style>
+ <script>
+(function () {
+    const loaded = function(){
+       setTimeout(function(){
+            const loader = document.getElementById("loading-container");
+            loader.className="fadeout" ;//使用渐隐的方法淡出loading page
+            // document.getElementById("body-wrap").style.display="flex";
+            setTimeout(function(){
+                loader.style.display="none";
+            },1000); 
+        },1000);//强制显示loading page 1s  
+    };
+    loaded();
+})()
+ </script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="WHT" type="application/atom+xml">
+</head>
+
+
+ <div id="loading-container">
+     <p class="loading-text">玩命加载中 . . . </p> 
+     <div class="loading-image">
+         <div></div>
+         <div></div>
+         <div></div>
+         <div></div> 
+         <div></div>
+     </div>
+ </div><body>
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">WHT&#39;s Blog</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a  href="/">
+                        <i class="fa fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    
+                    <a  href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>Archives</span>
+                    </a>
+                    
+                    <a  href="/about">
+                        <i class="fa fa-user"></i>
+                        <span>About</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/logo.png" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        WHT&#39;s Blog
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        一个专注运维开发的技术博客
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="WHT&#39;s Blog" target="_blank" href="//wht6.github.io">
+                            <i class="fa fa-home fa-2x"></i></a>
+                    
+                        <a title="Github" target="_blank" href="//github.com/wht6">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                        <a title="Weibo" target="_blank" href="//weibo.com/wht6">
+                            <i class="fa fa-weibo fa-2x"></i></a>
+                    
+                        <a title="Twitter" target="_blank" href="//twitter.com/wht6">
+                            <i class="fa fa-twitter fa-2x"></i></a>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="post-bufio包中的数据类型" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="post-title" itemprop="name">
+      bufio包中的数据类型
+    </h1>
+    <div class="post-title-bar">
+      <ul>
+          
+              <li>
+                  <i class="fa fa-book"></i>
+                  
+                      <a href="/categories/编程/">编程</a>
+                  
+              </li>
+          
+        <li>
+          <i class="fa fa-calendar"></i>  2022-03-17
+        </li>
+        <li>
+          <i class="fa fa-eye"></i>
+          <span id="busuanzi_value_page_pv"></span>
+        </li>
+      </ul>
+    </div>
+  
+
+          
+      </header>
+    
+    <div class="article-entry post-content" itemprop="articleBody">
+      
+            
+            <p><code>bufio</code>是“buffered I/O”的缩写。顾名思义，这个代码包中的程序实体实现的 I/O 操作都内置了缓冲区。</p>
+<p>&nbsp;</p>
+<p><code>bufio</code>包中的数据类型主要有：<br>&nbsp;</p>
+<ol>
+<li><code>Reader</code>；</li>
+<li><code>Scanner</code>；</li>
+<li><code>Writer</code>和<code>ReadWriter</code>。</li>
+</ol>
+<p>&nbsp;<br>与<code>io</code>包中的数据类型类似，这些类型的值也都需要在初始化的时候，包装一个或多个简单 I/O 接口类型的值。<br>&nbsp;<br>（这里的简单 I/O 接口类型指的就是<code>io</code>包中的那些简单接口。）<br>&nbsp;<br><strong><code>bufio.Reader</code>类型值中的缓冲区起着怎样的作用？</strong><br>&nbsp;<br><code>bufio.Reader</code>类型的值（以下简称<code>Reader</code>值）内的缓冲区，其实就是一个数据存储中介，它介于底层读取器与读取方法及其调用方之间。所谓的底层读取器，就是在初始化此类值的时候传入的<code>io.Reader</code>类型的参数值。<br>&nbsp;<br><code>Reader</code>值的读取方法一般都会先从其所属值的缓冲区中读取数据。同时，在必要的时候，它们还会预先从底层读取器那里读出一部分数据，并暂存于缓冲区之中以备后用。<br>&nbsp;<br>有这样一个缓冲区的好处是，可以在大多数的时候降低读取方法的执行时间。虽然，读取方法有时还要负责填充缓冲区，但从总体来看，读取方法的平均执行时间一般都会因此有大幅度的缩短。<br>&nbsp;<br><code>bufio.Reader</code>类型并不是开箱即用的，因为它包含了一些需要显式初始化的字段。为了让你能在后面更好地理解它的读取方法的内部流程，我先在这里简要地解释一下这些字段，如下所示。<br>&nbsp;</p>
+<ol>
+<li><code>buf</code>：<code>[]byte</code>类型的字段，即字节切片，代表缓冲区。虽然它是切片类型的，但是其长度却会在初始化的时候指定，并在之后保持不变。</li>
+<li><code>rd</code>：<code>io.Reader</code>类型的字段，代表底层读取器。缓冲区中的数据就是从这里拷贝来的。</li>
+<li><code>r</code>：<code>int</code>类型的字段，代表对缓冲区进行下一次读取时的开始索引。我们可以称它为已读计数。</li>
+<li><code>w</code>：<code>int</code>类型的字段，代表对缓冲区进行下一次写入时的开始索引。我们可以称之为已写计数。</li>
+<li><code>err</code>：<code>error</code>类型的字段。它的值用于表示在从底层读取器获得数据时发生的错误。这里的值在被读取或忽略之后，该字段会被置为<code>nil</code>。</li>
+<li><code>lastByte</code>：<code>int</code>类型的字段，用于记录缓冲区中最后一个被读取的字节。读回退时会用到它的值。</li>
+<li><code>lastRuneSize</code>：<code>int</code>类型的字段，用于记录缓冲区中最后一个被读取的 Unicode 字符所占用的字节数。读回退的时候会用到它的值。这个字段只会在其所属值的<code>ReadRune</code>方法中才会被赋予有意义的值。在其他情况下，它都会被置为<code>-1</code>。</li>
+</ol>
+<p>&nbsp;<br><code>bufio</code>包为我们提供了两个用于初始化<code>Reader</code>值的函数，分别叫：<br>&nbsp;</p>
+<ul>
+<li><code>NewReader</code>；</li>
+<li><code>NewReaderSize</code>；</li>
+</ul>
+<p>&nbsp;<br>它们都会返回一个<code>*bufio.Reader</code>类型的值。<br>&nbsp;<br><code>NewReader</code>函数初始化的<code>Reader</code>值会拥有一个默认尺寸的缓冲区。这个默认尺寸是 4096 个字节，即：4 KB。而<code>NewReaderSize</code>函数则将缓冲区尺寸的决定权抛给了使用方。<br>&nbsp;<br>由于这里的缓冲区在一个<code>Reader</code>值的生命周期内其尺寸不可变，所以在有些时候是需要做一些权衡的。<code>NewReaderSize</code>函数就提供了这样一个途径。<br>&nbsp;<br>在<code>bufio.Reader</code>类型拥有的读取方法中，<code>Peek</code>方法和<code>ReadSlice</code>方法都会调用该类型一个名为<code>fill</code>的包级私有方法。<code>fill</code>方法的作用是填充内部缓冲区。我们在这里就先重点说说它。<br>&nbsp;<br><code>fill</code>方法会先检查其所属值的已读计数。如果这个计数不大于<code>0</code>，那么有两种可能。<br>&nbsp;<br>一种可能是其缓冲区中的字节都是全新的，也就是说它们都没有被读取过，另一种可能是缓冲区刚被压缩过。<br>&nbsp;<br>对缓冲区的压缩包括两个步骤。<strong>第一步，把缓冲区中在<code>[已读计数, 已写计数)</code>范围之内的所有元素值（或者说字节）都依次拷贝到缓冲区的头部。</strong><br>&nbsp;<br>比如，把缓冲区中与已读计数代表的索引对应字节拷贝到索引<code>0</code>的位置，并把紧挨在它后边的字节拷贝到索引<code>1</code>的位置，以此类推。<br>&nbsp;<br>这一步之所以不会有任何副作用，是因为它基于两个事实。<br>&nbsp;<br><strong>第一事实，</strong>已读计数之前的字节都已经被读取过，并且肯定不会再被读取了，因此把它们覆盖掉是安全的。<br>&nbsp;<br><strong>第二个事实，</strong>在压缩缓冲区之后，已写计数之后的字节只可能是已被读取过的字节，或者是已被拷贝到缓冲区头部的未读字节，又或者是代表未曾被填入数据的零值<code>0x00</code>。所以，后续的新字节是可以被写到这些位置上的。<br>&nbsp;<br><strong>在压缩缓冲区的第二步中，<code>fill</code>方法会把已写计数的新值设定为原已写计数与原已读计数的差。这个差所代表的索引，就是压缩后第一次写入字节时的开始索引。</strong><br>&nbsp;<br>另外，该方法还会把已读计数的值置为<code>0</code>。显而易见，在压缩之后，再读取字节就肯定要从缓冲区的头部开始读了。</p>
+<p><img src="https://raw.githubusercontent.com/wht6/image/master/img/bufio_2022317.png" alt></p>
+<p>实际上，<code>fill</code>方法只要在开始时发现其所属值的已读计数大于<code>0</code>，就会对缓冲区进行一次压缩。之后，如果缓冲区中还有可写的位置，那么该方法就会对其进行填充。<br>&nbsp;<br>在填充缓冲区的时候，<code>fill</code>方法会试图从底层读取器那里，读取足够多的字节，并尽量把从已写计数代表的索引位置到缓冲区末尾之间的空间都填满。<br>&nbsp;<br>在这个过程中，<code>fill</code>方法会及时地更新已写计数，以保证填充的正确性和顺序性。另外，它还会判断从底层读取器读取数据的时候，是否有错误发生。如果有，那么它就会把错误值赋给其所属值的<code>err</code>字段，并终止填充流程。<br>&nbsp;<br><strong><code>bufio.Writer</code>类型值中缓冲的数据什么时候会被写到它的底层写入器？</strong><br>&nbsp;<br>我们先来看一下<code>bufio.Writer</code>类型都有哪些字段：</p>
+<ol>
+<li><code>err</code>：<code>error</code>类型的字段。它的值用于表示在向底层写入器写数据时发生的错误。</li>
+<li><code>buf</code>：<code>[]byte</code>类型的字段，代表缓冲区。在初始化之后，它的长度会保持不变。</li>
+<li><code>n</code>：<code>int</code>类型的字段，代表对缓冲区进行下一次写入时的开始索引。我们可以称之为已写计数。</li>
+<li><code>wr</code>：<code>io.Writer</code>类型的字段，代表底层写入器。</li>
+</ol>
+<p><code>bufio.Writer</code>类型有一个名为<code>Flush</code>的方法，它的主要功能是把相应缓冲区中暂存的所有数据，都写到底层写入器中。数据一旦被写进底层写入器，该方法就会把它们从缓冲区中删除掉。<br>&nbsp;<br>不过，这里的删除有时候只是逻辑上的删除而已。不论是否成功地写入了所有的暂存数据，<code>Flush</code>方法都会妥当处置，并保证不会出现重写和漏写的情况。该类型的字段<code>n</code>在此会起到很重要的作用。<br>&nbsp;<br><code>bufio.Writer</code>类型值（以下简称<code>Writer</code>值）拥有的所有数据写入方法都会在必要的时候调用它的<code>Flush</code>方法。<br>&nbsp;<br>比如，<code>Write</code>方法有时候会在把数据写进缓冲区之后，调用<code>Flush</code>方法，以便为后续的新数据腾出空间。<code>WriteString</code>方法的行为与之类似。<br>&nbsp;<br>又比如，<code>WriteByte</code>方法和<code>WriteRune</code>方法，都会在发现缓冲区中的可写空间不足以容纳新的字节，或 Unicode 字符的时候，调用<code>Flush</code>方法。<br>&nbsp;<br>此外，如果<code>Write</code>方法发现需要写入的字节太多，同时缓冲区已空，那么它就会跨过缓冲区，并直接把这些数据写到底层写入器中。<br>&nbsp;<br>而<code>ReadFrom</code>方法，则会在发现底层写入器的类型是<code>io.ReaderFrom</code>接口的实现之后，直接调用其<code>ReadFrom</code>方法把参数值持有的数据写进去。<br>&nbsp;<br>总之，在通常情况下，只要缓冲区中的可写空间无法容纳需要写入的新数据，<code>Flush</code>方法就一定会被调用。并且，<code>bufio.Writer</code>类型的一些方法有时候还会试图走捷径，跨过缓冲区而直接对接数据供需的双方。<br>&nbsp;<br>你可以在理解了这些内部机制之后，有的放矢地编写你的代码。不过，在你把所有的数据都写入<code>Writer</code>值之后，再调用一下它的<code>Flush</code>方法，显然是最稳妥的。<br>&nbsp;<br><strong>bufio.Reader类型读取方法有哪些不同？</strong><br>&nbsp;<br><code>bufio.Reader</code>类型拥有很多用于读取数据的指针方法，<strong>这里面有 4 个方法可以作为不同读取流程的代表，它们是：<code>Peek</code>、<code>Read</code>、<code>ReadSlice</code>和<code>ReadBytes</code>。</strong><br>&nbsp;<br><strong><code>Reader</code>值的<code>Peek</code>方法</strong>的功能是：读取并返回其缓冲区中的<code>n</code>个未读字节，并且它会从已读计数代表的索引位置开始读。<br>&nbsp;<br>在缓冲区未被填满，并且其中的未读字节的数量小于<code>n</code>的时候，该方法就会调用<code>fill</code>方法，以启动缓冲区填充流程。但是，如果它发现上次填充缓冲区的时候有错误，那就不会再次填充。<br>&nbsp;<br>如果调用方给定的<code>n</code>比缓冲区的长度还要大，或者缓冲区中未读字节的数量小于<code>n</code>，那么<code>Peek</code>方法就会把“所有未读字节组成的序列”作为第一个结果值返回。<br>&nbsp;<br>同时，它通常还把“<code>bufio.ErrBufferFull</code>变量的值（以下简称缓冲区已满的错误）”<br>作为第二个结果值返回，用来表示：虽然缓冲区被压缩和填满了，但是仍然满足不了要求。<br>&nbsp;<br>只有在上述的情况都没有出现时，<code>Peek</code>方法才能返回：“以已读计数为起始的<code>n</code>个字节”和“表示未发生任何错误的<code>nil</code>”。<br>&nbsp;<br><strong><code>bufio.Reader</code>类型的 Peek 方法有一个鲜明的特点，那就是：即使它读取了缓冲区中的数据，也不会更改已读计数的值。</strong><br>&nbsp;<br>这个类型的其他读取方法并不是这样。就拿<strong>该类型的<code>Read</code>方法来说</strong>，它有时会把缓冲区中的未读字节，依次拷贝到其参数<code>p</code>代表的字节切片中，并立即根据实际拷贝的字节数增加已读计数的值。</p>
+<ul>
+<li>在缓冲区中还有未读字节的情况下，该方法的做法就是如此。不过，在另一些时候，其所属值的已读计数会等于已写计数，这表明：此时的缓冲区中已经没有任何未读的字节了。</li>
+<li>当缓冲区中已无未读字节时，<code>Read</code>方法会先检查参数<code>p</code>的长度是否大于或等于缓冲区的长度。如果是，那么<code>Read</code>方法会索性放弃向缓冲区中填充数据，转而直接从其底层读取器中读出数据并拷贝到<code>p</code>中。这意味着它完全跨过了缓冲区，并直连了数据供需的双方。</li>
+</ul>
+<p>&nbsp;<br>需要注意的是，<code>Peek</code>方法在遇到类似情况时的做法与这里的区别（这两种做法孰优孰劣还要看具体的使用场景）。<br>&nbsp;<br><code>Peek</code>方法会在条件满足时填充缓冲区，并在发现参数<code>n</code>的值比缓冲区的长度更大时，直接返回缓冲区中的所有未读字节。<br>&nbsp;<br>如果我们当初设定的缓冲区长度很大，那么在这种情况下的方法执行耗时，就有可能会比较长。最主要的原因是填充缓冲区需要花费较长的时间。<br>&nbsp;<br>由<code>fill</code>方法执行的流程可知，它会尽量填满缓冲区中的可写空间。然而，<code>Read</code>方法在大多数的情况下，是不会向缓冲区中写入数据的，尤其是在前面描述的那种情况下，即：缓冲区中已无未读字节，且参数<code>p</code>的长度大于或等于缓冲区的长度。<br>&nbsp;<br>此时，该方法会直接从底层读取器那里读出数据，所以数据的读出速度就成为了这种情况下方法执行耗时的决定性因素。<br>&nbsp;<br>当然了，我在这里说的只是耗时操作在某些情况下更可能出现在哪里，一切的结论还是要以性能测试的客观结果为准。<br>&nbsp;<br>说回<code>Read</code>方法的内部流程。如果缓冲区中已无未读字节，但其长度比参数<code>p</code>的长度更大，那么该方法会先把已读计数和已写计数的值都重置为<code>0</code>，然后再尝试着使用从底层读取器那里获取的数据，对缓冲区进行一次从头至尾的填充。<br>&nbsp;<br>不过要注意，这里的尝试只会进行一次。无论在这一时刻是否能够获取到数据，也无论获取时是否有错误发生，都会是如此。而<code>fill</code>方法的做法与此不同，只要没有发生错误，它就会进行多次尝试，因此它真正获取到一些数据的可能性更大。<br>&nbsp;<br>不过，这两个方法有一点是相同，那就是：只要它们把获取到的数据写入缓冲区，就会及时地更新已写计数的值。<br>&nbsp;<br><strong>再来说<code>ReadSlice</code>方法和<code>ReadBytes</code>方法。</strong> 这两个方法的功能总体上来说，都是持续地读取数据，直至遇到调用方给定的分隔符为止。<br>&nbsp;<br><strong><code>ReadSlice</code>方法</strong>会先在其缓冲区的未读部分中寻找分隔符。如果未能找到，并且缓冲区未满，那么该方法会先通过调用<code>fill</code>方法对缓冲区进行填充，然后再次寻找，如此往复。<br>&nbsp;<br>如果在填充的过程中发生了错误，那么它会把缓冲区中的未读部分作为结果返回，同时返回相应的错误值。<br>&nbsp;<br>注意，在这个过程中有可能会出现虽然缓冲区已被填满，但仍然没能找到分隔符的情况。<br>&nbsp;<br>这时，<code>ReadSlice</code>方法会把整个缓冲区（也就是<code>buf</code>字段代表的字节切片）作为第一个结果值，并把缓冲区已满的错误（即<code>bufio.ErrBufferFull</code>变量的值）作为第二个结果值。<br>&nbsp;<br>经过<code>fill</code>方法填满的缓冲区肯定从头至尾都只包含了未读的字节，所以这样做是合理的。<br>&nbsp;<br>当然了，一旦<code>ReadSlice</code>方法找到了分隔符，它就会在缓冲区上切出相应的、包含分隔符的字节切片，并把该切片作为结果值返回。无论分隔符找到与否，该方法都会正确地设置已读计数的值。<br>&nbsp;<br>比如，在返回缓冲区中的所有未读字节，或者代表全部缓冲区的字节切片之前，它会把已写计数的值赋给已读计数，以表明缓冲区中已无未读字节。<br>&nbsp;<br>如果说<code>ReadSlice</code>是一个容易半途而废的方法的话，那么可以说<code>ReadBytes</code>方法算得上是相当的执着。<br>&nbsp;<br><strong><code>ReadBytes</code>方法</strong>会通过调用<code>ReadSlice</code>方法一次又一次地从缓冲区中读取数据，直至找到分隔符为止。<br>&nbsp;<br>在这个过程中，<code>ReadSlice</code>方法可能会因缓冲区已满而返回所有已读到的字节和相应的错误值，但<code>ReadBytes</code>方法总是会忽略掉这样的错误，并再次调用<code>ReadSlice</code>方法，这使得后者会继续填充缓冲区并在其中寻找分隔符。<br>&nbsp;<br>除非<code>ReadSlice</code>方法返回的错误值并不代表缓冲区已满的错误，或者它找到了分隔符，否则这一过程永远不会结束。<br>&nbsp;<br>如果寻找的过程结束了，不管是不是因为找到了分隔符，<code>ReadBytes</code>方法都会把在这个过程中读到的所有字节，按照读取的先后顺序组装成一个字节切片，并把它作为第一个结果值。如果过程结束是因为出现错误，那么它还会把拿到的错误值作为第二个结果值。<br>&nbsp;<br>在<code>bufio.Reader</code>类型的众多读取方法中，依赖<code>ReadSlice</code>方法的除了<code>ReadBytes</code>方法，还有<code>ReadLine</code>方法。不过后者在读取流程上并没有什么特别之处，我就不在这里赘述了。<br>&nbsp;<br>另外，该类型的<code>ReadString</code>方法完全依赖于<code>ReadBytes</code>方法，前者只是在后者返回的结果值之上做了一个简单的类型转换而已。<br>&nbsp;<br><strong>最后，我还要提醒你一下，有个安全性方面的问题需要你注意。<code>bufio.Reader</code>类型的<code>Peek</code>方法、<code>ReadSlice</code>方法和<code>ReadLine</code>方法都有可能会造成内容泄露。</strong><br>&nbsp;<br>这主要是因为它们在正常的情况下都会返回直接基于缓冲区的字节切片。<br>&nbsp;<br>调用方可以通过这些方法返回的结果值访问到缓冲区的其他部分，甚至修改缓冲区中的内容。这通常都是很危险的。<br>&nbsp;<br><strong>bufio.Scanner类型的主要功用是什么？它有哪些特点？</strong><br>&nbsp;<br><code>bufio.Scanner</code>类型俗称带缓存的扫描器。它的功能还是比较强大的。<br>&nbsp;<br>比如，我们可以自定义每次扫描的边界，或者说内容的分段方法。我们在调用它的<code>Scan</code>方法对目标进行扫描之前，可以先调用其<code>Split</code>方法并传入一个函数来自定义分段方法。<br>&nbsp;<br>在默认情况下，扫描器会以行为单位对目标内容进行扫描。<code>bufio</code>代码包提供了一些现成的分段方法。实际上，扫描器在默认情况下会使用<code>bufio.ScanLines</code>函数作为分段方法。<br>&nbsp;<br>又比如，我们还可以在扫描之前自定义缓存的载体和缓存的最大容量，这需要调用它的<code>Buffer</code>方法。在默认情况下，扫描器内部设定的最大缓存容量是<code>64K</code>个字节。<br>&nbsp;<br>换句话说，目标内容中的每一段都不能超过<code>64K</code>个字节。否则，扫描器就会使它的<code>Scan</code>方法返回<code>false</code>，并通过其<code>Err</code>方法给予我们一个表示“token too long”的错误值。这里的“token”代表的就是一段内容。<br>&nbsp;<br>&nbsp;</p>
+<p>参考链接：<a target="_blank" rel="noopener" href="https://time.geekbang.org/column/intro/112">https://time.geekbang.org/column/intro/112</a></p>
+
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2022年03月17日 15:23</p>
+        <p>原始链接： <a class="post-url" href="/posts/b456.html" title="bufio包中的数据类型">http://wht6.github.io/posts/b456.html</a></p>
+        <footer>
+            <a href="http://wht6.github.io">
+                <img src="/images/logo.png" alt="并指如刀">
+                并指如刀
+            </a>
+        </footer>
+    </div>
+</div>
+
+      
+        
+            
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;">赏</a>
+</div>
+
+<div id="reward" class="post-modal reward-lay">
+    <a class="close" href="javascript:;" id="reward-close">×</a>
+    <span class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我吃糖~
+        <i class="icon icon-quote-right"></i>
+    </span>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/images/wechat_code.jpg" alt="打赏二维码">
+        </div>
+        <div class="reward-select">
+            
+            <label class="reward-select-item checked" data-id="wechat" data-wechat="/images/wechat_code.jpg">
+                <img class="reward-select-item-wechat" src="/images/wechat.png" alt="微信">
+            </label>
+            
+            
+            <label class="reward-select-item" data-id="alipay" data-alipay="/images/alipay_code.jpg">
+                <img class="reward-select-item-alipay" src="/images/alipay.png" alt="支付宝">
+            </label>
+            
+        </div>
+    </div>
+</div>
+
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://wht6.github.io/posts/b456.html&title=《bufio包中的数据类型》 — WHT&pic=/images/featureimages/61.jpg" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://wht6.github.io/posts/b456.html&title=《bufio包中的数据类型》 — WHT&source=分享技术,分享知识,分享感悟" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://wht6.github.io/posts/b456.html" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《bufio包中的数据类型》 — WHT&url=http://wht6.github.io/posts/b456.html&via=http://wht6.github.io" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://wht6.github.io/posts/b456.html" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://wht6.github.io/posts/b456.html" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/Go语言/" class="color5">Go语言</a>
+      
+  </li>
+
+        </ul>
+        
+    </footer>
+  </div>
+</article>
+
+
+
+<nav id="article-nav">
+  
+  
+    <a href="/posts/6c1c.html" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">io包中的接口和工具</span>
+      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    </a>
+  
+</nav>
+
+
+
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2022 并指如刀<br>
+      </p>
+    </div>
+  </div>
+</footer>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "http://wht6.github.io",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 1
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
+</div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            <a class="category-link" href="/categories/Linux/">Linux</a><a class="category-link" href="/categories/%E4%B8%AA%E4%BA%BA%E5%85%B4%E8%B6%A3/">个人兴趣</a><a class="category-link" href="/categories/%E4%BA%91%E8%AE%A1%E7%AE%97/">云计算</a><a class="category-link" href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/">嵌入式</a><a class="category-link" href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a><a class="category-link" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a>
+        </div>
+        <div id="sidebar-menu-box-tags">
+            <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Go%E8%AF%AD%E8%A8%80/" style="font-size: 20px;">Go语言</a> <a href="/tags/Python%E8%AF%AD%E8%A8%80/" style="font-size: 16.67px;">Python语言</a> <a href="/tags/pytorch/" style="font-size: 10px;">pytorch</a> <a href="/tags/%E4%BB%A3%E7%90%86/" style="font-size: 10px;">代理</a> <a href="/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 10px;">包管理</a> <a href="/tags/%E5%AE%9E%E4%BE%8B%E5%88%86%E5%89%B2/" style="font-size: 13.33px;">实例分割</a> <a href="/tags/%E5%AE%B9%E5%99%A8/" style="font-size: 10px;">容器</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 13.33px;">工具</a> <a href="/tags/%E6%80%9D%E7%BB%B4/" style="font-size: 10px;">思维</a> <a href="/tags/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/" style="font-size: 16.67px;">文件系统</a> <a href="/tags/%E6%97%A5%E5%BF%97/" style="font-size: 10px;">日志</a> <a href="/tags/%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86/" style="font-size: 10px;">权限管理</a> <a href="/tags/%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86/" style="font-size: 10px;">用户管理</a> <a href="/tags/%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">磁盘管理</a> <a href="/tags/%E7%AE%A1%E9%81%93/" style="font-size: 10px;">管道</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">系统配置</a> <a href="/tags/%E7%BD%91%E7%AB%99/" style="font-size: 10px;">网站</a> <a href="/tags/%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/" style="font-size: 10px;">网站搭建</a> <a href="/tags/%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">网络配置</a> <a href="/tags/%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1/" style="font-size: 10px;">计划任务</a> <a href="/tags/%E8%B7%AF%E7%94%B1%E5%99%A8/" style="font-size: 10px;">路由器</a> <a href="/tags/%E8%BF%9B%E7%A8%8B/" style="font-size: 10px;">进程</a> <a href="/tags/%E9%81%93%E5%AE%B6/" style="font-size: 10px;">道家</a> <a href="/tags/%E9%87%8D%E5%AE%9A%E5%90%91/" style="font-size: 10px;">重定向</a> <a href="/tags/%E9%98%BF%E9%87%8C%E4%BA%91/" style="font-size: 13.33px;">阿里云</a>
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a  href="/">
+                    <i class="fa fa-home"></i><span>Home</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/archives">
+                    <i class="fa fa-archive"></i><span>Archives</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/about">
+                    <i class="fa fa-user"></i><span>About</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Go%E8%AF%AD%E8%A8%80/" style="font-size: 20px;">Go语言</a> <a href="/tags/Python%E8%AF%AD%E8%A8%80/" style="font-size: 16.67px;">Python语言</a> <a href="/tags/pytorch/" style="font-size: 10px;">pytorch</a> <a href="/tags/%E4%BB%A3%E7%90%86/" style="font-size: 10px;">代理</a> <a href="/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 10px;">包管理</a> <a href="/tags/%E5%AE%9E%E4%BE%8B%E5%88%86%E5%89%B2/" style="font-size: 13.33px;">实例分割</a> <a href="/tags/%E5%AE%B9%E5%99%A8/" style="font-size: 10px;">容器</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 13.33px;">工具</a> <a href="/tags/%E6%80%9D%E7%BB%B4/" style="font-size: 10px;">思维</a> <a href="/tags/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/" style="font-size: 16.67px;">文件系统</a> <a href="/tags/%E6%97%A5%E5%BF%97/" style="font-size: 10px;">日志</a> <a href="/tags/%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86/" style="font-size: 10px;">权限管理</a> <a href="/tags/%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86/" style="font-size: 10px;">用户管理</a> <a href="/tags/%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">磁盘管理</a> <a href="/tags/%E7%AE%A1%E9%81%93/" style="font-size: 10px;">管道</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">系统配置</a> <a href="/tags/%E7%BD%91%E7%AB%99/" style="font-size: 10px;">网站</a> <a href="/tags/%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/" style="font-size: 10px;">网站搭建</a> <a href="/tags/%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">网络配置</a> <a href="/tags/%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1/" style="font-size: 10px;">计划任务</a> <a href="/tags/%E8%B7%AF%E7%94%B1%E5%99%A8/" style="font-size: 10px;">路由器</a> <a href="/tags/%E8%BF%9B%E7%A8%8B/" style="font-size: 10px;">进程</a> <a href="/tags/%E9%81%93%E5%AE%B6/" style="font-size: 10px;">道家</a> <a href="/tags/%E9%87%8D%E5%AE%9A%E5%90%91/" style="font-size: 10px;">重定向</a> <a href="/tags/%E9%98%BF%E9%87%8C%E4%BA%91/" style="font-size: 13.33px;">阿里云</a>
+        </div>
+    </div>
+</div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+
+
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  
+<script src="/js/particles.js"></script>
+
+
+
+
+
+
+
+
+  
+<link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  
+<script src="/js/animate.js"></script>
+
+
+
+  
+<script src="/js/pop-img.js"></script>
+
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/ Relative)","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"left","width":100,"height":180},"mobile":{"show":false},"react":{"opacityDefault":0.7}});</script></body>
+</html>
