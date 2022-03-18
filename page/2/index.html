@@ -258,6 +258,70 @@
       <div class="outer">
         <section id="main" class="body-wrap">
   
+    <article id="post-并发安全字典" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/posts/1e86.html"  >并发安全字典</a>
+    </h1>
+  
+
+          
+              <span class="header-cate">
+                <i class="fa fa-map-marker"></i>
+                  
+                  <a href="/categories/编程/">编程</a>
+                  
+              </span>
+          
+      </header>
+    
+    <div class="article-entry " itemprop="articleBody">
+      
+        <div class="article-img">
+            <a href="/posts/1e86.html" >
+                
+                <img src="http://wht6.github.io//images/featureimages/51.jpg" alt="并发安全字典" title="并发安全字典">
+                
+            </a>
+        </div>
+        <div class="article-feed">
+            <p>
+                在sync包中提供了一个并发安全的高级数据结构sync.Map，而Go 语言自带的字典类型map并不是并发安全的。
+&nbsp;
+换句话说，在同一时间段内，让不同 goroutine 中的代码，对同一个字典进行读写操作是不安全的。字典值本身可能会因这些操作而产生混乱，相关的程序也可能会因此发生不可预知的问题。&nbsp;在sync.Map出现之前，我们如果要实现并发安全的...
+            </p>
+        </div>
+      
+        
+    </div>
+    <footer class="article-footer">
+        
+        <ul class="article-footer-menu">
+            
+                <li><i class="fa fa-calendar"></i>2022-03-08</li>
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/Go语言/" class="color5">Go语言</a>
+      
+  </li>
+
+        </ul>
+        
+            <a href="/posts/1e86.html#more" class="article-more-link" >more&gt;&gt;</a>
+        
+    </footer>
+  </div>
+</article>
+
+
+  
     <article id="post-临时对象池" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -955,70 +1019,6 @@ Don’t communicate by sharing memory; share memory by communicating.
         </ul>
         
             <a href="/posts/874b.html#more" class="article-more-link" >more&gt;&gt;</a>
-        
-    </footer>
-  </div>
-</article>
-
-
-  
-    <article id="post-结构体及其方法的使用" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/posts/6ae0.html"  >结构体及其方法的使用</a>
-    </h1>
-  
-
-          
-              <span class="header-cate">
-                <i class="fa fa-map-marker"></i>
-                  
-                  <a href="/categories/编程/">编程</a>
-                  
-              </span>
-          
-      </header>
-    
-    <div class="article-entry " itemprop="articleBody">
-      
-        <div class="article-img">
-            <a href="/posts/6ae0.html" >
-                
-                <img src="http://wht6.github.io//images/featureimages/39.jpg" alt="结构体及其方法的使用" title="结构体及其方法的使用">
-                
-            </a>
-        </div>
-        <div class="article-feed">
-            <p>
-                结构体类型表示的是实实在在的数据结构。一个结构体类型可以包含若干个字段，每个字段通常都需要有确切的名字和类型。
-&nbsp;
-结构体类型也可以不包含任何字段，这样并不是没有意义的，因为我们还可以为类型关联上一些方法，这里你可以把方法看做是函数的特殊版本。&nbsp;函数是独立的程序实体。我们可以声明有名字的函数，也可以声明没名字的函数，还可以把它们当做普通的值传来传去。我...
-            </p>
-        </div>
-      
-        
-    </div>
-    <footer class="article-footer">
-        
-        <ul class="article-footer-menu">
-            
-                <li><i class="fa fa-calendar"></i>2022-03-01</li>
-            
-            
-  <li class="article-footer-tags">
-    <i class="fa fa-tags"></i>
-      
-    <a href="/tags/Go语言/" class="color5">Go语言</a>
-      
-  </li>
-
-        </ul>
-        
-            <a href="/posts/6ae0.html#more" class="article-more-link" >more&gt;&gt;</a>
         
     </footer>
   </div>
