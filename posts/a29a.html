@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>使用os包中的API | WHT</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="技术，运维,编程，兴趣" />
+  
+  <meta name="description" content="&amp;nbsp; os 包中的 API&amp;nbsp;这个代码包提供的都是平台不相关的 API。那么说，什么叫平台不相关的 API 呢？&amp;nbsp;它的意思是：这些 API 基于（或者说抽象自）操作系统，为我们使用操作系统的功能提供高层次的支持，但是，它们并不依赖于具体的操作系统。&amp;nbsp;不论是 Linux、macOS、Windows，还是 FreeBSD、OpenBSD、Plan9，os代码包都可以">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用os包中的API">
+<meta property="og:url" content="http://wht6.github.io/posts/a29a.html">
+<meta property="og:site_name" content="WHT">
+<meta property="og:description" content="&amp;nbsp; os 包中的 API&amp;nbsp;这个代码包提供的都是平台不相关的 API。那么说，什么叫平台不相关的 API 呢？&amp;nbsp;它的意思是：这些 API 基于（或者说抽象自）操作系统，为我们使用操作系统的功能提供高层次的支持，但是，它们并不依赖于具体的操作系统。&amp;nbsp;不论是 Linux、macOS、Windows，还是 FreeBSD、OpenBSD、Plan9，os代码包都可以">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/wht6/image/master/img/osfile_2022318.png">
+<meta property="article:published_time" content="2022-03-18T03:00:00.000Z">
+<meta property="article:modified_time" content="2022-03-18T01:57:49.746Z">
+<meta property="article:author" content="并指如刀">
+<meta property="article:tag" content="Go语言">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/wht6/image/master/img/osfile_2022318.png">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<script src="/js/pace.min.js"></script>
+
+  
+
+  
+  
+
+<style type="text/css" lang="css">
+    #loading-container{
+        position: fixed;
+        top: 0;
+        left: 0;
+        min-height: 100vh;
+        width: 100vw;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: #FFF;
+        text-align: center;
+        /* loader页面消失采用渐隐的方式*/
+        -webkit-transition: opacity 1s ease;
+        -moz-transition: opacity 1s ease;
+        -o-transition: opacity 1s ease;
+        transition: opacity 1s ease;
+    }
+    .loading-image{
+        width: 120px;
+        height: 50px;
+        transform: translate(-50%);
+    }
+    
+    .loading-image div:nth-child(2) {
+        -webkit-animation: pacman-balls 1s linear 0s infinite;
+        animation: pacman-balls 1s linear 0s infinite
+    }
+
+    .loading-image div:nth-child(3) {
+        -webkit-animation: pacman-balls 1s linear .33s infinite;
+        animation: pacman-balls 1s linear .33s infinite
+    }
+
+    .loading-image div:nth-child(4) {
+        -webkit-animation: pacman-balls 1s linear .66s infinite;
+        animation: pacman-balls 1s linear .66s infinite
+    }
+
+    .loading-image div:nth-child(5) {
+        -webkit-animation: pacman-balls 1s linear .99s infinite;
+        animation: pacman-balls 1s linear .99s infinite
+    }
+    
+   .loading-image div:first-of-type {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_up .5s 0s infinite;
+        animation: rotate_pacman_half_up .5s 0s infinite;
+    }
+    .loading-image div:nth-child(2) {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_down .5s 0s infinite;
+        animation: rotate_pacman_half_down .5s 0s infinite;
+        margin-top: -50px;
+    }
+    @-webkit-keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @-webkit-keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+
+    @keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+    
+    @-webkit-keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+
+    @keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+    
+   
+    .loading-image div:nth-child(3),
+    .loading-image div:nth-child(4),
+    .loading-image div:nth-child(5),
+    .loading-image div:nth-child(6){
+        background-color: #49b1f5;
+        width: 15px;
+        height: 15px;
+        border-radius: 100%;
+        margin: 2px;
+        width: 10px;
+        height: 10px;
+        position: absolute;
+        transform: translateY(-6.25px);
+        top: 25px;
+        left: 100px;
+    }
+    .loading-text{
+        margin-bottom: 20vh;
+        text-align: center;
+        color: #2c3e50;
+        font-size: 2rem;
+        box-sizing: border-box;
+        padding: 0 10px;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    @media only screen and (max-width: 500px) {
+         .loading-text{
+            font-size: 1.5rem;
+         }
+    }
+    .fadeout {
+        opacity: 0;
+        filter: alpha(opacity=0);
+    }
+    /* logo出现动画 */
+    @-webkit-keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);transform:translate3d(0,-100%,0)}100%{opacity:1;-webkit-transform:none;transform:none}}
+    @keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);}}
+ </style>
+ <script>
+(function () {
+    const loaded = function(){
+       setTimeout(function(){
+            const loader = document.getElementById("loading-container");
+            loader.className="fadeout" ;//使用渐隐的方法淡出loading page
+            // document.getElementById("body-wrap").style.display="flex";
+            setTimeout(function(){
+                loader.style.display="none";
+            },1000); 
+        },1000);//强制显示loading page 1s  
+    };
+    loaded();
+})()
+ </script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="WHT" type="application/atom+xml">
+</head>
+
+
+ <div id="loading-container">
+     <p class="loading-text">玩命加载中 . . . </p> 
+     <div class="loading-image">
+         <div></div>
+         <div></div>
+         <div></div>
+         <div></div> 
+         <div></div>
+     </div>
+ </div><body>
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">WHT&#39;s Blog</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a  href="/">
+                        <i class="fa fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    
+                    <a  href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>Archives</span>
+                    </a>
+                    
+                    <a  href="/about">
+                        <i class="fa fa-user"></i>
+                        <span>About</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/logo.png" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        WHT&#39;s Blog
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        一个专注知识分享的技术博客
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="WHT&#39;s Blog" target="_blank" href="//wht6.github.io">
+                            <i class="fa fa-home fa-2x"></i></a>
+                    
+                        <a title="Github" target="_blank" href="//github.com/wht6">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                        <a title="Weibo" target="_blank" href="//weibo.com/wht6">
+                            <i class="fa fa-weibo fa-2x"></i></a>
+                    
+                        <a title="Twitter" target="_blank" href="//twitter.com/wht6">
+                            <i class="fa fa-twitter fa-2x"></i></a>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="post-使用os包中的API" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="post-title" itemprop="name">
+      使用os包中的API
+    </h1>
+    <div class="post-title-bar">
+      <ul>
+          
+              <li>
+                  <i class="fa fa-book"></i>
+                  
+                      <a href="/categories/编程/">编程</a>
+                  
+              </li>
+          
+        <li>
+          <i class="fa fa-calendar"></i>  2022-03-18
+        </li>
+        <li>
+          <i class="fa fa-eye"></i>
+          <span id="busuanzi_value_page_pv"></span>
+        </li>
+      </ul>
+    </div>
+  
+
+          
+      </header>
+    
+    <div class="article-entry post-content" itemprop="articleBody">
+      
+            
+            <p>&nbsp;</p>
+<h3 id="os-包中的-API"><a href="#os-包中的-API" class="headerlink" title="os 包中的 API"></a>os 包中的 API</h3><p>&nbsp;<br>这个代码包提供的都是平台不相关的 API。那么说，什么叫平台不相关的 API 呢？<br>&nbsp;<br>它的意思是：这些 API 基于（或者说抽象自）操作系统，为我们使用操作系统的功能提供高层次的支持，但是，它们并不依赖于具体的操作系统。<br>&nbsp;<br>不论是 Linux、macOS、Windows，还是 FreeBSD、OpenBSD、Plan9，<code>os</code>代码包都可以为之提供统一的使用接口。这使得我们可以用同样的方式，来操纵不同的操作系统，并得到相似的结果。<br>&nbsp;<br><code>os</code>包中的 API 主要可以帮助我们使用操作系统中的文件系统、权限系统、环境变量、系统进程以及系统信号。<br>&nbsp;<br>其中，操纵文件系统的 API 最为丰富。我们不但可以利用这些 API 创建和删除文件以及目录，还可以获取到它们的各种信息、修改它们的内容、改变它们的访问权限，等等。<br>&nbsp;<br>说到这里，就不得不提及一个非常常用的数据类型：<code>os.File</code>。<br>&nbsp;<br>从字面上来看，<code>os.File</code>类型代表了操作系统中的文件。但实际上，它可以代表的远不止于此。或许你已经知道，对于类 Unix 的操作系统（包括 Linux、macOS、FreeBSD 等），其中的一切都可以被看做是文件。<br>&nbsp;<br>除了文本文件、二进制文件、压缩文件、目录这些常见的形式之外，还有符号链接、各种物理设备（包括内置或外接的面向块或者字符的设备）、命名管道，以及套接字（也就是 socket），等等。<br>&nbsp;<br>因此，可以说，我们能够利用<code>os.File</code>类型操纵的东西太多了。不过，为了聚焦于<code>os.File</code>本身，同时也为了让本文讲述的内容更加通用，我们在这里主要把<code>os.File</code>类型应用于常规的文件。<br>&nbsp;<br><strong><code>os.File</code>类型都实现了哪些<code>io</code>包中的接口？</strong><br>&nbsp;<br><code>os.File</code>类型拥有的都是指针方法，所以除了空接口之外，它本身没有实现任何接口。而它的指针类型则实现了很多<code>io</code>代码包中的接口。<br>&nbsp;<br>首先，对于<code>io</code>包中最核心的 3 个简单接口<code>io.Reader</code>、<code>io.Writer</code>和<code>io.Closer</code>，<code>*os.File</code>类型都实现了它们。<br>&nbsp;<br>其次，该类型还实现了另外的 3 个简单接口，即：<code>io.ReaderAt</code>、<code>io.Seeker</code>和<code>io.WriterAt</code>。<br>&nbsp;<br>正是因为<code>*os.File</code>类型实现了这些简单接口，所以它也顺便实现了<code>io</code>包的 9 个扩展接口中的 7 个。<br>&nbsp;<br>然而，由于它并没有实现简单接口<code>io.ByteReader</code>和<code>io.RuneReader</code>，所以它没有实现分别作为这两者的扩展接口的<code>io.ByteScanner</code>和<code>io.RuneScanner</code>。<br>&nbsp;<br>总之，<code>os.File</code>类型及其指针类型的值，不但可以通过各种方式读取和写入某个文件中的内容，还可以寻找并设定下一次读取或写入时的起始索引位置，另外还可以随时对文件进行关闭。<br>&nbsp;<br>但是，它们并不能专门地读取文件中的下一个字节，或者下一个 Unicode 字符，也不能进行任何的读回退操作。<br>&nbsp;<br>不过，单独读取下一个字节或字符的功能也可以通过其他方式来实现，比如，调用它的<code>Read</code>方法并传入适当的参数值就可以做到这一点。<br>&nbsp;<br>怎样才能获得一个<code>os.File</code>类型的指针值（以下简称<code>File</code>值）。<br>&nbsp;<br>在<code>os</code>包中，有这样几个函数，即：<code>Create</code>、<code>NewFile</code>、<code>Open</code>和<code>OpenFile</code>。<br>&nbsp;<br><strong><code>os.Create</code>函数用于根据给定的路径创建一个新的文件。</strong> 它会返回一个<code>File</code>值和一个错误值。我们可以在该函数返回的<code>File</code>值之上，对相应的文件进行读操作和写操作。<br>&nbsp;<br>不但如此，我们使用这个函数创建的文件，对于操作系统中的所有用户来说，都是可以读和写的。<br>&nbsp;<br>换句话说，一旦这样的文件被创建出来，任何能够登录其所属的操作系统的用户，都可以在任意时刻读取该文件中的内容，或者向该文件写入内容。<br>&nbsp;<br>注意，如果在我们给予<code>os.Create</code>函数的路径之上，已经存在了一个文件，那么该函数会先清空现有文件中的全部内容，然后再把它作为第一个结果值返回。<br>&nbsp;<br>另外，<code>os.Create</code>函数是有可能返回非<code>nil</code>的错误值的。<br>&nbsp;<br>比如，如果我们给定的路径上的某一级父目录并不存在，那么该函数就会返回一个<code>*os.PathError</code>类型的错误值，以表示“不存在的文件或目录”。<br>&nbsp;<br><strong>再来看<code>os.NewFile</code>函数。</strong> 该函数在被调用的时候，需要接受一个代表文件描述符的、<code>uintptr</code>类型的值，以及一个用于表示文件名的字符串值。<br>&nbsp;<br>如果我们给定的文件描述符并不是有效的，那么这个函数将会返回<code>nil</code>，否则，它将会返回一个代表了相应文件的<code>File</code>值。<br>&nbsp;<br>注意，不要被这个函数的名称误导了，它的功能并不是创建一个新的文件，而是依据一个已经存在的文件的描述符，来新建一个包装了该文件的<code>File</code>值。<br>&nbsp;<br>例如，我们可以像这样拿到一个包装了标准错误输出的<code>File</code>值：<br>&nbsp;<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">file3 := os.NewFile(<span class="keyword">uintptr</span>(syscall.Stderr), <span class="string">&quot;/dev/stderr&quot;</span>)</span><br></pre></td></tr></table></figure><br>&nbsp;</p>
+<p>然后，通过这个<code>File</code>值向标准错误输出上写入一些内容：</p>
+<p>&nbsp;<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> file3 != <span class="literal">nil</span> &#123;</span><br><span class="line"> <span class="keyword">defer</span> file3.Close()</span><br><span class="line"> file3.WriteString(</span><br><span class="line">  <span class="string">&quot;The Go language program writes the contents into stderr.\n&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>&nbsp;</p>
+<p><strong><code>os.Open</code>函数会打开一个文件并返回包装了该文件的<code>File</code>值。</strong> 然而，该函数只能以只读模式打开文件。换句话说，我们只能从该函数返回的<code>File</code>值中读取内容，而不能向它写入任何内容。</p>
+<p>&nbsp;<br>如果我们调用了这个<code>File</code>值的任何一个写入方法，那么都将会得到一个表示了“坏的文件描述符”的错误值。实际上，我们刚刚说的只读模式，正是应用在<code>File</code>值所持有的文件描述符之上的。<br>&nbsp;<br>所谓的文件描述符，是由通常很小的非负整数代表的。它一般会由 I/O 相关的系统调用返回，并作为某个文件的一个标识存在。<br>&nbsp;<br>从操作系统的层面看，针对任何文件的 I/O 操作都需要用到这个文件描述符。只不过，Go 语言中的一些数据类型，为我们隐匿掉了这个描述符，如此一来我们就无需时刻关注和辨别它了（就像<code>os.File</code>类型这样）。<br>&nbsp;<br>实际上，我们在调用前文所述的<code>os.Create</code>函数、<code>os.Open</code>函数以及将会提到的<code>os.OpenFile</code>函数的时候，它们都会执行同一个系统调用，并且在成功之后得到这样一个文件描述符。这个文件描述符将会被储存在它们返回的<code>File</code>值中。<br>&nbsp;<br><code>os.File</code>类型有一个指针方法，名叫<code>Fd</code>。它在被调用之后将会返回一个<code>uintptr</code>类型的值。这个值就代表了当前的<code>File</code>值所持有的那个文件描述符。<br>&nbsp;<br>不过，在<code>os</code>包中，除了<code>NewFile</code>函数需要用到它，它也没有什么别的用武之地了。所以，如果你操作的只是常规的文件或者目录，那么就无需特别地在意它了。<br>&nbsp;<br><strong>最后，再说一下<code>os.OpenFile</code>函数。</strong> 这个函数其实是<code>os.Create</code>函数和<code>os.Open</code>函数的底层支持，它最为灵活。<br>&nbsp;<br>这个函数有 3 个参数，分别名为<code>name</code>、<code>flag</code>和<code>perm</code>。其中的<code>name</code>指代的就是文件的路径。而<code>flag</code>参数指的则是需要施加在文件描述符之上的模式，我在前面提到的只读模式就是这里的一个可选项。<br>&nbsp;<br>在 Go 语言中，这个只读模式由常量<code>os.O_RDONLY</code>代表，它是<code>int</code>类型的。当然了，这里除了只读模式之外，还有几个别的模式可选，我们稍后再细说。<br>&nbsp;<br><code>os.OpenFile</code>函数的参数<code>perm</code>代表的也是模式，它的类型是<code>os.FileMode</code>，此类型是一个基于<code>uint32</code>类型的再定义类型。<br>&nbsp;<br>为了加以区别，我们把参数<code>flag</code>指代的模式叫做操作模式，而把参数<code>perm</code>指代的模式叫做权限模式。可以这么说，操作模式限定了操作文件的方式，而权限模式则可以控制文件的访问权限。</p>
+<p><img src="https://raw.githubusercontent.com/wht6/image/master/img/osfile_2022318.png" alt></p>
+<p>到这里，你需要记住的是，通过<code>os.File</code>类型的值，我们不但可以对文件进行读取、写入、关闭等操作，还可以设定下一次读取或写入时的起始索引位置。<br>&nbsp;<br>此外，<code>os</code>包中还有用于创建全新文件的<code>Create</code>函数，用于包装现存文件的<code>NewFile</code>函数，以及可被用来打开已存在的文件的<code>Open</code>函数和<code>OpenFile</code>函数。<br>&nbsp;</p>
+<h3 id="操作模式和访问权限"><a href="#操作模式和访问权限" class="headerlink" title="操作模式和访问权限"></a>操作模式和访问权限</h3><p>&nbsp;<br><strong>可应用于File值的操作模式都有哪些？</strong><br>&nbsp;<br>针对<code>File</code>值的操作模式主要有只读模式、只写模式和读写模式。<br>&nbsp;<br>这些模式分别由常量<code>os.O_RDONLY</code>、<code>os.O_WRONLY</code>和<code>os.O_RDWR</code>代表。在我们新建或打开一个文件的时候，必须把这三个模式中的一个设定为此文件的操作模式。<br>&nbsp;<br>除此之外，我们还可以为这里的文件设置额外的操作模式，可选项如下所示。</p>
+<ul>
+<li><code>os.O_APPEND</code>：当向文件中写入内容时，把新内容追加到现有内容的后边。</li>
+<li><code>os.O_CREATE</code>：当给定路径上的文件不存在时，创建一个新文件。</li>
+<li><code>os.O_EXCL</code>：需要与<code>os.O_CREATE</code>一同使用，表示在给定的路径上不能有已存在的文件。</li>
+<li><code>os.O_SYNC</code>：在打开的文件之上实施同步 I/O。它会保证读写的内容总会与硬盘上的数据保持同步。</li>
+<li><code>os.O_TRUNC</code>：如果文件已存在，并且是常规的文件，那么就先清空其中已经存在的任何内容。</li>
+</ul>
+<p>对于以上操作模式的使用，<code>os.Create</code>函数和<code>os.Open</code>函数都是现成的例子。<br>&nbsp;<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Create</span><span class="params">(name <span class="keyword">string</span>)</span> <span class="params">(*File, error)</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> OpenFile(name, O_RDWR|O_CREATE|O_TRUNC, <span class="number">0666</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>&nbsp;</p>
+<p><code>os.Create</code>函数在调用<code>os.OpenFile</code>函数的时候，给予的操作模式是<code>os.O_RDWR</code>、<code>os.O_CREATE</code>和<code>os.O_TRUNC</code>的组合。</p>
+<p>&nbsp;<br>这就基本上决定了前者的行为，即：如果参数<code>name</code>代表路径之上的文件不存在，那么就新建一个，否则，先清空现存文件中的全部内容。<br>&nbsp;<br>并且，它返回的<code>File</code>值的读取方法和写入方法都是可用的。这里需要注意，多个操作模式是通过按位或操作符<code>|</code>组合起来的。<br>&nbsp;<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">Open</span><span class="params">(name <span class="keyword">string</span>)</span> <span class="params">(*File, error)</span></span> &#123;</span><br><span class="line">	<span class="keyword">return</span> OpenFile(name, O_RDONLY, <span class="number">0</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>&nbsp;</p>
+<p>我在前面说过，<code>os.Open</code>函数的功能是：以只读模式打开已经存在的文件。其根源就是它在调用<code>os.OpenFile</code>函数的时候，只提供了一个单一的操作模式<code>os.O_RDONLY</code>。</p>
+<p>&nbsp;<br>以上，就是我对可应用于<code>File</code>值的操作模式的简单解释。<br>&nbsp;<br><strong>怎样设定常规文件的访问权限？</strong><br>&nbsp;<br>我们已经知道，<code>os.OpenFile</code>函数的第三个参数<code>perm</code>代表的是权限模式，其类型是<code>os.FileMode</code>。但实际上，<code>os.FileMode</code>类型能够代表的，可远不只权限模式，它还可以代表文件模式（也可以称之为文件种类）。<br>&nbsp;<br>由于<code>os.FileMode</code>是基于<code>uint32</code>类型的再定义类型，所以它的每个值都包含了 32 个比特位。在这 32 个比特位当中，每个比特位都有其特定的含义。<br>&nbsp;<br>比如，如果在其最高比特位上的二进制数是<code>1</code>，那么该值表示的文件模式就等同于<code>os.ModeDir</code>，也就是说，相应的文件代表的是一个目录。<br>&nbsp;<br>又比如，如果其中的第 26 个比特位上的是<code>1</code>，那么相应的值表示的文件模式就等同于<code>os.ModeNamedPipe</code>，也就是说，那个文件代表的是一个命名管道。<br>&nbsp;<br>实际上，在一个<code>os.FileMode</code>类型的值（以下简称<code>FileMode</code>值）中，只有最低的 9 个比特位才用于表示文件的权限。当我们拿到一个此类型的值时，可以把它和<code>os.ModePerm</code>常量的值做按位与操作。<br>&nbsp;<br>这个常量的值是<code>0777</code>，是一个八进制的无符号整数，其最低的 9 个比特位上都是<code>1</code>，而更高的 23 个比特位上都是<code>0</code>。<br>&nbsp;<br>所以，经过这样的按位与操作之后，我们即可得到这个<code>FileMode</code>值中所有用于表示文件权限的比特位，也就是该值所表示的权限模式。这将会与我们调用<code>FileMode</code>值的<code>Perm</code>方法所得到的结果值是一致。<br>&nbsp;<br>在这 9 个用于表示文件权限的比特位中，每 3 个比特位为一组，共可分为 3 组。<br>&nbsp;<br><strong>从高到低，这 3 组分别表示的是文件所有者（也就是创建这个文件的那个用户）、文件所有者所属的用户组，以及其他用户对该文件的访问权限。而对于每个组，其中的 3 个比特位从高到低分别表示读权限、写权限和执行权限。</strong><br>&nbsp;<br>如果在其中的某个比特位上的是<code>1</code>，那么就意味着相应的权限开启，否则，就表示相应的权限关闭。<br>&nbsp;<br>因此，八进制整数<code>0777</code>就表示：操作系统中的所有用户都对当前的文件有读、写和执行的权限，而八进制整数<code>0666</code>则表示：所有用户都对当前文件有读和写的权限，但都没有执行的权限。<br>&nbsp;<br>我们在调用<code>os.OpenFile</code>函数的时候，可以根据以上说明设置它的第三个参数。但要注意，只有在新建文件的时候，这里的第三个参数值才是有效的。在其他情况下，即使我们设置了此参数，也不会对目标文件产生任何的影响。<br>&nbsp;<br><strong>扩展：</strong>怎样通过os包中的 API 创建和操纵一个系统进程？<br>&nbsp;<br>可以从<code>os</code>包的<code>FindProcess</code>函数和<code>StartProcess</code>函数开始。前者用于通过进程 ID（pid）查找进程，后者用来基于某个程序启动一个进程。<br>&nbsp;<br>这两者都会返回一个<code>*os.Process</code>类型的值。该类型提供了一些方法，比如，用于杀掉当前进程的<code>Kill</code>方法，又比如，可以给当前进程发送系统信号的<code>Signal</code>方法，以及会等待当前进程结束的<code>Wait</code>方法。<br>&nbsp;<br>与此相关的还有<code>os.ProcAttr</code>类型、<code>os.ProcessState</code>类型、<code>os.Signal</code>类型，等等。<br>&nbsp;</p>
+<p>&nbsp;<br>参考链接：<a target="_blank" rel="noopener" href="https://time.geekbang.org/column/intro/112">https://time.geekbang.org/column/intro/112</a></p>
+
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2022年03月18日 09:57</p>
+        <p>原始链接： <a class="post-url" href="/posts/a29a.html" title="使用os包中的API">http://wht6.github.io/posts/a29a.html</a></p>
+        <footer>
+            <a href="http://wht6.github.io">
+                <img src="/images/logo.png" alt="并指如刀">
+                并指如刀
+            </a>
+        </footer>
+    </div>
+</div>
+
+      
+        
+            
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;">赏</a>
+</div>
+
+<div id="reward" class="post-modal reward-lay">
+    <a class="close" href="javascript:;" id="reward-close">×</a>
+    <span class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我吃糖~
+        <i class="icon icon-quote-right"></i>
+    </span>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/images/wechat_code.jpg" alt="打赏二维码">
+        </div>
+        <div class="reward-select">
+            
+            <label class="reward-select-item checked" data-id="wechat" data-wechat="/images/wechat_code.jpg">
+                <img class="reward-select-item-wechat" src="/images/wechat.png" alt="微信">
+            </label>
+            
+            
+            <label class="reward-select-item" data-id="alipay" data-alipay="/images/alipay_code.jpg">
+                <img class="reward-select-item-alipay" src="/images/alipay.png" alt="支付宝">
+            </label>
+            
+        </div>
+    </div>
+</div>
+
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://wht6.github.io/posts/a29a.html&title=《使用os包中的API》 — WHT&pic=/images/featureimages/62.jpg" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://wht6.github.io/posts/a29a.html&title=《使用os包中的API》 — WHT&source=分享技术,分享知识,分享感悟" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://wht6.github.io/posts/a29a.html" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《使用os包中的API》 — WHT&url=http://wht6.github.io/posts/a29a.html&via=http://wht6.github.io" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://wht6.github.io/posts/a29a.html" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://wht6.github.io/posts/a29a.html" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/Go语言/" class="color5">Go语言</a>
+      
+  </li>
+
+        </ul>
+        
+    </footer>
+  </div>
+</article>
+
+
+    <aside class="post-toc-pos post-toc-top" id="post-toc">
+        <nav class="post-toc-wrap">
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#os-%E5%8C%85%E4%B8%AD%E7%9A%84-API"><span class="post-toc-text">os 包中的 API</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#%E6%93%8D%E4%BD%9C%E6%A8%A1%E5%BC%8F%E5%92%8C%E8%AE%BF%E9%97%AE%E6%9D%83%E9%99%90"><span class="post-toc-text">操作模式和访问权限</span></a></li></ol>
+        </nav>
+    </aside>
+    
+
+<nav id="article-nav">
+  
+  
+    <a href="/posts/b456.html" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">bufio包中的数据类型</span>
+      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    </a>
+  
+</nav>
+
+
+
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2022 并指如刀<br>
+      </p>
+    </div>
+  </div>
+</footer>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "http://wht6.github.io",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 1
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
+</div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            <a class="category-link" href="/categories/Linux/">Linux</a><a class="category-link" href="/categories/%E4%B8%AA%E4%BA%BA%E5%85%B4%E8%B6%A3/">个人兴趣</a><a class="category-link" href="/categories/%E4%BA%91%E8%AE%A1%E7%AE%97/">云计算</a><a class="category-link" href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/">嵌入式</a><a class="category-link" href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a><a class="category-link" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a>
+        </div>
+        <div id="sidebar-menu-box-tags">
+            <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Go%E8%AF%AD%E8%A8%80/" style="font-size: 20px;">Go语言</a> <a href="/tags/Python%E8%AF%AD%E8%A8%80/" style="font-size: 16.67px;">Python语言</a> <a href="/tags/pytorch/" style="font-size: 10px;">pytorch</a> <a href="/tags/%E4%BB%A3%E7%90%86/" style="font-size: 10px;">代理</a> <a href="/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 10px;">包管理</a> <a href="/tags/%E5%AE%9E%E4%BE%8B%E5%88%86%E5%89%B2/" style="font-size: 13.33px;">实例分割</a> <a href="/tags/%E5%AE%B9%E5%99%A8/" style="font-size: 10px;">容器</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 13.33px;">工具</a> <a href="/tags/%E6%80%9D%E7%BB%B4/" style="font-size: 10px;">思维</a> <a href="/tags/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/" style="font-size: 16.67px;">文件系统</a> <a href="/tags/%E6%97%A5%E5%BF%97/" style="font-size: 10px;">日志</a> <a href="/tags/%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86/" style="font-size: 10px;">权限管理</a> <a href="/tags/%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86/" style="font-size: 10px;">用户管理</a> <a href="/tags/%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">磁盘管理</a> <a href="/tags/%E7%AE%A1%E9%81%93/" style="font-size: 10px;">管道</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">系统配置</a> <a href="/tags/%E7%BD%91%E7%AB%99/" style="font-size: 10px;">网站</a> <a href="/tags/%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/" style="font-size: 10px;">网站搭建</a> <a href="/tags/%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">网络配置</a> <a href="/tags/%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1/" style="font-size: 10px;">计划任务</a> <a href="/tags/%E8%B7%AF%E7%94%B1%E5%99%A8/" style="font-size: 10px;">路由器</a> <a href="/tags/%E8%BF%9B%E7%A8%8B/" style="font-size: 10px;">进程</a> <a href="/tags/%E9%81%93%E5%AE%B6/" style="font-size: 10px;">道家</a> <a href="/tags/%E9%87%8D%E5%AE%9A%E5%90%91/" style="font-size: 10px;">重定向</a> <a href="/tags/%E9%98%BF%E9%87%8C%E4%BA%91/" style="font-size: 13.33px;">阿里云</a>
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a  href="/">
+                    <i class="fa fa-home"></i><span>Home</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/archives">
+                    <i class="fa fa-archive"></i><span>Archives</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/about">
+                    <i class="fa fa-user"></i><span>About</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Go%E8%AF%AD%E8%A8%80/" style="font-size: 20px;">Go语言</a> <a href="/tags/Python%E8%AF%AD%E8%A8%80/" style="font-size: 16.67px;">Python语言</a> <a href="/tags/pytorch/" style="font-size: 10px;">pytorch</a> <a href="/tags/%E4%BB%A3%E7%90%86/" style="font-size: 10px;">代理</a> <a href="/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 10px;">包管理</a> <a href="/tags/%E5%AE%9E%E4%BE%8B%E5%88%86%E5%89%B2/" style="font-size: 13.33px;">实例分割</a> <a href="/tags/%E5%AE%B9%E5%99%A8/" style="font-size: 10px;">容器</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 13.33px;">工具</a> <a href="/tags/%E6%80%9D%E7%BB%B4/" style="font-size: 10px;">思维</a> <a href="/tags/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/" style="font-size: 16.67px;">文件系统</a> <a href="/tags/%E6%97%A5%E5%BF%97/" style="font-size: 10px;">日志</a> <a href="/tags/%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86/" style="font-size: 10px;">权限管理</a> <a href="/tags/%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86/" style="font-size: 10px;">用户管理</a> <a href="/tags/%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">磁盘管理</a> <a href="/tags/%E7%AE%A1%E9%81%93/" style="font-size: 10px;">管道</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">系统配置</a> <a href="/tags/%E7%BD%91%E7%AB%99/" style="font-size: 10px;">网站</a> <a href="/tags/%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/" style="font-size: 10px;">网站搭建</a> <a href="/tags/%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">网络配置</a> <a href="/tags/%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1/" style="font-size: 10px;">计划任务</a> <a href="/tags/%E8%B7%AF%E7%94%B1%E5%99%A8/" style="font-size: 10px;">路由器</a> <a href="/tags/%E8%BF%9B%E7%A8%8B/" style="font-size: 10px;">进程</a> <a href="/tags/%E9%81%93%E5%AE%B6/" style="font-size: 10px;">道家</a> <a href="/tags/%E9%87%8D%E5%AE%9A%E5%90%91/" style="font-size: 10px;">重定向</a> <a href="/tags/%E9%98%BF%E9%87%8C%E4%BA%91/" style="font-size: 13.33px;">阿里云</a>
+        </div>
+    </div>
+</div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+
+
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  
+<script src="/js/particles.js"></script>
+
+
+
+
+
+
+
+
+  
+<link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  
+<script src="/js/animate.js"></script>
+
+
+
+  
+<script src="/js/pop-img.js"></script>
+
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/ Relative)","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"left","width":100,"height":180},"mobile":{"show":false},"react":{"opacityDefault":0.7}});</script></body>
+</html>

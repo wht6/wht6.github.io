@@ -6,7 +6,7 @@
   <title>WHT</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
-    <meta name="keywords" content="WHT,WHT's Blog" />
+    <meta name="keywords" content="技术，运维,编程，兴趣" />
   
   <meta name="description" content="分享技术,分享知识,分享感悟">
 <meta property="og:type" content="website">
@@ -17,9 +17,9 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="article:author" content="并指如刀">
 <meta property="article:tag" content="技术">
+<meta property="article:tag" content="运维">
+<meta property="article:tag" content="编程">
 <meta property="article:tag" content="兴趣">
-<meta property="article:tag" content="生活">
-<meta property="article:tag" content="思维">
 <meta name="twitter:card" content="summary">
   
   
@@ -230,7 +230,7 @@
                 <div id="header-description">
                     
                     <h3>
-                        一个专注运维开发的技术博客
+                        一个专注知识分享的技术博客
                     </h3>
                     
                 </div>
@@ -257,6 +257,73 @@
 </header>
       <div class="outer">
         <section id="main" class="body-wrap">
+  
+    <article id="post-frp远程访问" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/posts/a3d2.html"  >frp远程访问</a>
+    </h1>
+  
+
+          
+              <span class="header-cate">
+                <i class="fa fa-map-marker"></i>
+                  
+                  <a href="/categories/网络/">网络</a>
+                  
+              </span>
+          
+      </header>
+    
+    <div class="article-entry " itemprop="articleBody">
+      
+        <div class="article-img">
+            <a href="/posts/a3d2.html" >
+                
+                <img src="http://wht6.github.io//images/featureimages/14.jpg" alt="frp远程访问" title="frp远程访问">
+                
+            </a>
+        </div>
+        <div class="article-feed">
+            <p>
+                frp远程访问frp原理frp主要进行反向代理，将数据包定向转发，多用于内网穿透。
+下图以SSH为例，说明frp是如何实现内网穿透的。
+
+frp通过建立上图的三个通道，并把三个通道进行连通，即实现了ssh的内网穿透。
+具体步骤如下：
+1）frpc注册frps，两者建立TCP连接，frpc将端口映射信息发送给frps，frps根据端口映射信息建立连接池，监听固定端口的连接。...
+            </p>
+        </div>
+      
+        
+    </div>
+    <footer class="article-footer">
+        
+        <ul class="article-footer-menu">
+            
+                <li><i class="fa fa-calendar"></i>2021-06-22</li>
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/工具/" class="color3">工具</a>
+      
+  </li>
+
+        </ul>
+        
+            <a href="/posts/a3d2.html#more" class="article-more-link" >more&gt;&gt;</a>
+        
+    </footer>
+  </div>
+</article>
+
+
   
     <article id="post-搭建ss服务器" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
@@ -979,68 +1046,6 @@ LAT：锁存器。0打开，...
         </ul>
         
             <a href="/posts/a469.html#more" class="article-more-link" >more&gt;&gt;</a>
-        
-    </footer>
-  </div>
-</article>
-
-
-  
-    <article id="post-ubuntu20-04配置pytorch环境" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/posts/ee8d.html"  >ubuntu20.04配置pytorch环境</a>
-    </h1>
-  
-
-          
-              <span class="header-cate">
-                <i class="fa fa-map-marker"></i>
-                  
-                  <a href="/categories/深度学习/">深度学习</a>
-                  
-              </span>
-          
-      </header>
-    
-    <div class="article-entry " itemprop="articleBody">
-      
-        <div class="article-img">
-            <a href="/posts/ee8d.html" >
-                
-                <img src="http://wht6.github.io//images/featureimages/1.jpg" alt="ubuntu20.04配置pytorch环境" title="ubuntu20.04配置pytorch环境">
-                
-            </a>
-        </div>
-        <div class="article-feed">
-            <p>
-                ubuntu20.04配置pytorch环境Linux相关命令cd /home 进入 ‘/ home’ 目录’cd .. 返回上一级目录cd ~ 进入个人的主目录cd - 返回上次所在的目录ls 查看目录中的文件ls -a 显示隐藏文件mkdir dir1 创建一个叫做 ‘dir1’ 的目录’rm -f file1 删除一个叫做 ‘file1’ 的文件’rm -rf di...
-            </p>
-        </div>
-      
-        
-    </div>
-    <footer class="article-footer">
-        
-        <ul class="article-footer-menu">
-            
-                <li><i class="fa fa-calendar"></i>2021-03-17</li>
-            
-            
-  <li class="article-footer-tags">
-    <i class="fa fa-tags"></i>
-      
-    <a href="/tags/pytorch/" class="color3">pytorch</a>
-      
-  </li>
-
-        </ul>
-        
-            <a href="/posts/ee8d.html#more" class="article-more-link" >more&gt;&gt;</a>
         
     </footer>
   </div>

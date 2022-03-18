@@ -6,7 +6,7 @@
   <title>实现一对多的goroutine协作流程 | WHT</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
-    <meta name="keywords" content="WHT,WHT's Blog" />
+    <meta name="keywords" content="技术，运维,编程，兴趣" />
   
   <meta name="description" content="声明一个通道，使它的容量与我们手动启用的 goroutine 的数量相同，之后再利用这个通道，让主 goroutine 等待其他 goroutine 的运行结束。 &amp;nbsp; 这一步更具体地说就是：让其他的 goroutine 在运行结束之前，都向这个通道发送一个元素值，并且，让主 goroutine 在最后从这个通道中接收元素值，接收的次数需要与其他的 goroutine 的数量相同。&amp;nbs">
 <meta property="og:type" content="article">
@@ -232,7 +232,7 @@
                 <div id="header-description">
                     
                     <h3>
-                        一个专注运维开发的技术博客
+                        一个专注知识分享的技术博客
                     </h3>
                     
                 </div>

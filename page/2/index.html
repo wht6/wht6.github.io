@@ -6,7 +6,7 @@
   <title>WHT</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
-    <meta name="keywords" content="WHT,WHT's Blog" />
+    <meta name="keywords" content="技术，运维,编程，兴趣" />
   
   <meta name="description" content="分享技术,分享知识,分享感悟">
 <meta property="og:type" content="website">
@@ -17,9 +17,9 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="article:author" content="并指如刀">
 <meta property="article:tag" content="技术">
+<meta property="article:tag" content="运维">
+<meta property="article:tag" content="编程">
 <meta property="article:tag" content="兴趣">
-<meta property="article:tag" content="生活">
-<meta property="article:tag" content="思维">
 <meta name="twitter:card" content="summary">
   
   
@@ -230,7 +230,7 @@
                 <div id="header-description">
                     
                     <h3>
-                        一个专注运维开发的技术博客
+                        一个专注知识分享的技术博客
                     </h3>
                     
                 </div>
@@ -257,6 +257,70 @@
 </header>
       <div class="outer">
         <section id="main" class="body-wrap">
+  
+    <article id="post-临时对象池" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/posts/b82f.html"  >临时对象池</a>
+    </h1>
+  
+
+          
+              <span class="header-cate">
+                <i class="fa fa-map-marker"></i>
+                  
+                  <a href="/categories/编程/">编程</a>
+                  
+              </span>
+          
+      </header>
+    
+    <div class="article-entry " itemprop="articleBody">
+      
+        <div class="article-img">
+            <a href="/posts/b82f.html" >
+                
+                <img src="http://wht6.github.io//images/featureimages/50.jpg" alt="临时对象池" title="临时对象池">
+                
+            </a>
+        </div>
+        <div class="article-feed">
+            <p>
+                sync.Pool类型可以被称为临时对象池，它的值可以被用来存储临时的对象。与 Go 语言的很多同步工具一样，sync.Pool类型也属于结构体类型，它的值在被真正使用之后，就不应该再被复制了。
+&nbsp;
+这里的“临时对象”的意思是：不需要持久使用的某一类值。这类值对于程序来说可有可无，但如果有的话会明显更好。它们的创建和销毁可以在任何时候发生，并且完全不会影响到程序...
+            </p>
+        </div>
+      
+        
+    </div>
+    <footer class="article-footer">
+        
+        <ul class="article-footer-menu">
+            
+                <li><i class="fa fa-calendar"></i>2022-03-08</li>
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/Go语言/" class="color5">Go语言</a>
+      
+  </li>
+
+        </ul>
+        
+            <a href="/posts/b82f.html#more" class="article-more-link" >more&gt;&gt;</a>
+        
+    </footer>
+  </div>
+</article>
+
+
   
     <article id="post-实现一对多的goroutine协作流程" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
@@ -955,70 +1019,6 @@ Don’t communicate by sharing memory; share memory by communicating.
         </ul>
         
             <a href="/posts/6ae0.html#more" class="article-more-link" >more&gt;&gt;</a>
-        
-    </footer>
-  </div>
-</article>
-
-
-  
-    <article id="post-Go语言的函数" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/posts/24dd.html"  >Go语言的函数</a>
-    </h1>
-  
-
-          
-              <span class="header-cate">
-                <i class="fa fa-map-marker"></i>
-                  
-                  <a href="/categories/编程/">编程</a>
-                  
-              </span>
-          
-      </header>
-    
-    <div class="article-entry " itemprop="articleBody">
-      
-        <div class="article-img">
-            <a href="/posts/24dd.html" >
-                
-                <img src="http://wht6.github.io//images/featureimages/38.jpg" alt="Go语言的函数" title="Go语言的函数">
-                
-            </a>
-        </div>
-        <div class="article-feed">
-            <p>
-                在 Go 语言中，函数可是一等的（first-class）公民，函数类型也是一等的数据类型。这是什么意思呢？&nbsp;简单来说，这意味着函数不但可以用于封装代码、分割功能、解耦逻辑，还可以化身为普通的值，在其他函数间传递、赋予变量、做类型判断和转换等等，就像切片和字典的值那样。
-&nbsp;
-而更深层次的含义就是：函数值可以由此成为能够被随意传播的独立逻辑组件（或者说功...
-            </p>
-        </div>
-      
-        
-    </div>
-    <footer class="article-footer">
-        
-        <ul class="article-footer-menu">
-            
-                <li><i class="fa fa-calendar"></i>2022-02-28</li>
-            
-            
-  <li class="article-footer-tags">
-    <i class="fa fa-tags"></i>
-      
-    <a href="/tags/Go语言/" class="color5">Go语言</a>
-      
-  </li>
-
-        </ul>
-        
-            <a href="/posts/24dd.html#more" class="article-more-link" >more&gt;&gt;</a>
         
     </footer>
   </div>
