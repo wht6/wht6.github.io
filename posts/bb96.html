@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>程序性能分析基础 | WHT</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+    <meta name="keywords" content="技术，运维,编程，兴趣" />
+  
+  <meta name="description" content="Go 语言为程序开发者们提供了丰富的性能分析 API，和非常好用的标准工具。这些 API 主要存在于：  runtime&#x2F;pprof； net&#x2F;http&#x2F;pprof； runtime&#x2F;trace；  这三个代码包中。 &amp;nbsp; 另外，runtime代码包中还包含了一些更底层的 API。它们可以被用来收集或输出 Go 程序运行过程中的一些关键指标，并帮助我们生成相应的概要文件以供后续分析时使用。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="程序性能分析基础">
+<meta property="og:url" content="http://wht6.github.io/posts/bb96.html">
+<meta property="og:site_name" content="WHT">
+<meta property="og:description" content="Go 语言为程序开发者们提供了丰富的性能分析 API，和非常好用的标准工具。这些 API 主要存在于：  runtime&#x2F;pprof； net&#x2F;http&#x2F;pprof； runtime&#x2F;trace；  这三个代码包中。 &amp;nbsp; 另外，runtime代码包中还包含了一些更底层的 API。它们可以被用来收集或输出 Go 程序运行过程中的一些关键指标，并帮助我们生成相应的概要文件以供后续分析时使用。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/wht6/image/master/img/lookup_2022319.png">
+<meta property="article:published_time" content="2022-03-19T02:00:00.000Z">
+<meta property="article:modified_time" content="2022-03-18T11:30:27.552Z">
+<meta property="article:author" content="并指如刀">
+<meta property="article:tag" content="Go语言">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/wht6/image/master/img/lookup_2022319.png">
+  
+  
+    <link rel="icon" href="/favicon.ico">
+  
+  <link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<script src="/js/pace.min.js"></script>
+
+  
+
+  
+  
+
+<style type="text/css" lang="css">
+    #loading-container{
+        position: fixed;
+        top: 0;
+        left: 0;
+        min-height: 100vh;
+        width: 100vw;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: #FFF;
+        text-align: center;
+        /* loader页面消失采用渐隐的方式*/
+        -webkit-transition: opacity 1s ease;
+        -moz-transition: opacity 1s ease;
+        -o-transition: opacity 1s ease;
+        transition: opacity 1s ease;
+    }
+    .loading-image{
+        width: 120px;
+        height: 50px;
+        transform: translate(-50%);
+    }
+    
+    .loading-image div:nth-child(2) {
+        -webkit-animation: pacman-balls 1s linear 0s infinite;
+        animation: pacman-balls 1s linear 0s infinite
+    }
+
+    .loading-image div:nth-child(3) {
+        -webkit-animation: pacman-balls 1s linear .33s infinite;
+        animation: pacman-balls 1s linear .33s infinite
+    }
+
+    .loading-image div:nth-child(4) {
+        -webkit-animation: pacman-balls 1s linear .66s infinite;
+        animation: pacman-balls 1s linear .66s infinite
+    }
+
+    .loading-image div:nth-child(5) {
+        -webkit-animation: pacman-balls 1s linear .99s infinite;
+        animation: pacman-balls 1s linear .99s infinite
+    }
+    
+   .loading-image div:first-of-type {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_up .5s 0s infinite;
+        animation: rotate_pacman_half_up .5s 0s infinite;
+    }
+    .loading-image div:nth-child(2) {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_down .5s 0s infinite;
+        animation: rotate_pacman_half_down .5s 0s infinite;
+        margin-top: -50px;
+    }
+    @-webkit-keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @-webkit-keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+
+    @keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+    
+    @-webkit-keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+
+    @keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+    
+   
+    .loading-image div:nth-child(3),
+    .loading-image div:nth-child(4),
+    .loading-image div:nth-child(5),
+    .loading-image div:nth-child(6){
+        background-color: #49b1f5;
+        width: 15px;
+        height: 15px;
+        border-radius: 100%;
+        margin: 2px;
+        width: 10px;
+        height: 10px;
+        position: absolute;
+        transform: translateY(-6.25px);
+        top: 25px;
+        left: 100px;
+    }
+    .loading-text{
+        margin-bottom: 20vh;
+        text-align: center;
+        color: #2c3e50;
+        font-size: 2rem;
+        box-sizing: border-box;
+        padding: 0 10px;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    @media only screen and (max-width: 500px) {
+         .loading-text{
+            font-size: 1.5rem;
+         }
+    }
+    .fadeout {
+        opacity: 0;
+        filter: alpha(opacity=0);
+    }
+    /* logo出现动画 */
+    @-webkit-keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);transform:translate3d(0,-100%,0)}100%{opacity:1;-webkit-transform:none;transform:none}}
+    @keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);}}
+ </style>
+ <script>
+(function () {
+    const loaded = function(){
+       setTimeout(function(){
+            const loader = document.getElementById("loading-container");
+            loader.className="fadeout" ;//使用渐隐的方法淡出loading page
+            // document.getElementById("body-wrap").style.display="flex";
+            setTimeout(function(){
+                loader.style.display="none";
+            },1000); 
+        },1000);//强制显示loading page 1s  
+    };
+    loaded();
+})()
+ </script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="WHT" type="application/atom+xml">
+</head>
+
+
+ <div id="loading-container">
+     <p class="loading-text">玩命加载中 . . . </p> 
+     <div class="loading-image">
+         <div></div>
+         <div></div>
+         <div></div>
+         <div></div> 
+         <div></div>
+     </div>
+ </div><body>
+  <div id="container">
+      <header id="header">
+    <div id="banner"></div>
+    <div id="header-outer">
+        <div id="header-menu" class="header-menu-pos animated">
+            <div class="header-menu-container">
+                <a href="/" class="left">
+                    <span class="site-title">WHT&#39;s Blog</span>
+                </a>
+                <nav id="header-menu-nav" class="right">
+                    
+                    <a  href="/">
+                        <i class="fa fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    
+                    <a  href="/archives">
+                        <i class="fa fa-archive"></i>
+                        <span>Archives</span>
+                    </a>
+                    
+                    <a  href="/about">
+                        <i class="fa fa-user"></i>
+                        <span>About</span>
+                    </a>
+                    
+                </nav>
+                <a class="mobile-header-menu-button">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+        <div id="header-row">
+            <div id="logo">
+                <a href="/">
+                    <img src="/images/logo.png" alt="logo">
+                </a>
+            </div>
+            <div class="header-info">
+                <div id="header-title">
+                    
+                    <h2>
+                        WHT&#39;s Blog
+                    </h2>
+                    
+                </div>
+                <div id="header-description">
+                    
+                    <h3>
+                        一个专注知识分享的技术博客
+                    </h3>
+                    
+                </div>
+            </div>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a title="WHT&#39;s Blog" target="_blank" href="//wht6.github.io">
+                            <i class="fa fa-home fa-2x"></i></a>
+                    
+                        <a title="Github" target="_blank" href="//github.com/wht6">
+                            <i class="fa fa-github fa-2x"></i></a>
+                    
+                        <a title="Weibo" target="_blank" href="//weibo.com/wht6">
+                            <i class="fa fa-weibo fa-2x"></i></a>
+                    
+                        <a title="Twitter" target="_blank" href="//twitter.com/wht6">
+                            <i class="fa fa-twitter fa-2x"></i></a>
+                    
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+      <div class="outer">
+        <section id="main" class="body-wrap"><article id="post-程序性能分析基础" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 class="post-title" itemprop="name">
+      程序性能分析基础
+    </h1>
+    <div class="post-title-bar">
+      <ul>
+          
+              <li>
+                  <i class="fa fa-book"></i>
+                  
+                      <a href="/categories/编程/">编程</a>
+                  
+              </li>
+          
+        <li>
+          <i class="fa fa-calendar"></i>  2022-03-19
+        </li>
+        <li>
+          <i class="fa fa-eye"></i>
+          <span id="busuanzi_value_page_pv"></span>
+        </li>
+      </ul>
+    </div>
+  
+
+          
+      </header>
+    
+    <div class="article-entry post-content" itemprop="articleBody">
+      
+            
+            <p>Go 语言为程序开发者们提供了丰富的性能分析 API，和非常好用的标准工具。这些 API 主要存在于：</p>
+<ol>
+<li><code>runtime/pprof</code>；</li>
+<li><code>net/http/pprof</code>；</li>
+<li><code>runtime/trace</code>；</li>
+</ol>
+<p>这三个代码包中。</p>
+<p>&nbsp;</p>
+<p>另外，<code>runtime</code>代码包中还包含了一些更底层的 API。它们可以被用来收集或输出 Go 程序运行过程中的一些关键指标，并帮助我们生成相应的概要文件以供后续分析时使用。<br>&nbsp;<br>至于标准工具，主要有<code>go tool pprof</code>和<code>go tool trace</code>这两个。它们可以解析概要文件中的信息，并以人类易读的方式把这些信息展示出来。<br>&nbsp;<br>此外，<code>go test</code>命令也可以在程序测试完成后生成概要文件。如此一来，我们就可以很方便地使用前面那两个工具读取概要文件，并对被测程序的性能加以分析。这无疑会让程序性能测试的一手资料更加丰富，结果更加精确和可信。<br>&nbsp;<br>在 Go 语言中，用于分析程序性能的概要文件有三种，分别是：CPU 概要文件（CPU Profile）、内存概要文件（Mem Profile）和阻塞概要文件（Block Profile）。<br>&nbsp;<br>这些概要文件中包含的都是：在某一段时间内，对 Go 程序的相关指标进行多次采样后得到的概要信息。<br>&nbsp;<br>对于 CPU 概要文件来说，其中的每一段独立的概要信息都记录着，在进行某一次采样的那个时刻，CPU 上正在执行的 Go 代码。<br>&nbsp;<br>而对于内存概要文件，其中的每一段概要信息都记载着，在某个采样时刻，正在执行的 Go 代码以及堆内存的使用情况，这里包含已分配和已释放的字节数量和对象数量。至于阻塞概要文件，其中的每一段概要信息，都代表着 Go 程序中的一个 goroutine 阻塞事件。<br>&nbsp;<br>注意，在默认情况下，这些概要文件中的信息并不是普通的文本，它们都是以二进制的形式展现的。如果你使用一个常规的文本编辑器查看它们的话，那么肯定会看到一堆“乱码”。<br>&nbsp;<br>这时就可以显现出<code>go tool pprof</code>这个工具的作用了。我们可以通过它进入一个基于命令行的交互式界面，并对指定的概要文件进行查阅。就像下面这样：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ go tool pprof cpuprofile.out</span><br><span class="line">Type: cpu</span><br><span class="line">Time: Nov 9, 2018 at 4:31pm (CST)</span><br><span class="line">Duration: 7.96s, Total samples = 6.88s (86.38%)</span><br><span class="line">Entering interactive mode (<span class="built_in">type</span> <span class="string">&quot;help&quot;</span> <span class="keyword">for</span> commands, <span class="string">&quot;o&quot;</span> <span class="keyword">for</span> options)</span><br><span class="line">(pprof) </span><br></pre></td></tr></table></figure>
+<p>关于这个工具的具体用法，我就不在这里赘述了。在进入这个工具的交互式界面之后，我们只要输入指令<code>help</code>并按下回车键，就可以看到很详细的帮助文档。<br>&nbsp;<br>我们现在来说说怎样生成概要文件。<br>&nbsp;<br>你可能会问，既然在概要文件中的信息不是普通的文本，那么它们到底是什么格式的呢？一个对广大的程序开发者而言，并不那么重要的事实是，它们是通过 protocol buffers 生成的二进制数据流，或者说字节流。<br>&nbsp;<br>概括来讲，protocol buffers 是一种数据序列化协议，同时也是一个序列化工具。它可以把一个值，比如一个结构体或者一个字典，转换成一段字节流。<br>&nbsp;<br>也可以反过来，把经过它生成的字节流反向转换为程序中的一个值。前者就被叫做序列化，而后者则被称为反序列化。<br>&nbsp;<br>换句话说，protocol buffers 定义和实现了一种“可以让数据在结构形态和扁平形态之间互相转换”的方式。<br>&nbsp;<br>Protocol buffers 的优势有不少。比如，它可以在序列化数据的同时对数据进行压缩，所以它生成的字节流，通常都要比相同数据的其他格式（例如 XML 和 JSON）占用的空间明显小很多。<br>&nbsp;<br>又比如，它既能让我们自己去定义数据序列化和结构化的格式，也允许我们在保证向后兼容的前提下去更新这种格式。<br>&nbsp;<br>正因为这些优势，Go 语言从 1.8 版本开始，把所有 profile 相关的信息生成工作都交给 protocol buffers 来做了。这也是我们在上述概要文件中，看不到普通文本的根本原因了。<br>&nbsp;<br>Protocol buffers 的用途非常广泛，并且在诸如数据存储、数据传输等任务中有着很高的使用率。<br>&nbsp;<br><strong>怎样让程序对 CPU 概要信息进行采样？</strong><br>&nbsp;<br>这需要用到<code>runtime/pprof</code>包中的 API。更具体地说，在我们想让程序开始对 CPU 概要信息进行采样的时候，需要调用这个代码包中的<code>StartCPUProfile</code>函数，而在停止采样的时候则需要调用该包中的<code>StopCPUProfile</code>函数。<br>&nbsp;<br><code>runtime/pprof.StartCPUProfile</code>函数（以下简称<code>StartCPUProfile</code>函数）在被调用的时候，先会去设定 CPU 概要信息的采样频率，并会在单独的 goroutine 中进行 CPU 概要信息的收集和输出。<br>&nbsp;<br>注意，<code>StartCPUProfile</code>函数设定的采样频率总是固定的，即：<code>100</code>赫兹。也就是说，每秒采样<code>100</code>次，或者说每<code>10</code>毫秒采样一次。<br>&nbsp;<br>赫兹，也称 Hz，是从英文单词“Hertz”（一个英文姓氏）音译过来的一个中文词。它是 CPU 主频的基本单位。<br>&nbsp;<br>CPU 的主频指的是，CPU 内核工作的时钟频率，也常被称为 CPU clock speed。这个时钟频率的倒数即为时钟周期（clock cycle），也就是一个 CPU 内核执行一条运算指令所需的时间，单位是秒。<br>&nbsp;<br>例如，主频为<code>1000</code>Hz 的 CPU，它的单个内核执行一条运算指令所需的时间为<code>0.001</code>秒，即<code>1</code>毫秒。又例如，我们现在常用的<code>3.2</code>GHz 的多核 CPU，其单个内核在<code>1</code>个纳秒的时间里就可以至少执行三条运算指令。<br>&nbsp;<br><code>StartCPUProfile</code>函数设定的 CPU 概要信息采样频率，相对于现代的 CPU 主频来说是非常低的。这主要有两个方面的原因。<br>&nbsp;<br>一方面，过高的采样频率会对 Go 程序的运行效率造成很明显的负面影响。因此，<code>runtime</code>包中<code>SetCPUProfileRate</code>函数在被调用的时候，会保证采样频率不超过<code>1</code>MHz（兆赫），也就是说，它只允许每<code>1</code>微秒最多采样一次。<code>StartCPUProfile</code>函数正是通过调用这个函数来设定 CPU 概要信息的采样频率的。<br>&nbsp;<br>另一方面，经过大量的实验，Go 语言团队发现<code>100</code>Hz 是一个比较合适的设定。因为这样做既可以得到足够多、足够有用的概要信息，又不至于让程序的运行出现停滞。另外，操作系统对高频采样的处理能力也是有限的，一般情况下，超过<code>500</code>Hz 就很可能得不到及时的响应了。<br>&nbsp;<br>在<code>StartCPUProfile</code>函数执行之后，一个新启用的 goroutine 将会负责执行 CPU 概要信息的收集和输出，直到<code>runtime/pprof</code>包中的<code>StopCPUProfile</code>函数被成功调用。<br>&nbsp;<br><code>StopCPUProfile</code>函数也会调用<code>runtime.SetCPUProfileRate</code>函数，并把参数值（也就是采样频率）设为<code>0</code>。这会让针对 CPU 概要信息的采样工作停止。<br>&nbsp;<br>同时，它也会给负责收集 CPU 概要信息的代码一个“信号”，以告知收集工作也需要停止了。<br>&nbsp;<br>在接到这样的“信号”之后，那部分程序将会把这段时间内收集到的所有 CPU 概要信息，全部写入到我们在调用<code>StartCPUProfile</code>函数的时候指定的写入器中。只有在上述操作全部完成之后，<code>StopCPUProfile</code>函数才会返回。<br>&nbsp;<br><strong>怎样设定内存概要信息的采样频率？</strong><br>&nbsp;<br>针对内存概要信息的采样会按照一定比例收集 Go 程序在运行期间的堆内存使用情况。设定内存概要信息采样频率的方法很简单，只要为<code>runtime.MemProfileRate</code>变量赋值即可。<br>&nbsp;<br>这个变量的含义是，平均每分配多少个字节，就对堆内存的使用情况进行一次采样。如果把该变量的值设为<code>0</code>，那么，Go 语言运行时系统就会完全停止对内存概要信息的采样。该变量的缺省值是<code>512 KB</code>，也就是<code>512</code>千字节。<br>&nbsp;<br>注意，如果你要设定这个采样频率，那么越早设定越好，并且只应该设定一次，否则就可能会对 Go 语言运行时系统的采样工作，造成不良影响。比如，只在<code>main</code>函数的开始处设定一次。<br>&nbsp;<br>在这之后，当我们想获取内存概要信息的时候，还需要调用<code>runtime/pprof</code>包中的<code>WriteHeapProfile</code>函数。该函数会把收集好的内存概要信息，写到我们指定的写入器中。<br>&nbsp;<br>注意，我们通过<code>WriteHeapProfile</code>函数得到的内存概要信息并不是实时的，它是一个快照，是在最近一次的内存垃圾收集工作完成时产生的。如果你想要实时的信息，那么可以调用<code>runtime.ReadMemStats</code>函数。不过要特别注意，该函数会引起 Go 语言调度器的短暂停顿。<br>&nbsp;<br><strong>怎样获取到阻塞概要信息？</strong><br>&nbsp;<br>我们调用<code>runtime</code>包中的<code>SetBlockProfileRate</code>函数，即可对阻塞概要信息的采样频率进行设定。该函数有一个名叫<code>rate</code>的参数，它是<code>int</code>类型的。<br>&nbsp;<br>这个参数的含义是，只要发现一个阻塞事件的持续时间达到了多少个纳秒，就可以对其进行采样。如果这个参数的值小于或等于<code>0</code>，那么就意味着 Go 语言运行时系统将会完全停止对阻塞概要信息的采样。<br>&nbsp;<br>在<code>runtime</code>包中，还有一个名叫<code>blockprofilerate</code>的包级私有变量，它是<code>uint64</code>类型的。这个变量的含义是，只要发现一个阻塞事件的持续时间跨越了多少个 CPU 时钟周期，就可以对其进行采样。它的含义与我们刚刚提到的<code>rate</code>参数的含义非常相似，不是吗？<br>&nbsp;<br>实际上，这两者的区别仅仅在于单位不同。<code>runtime.SetBlockProfileRate</code>函数会先对参数<code>rate</code>的值进行单位换算和必要的类型转换，然后，它会把换算结果用原子操作赋给<code>blockprofilerate</code>变量。由于此变量的缺省值是<code>0</code>，所以 Go 语言运行时系统在默认情况下并不会记录任何在程序中发生的阻塞事件。<br>&nbsp;<br>另一方面，当我们需要获取阻塞概要信息的时候，需要先调用<code>runtime/pprof</code>包中的<code>Lookup</code>函数并传入参数值<code>&quot;block&quot;</code>，从而得到一个<code>*runtime/pprof.Profile</code>类型的值（以下简称<code>Profile</code>值）。在这之后，我们还需要调用这个<code>Profile</code>值的<code>WriteTo</code>方法，以驱使它把概要信息写进我们指定的写入器中。<br>&nbsp;<br>这个<code>WriteTo</code>方法有两个参数，一个参数就是我们刚刚提到的写入器，它是<code>io.Writer</code>类型的。而另一个参数则是代表了概要信息详细程度的<code>int</code>类型参数<code>debug</code>。<br>&nbsp;<br><code>debug</code>参数主要的可选值有两个，即：<code>0</code>和<code>1</code>。当<code>debug</code>的值为<code>0</code>时，通过<code>WriteTo</code>方法写进写入器的概要信息仅会包含<code>go tool pprof</code>工具所需的内存地址，这些内存地址会以十六进制的形式展现出来。<br>&nbsp;<br>当该值为<code>1</code>时，相应的包名、函数名、源码文件路径、代码行号等信息就都会作为注释被加入进去。另外，<code>debug</code>为<code>0</code>时的概要信息，会经由 protocol buffers 转换为字节流。而在<code>debug</code>为<code>1</code>的时候，<code>WriteTo</code>方法输出的这些概要信息就是我们可以读懂的普通文本了。<br>&nbsp;<br>除此之外，<code>debug</code>的值也可以是<code>2</code>。这时，被输出的概要信息也会是普通的文本，并且通常会包含更多的细节。至于这些细节都包含了哪些内容，那就要看我们调用<code>runtime/pprof.Lookup</code>函数的时候传入的是什么样的参数值了。<br>&nbsp;<br><strong><code>runtime/pprof.Lookup</code>函数的正确调用方式是什么？</strong><br>&nbsp;<br><code>runtime/pprof.Lookup</code>函数（以下简称<code>Lookup</code>函数）的功能是，提供与给定的名称相对应的概要信息。这个概要信息会由一个<code>Profile</code>值代表。如果该函数返回了一个<code>nil</code>，那么就说明不存在与给定名称对应的概要信息。<br>&nbsp;<br><code>runtime/pprof</code>包已经为我们预先定义了 6 个概要名称。它们对应的概要信息收集方法和输出方法也都已经准备好了。我们直接拿来使用就可以了。它们是：<code>goroutine</code>、<code>heap</code>、<code>allocs</code>、<code>threadcreate</code>、<code>block</code>和<code>mutex</code>。<br>&nbsp;<br>当我们把<code>&quot;goroutine&quot;</code>传入<code>Lookup</code>函数的时候，该函数会利用相应的方法，收集到当前正在使用的所有 goroutine 的堆栈跟踪信息。注意，这样的收集会引起 Go 语言调度器的短暂停顿。<br>&nbsp;<br>当调用该函数返回的<code>Profile</code>值的<code>WriteTo</code>方法时，如果参数<code>debug</code>的值大于或等于<code>2</code>，那么该方法就会输出所有 goroutine 的堆栈跟踪信息。这些信息可能会非常多。如果它们占用的空间超过了<code>64 MB</code>（也就是<code>64</code>兆字节），那么相应的方法就会将超出的部分截掉。<br>&nbsp;<br>如果<code>Lookup</code>函数接到的参数值是<code>&quot;heap&quot;</code>，那么它就会收集与堆内存的分配和释放有关的采样信息。这实际上就是我们在前面讨论过的内存概要信息。在我们传入<code>&quot;allocs&quot;</code>的时候，后续的操作会与之非常的相似。<br>&nbsp;<br>在这两种情况下，<code>Lookup</code>函数返回的<code>Profile</code>值也会极其相像。只不过，在这两种<code>Profile</code>值的<code>WriteTo</code>方法被调用时，它们输出的概要信息会有细微的差别，而且这仅仅体现在参数<code>debug</code>等于<code>0</code>的时候。<br>&nbsp;<br><code>&quot;heap&quot;</code>会使得被输出的内存概要信息默认以“在用空间”（inuse_space）的视角呈现，而<code>&quot;allocs&quot;</code>对应的默认视角则是“已分配空间”（alloc_space）。<br>&nbsp;<br>“在用空间”是指，已经被分配但还未被释放的内存空间。在这个视角下，<code>go tool pprof</code>工具并不会去理会与已释放空间有关的那部分信息。而在“已分配空间”的视角下，所有的内存分配信息都会被展现出来，无论这些内存空间在采样时是否已被释放。<br>&nbsp;<br>此外，无论是<code>&quot;heap&quot;</code>还是<code>&quot;allocs&quot;</code>，在我们调用<code>Profile</code>值的<code>WriteTo</code>方法的时候，只要赋予<code>debug</code>参数的值大于<code>0</code>，那么该方法输出内容的规格就会是相同的。<br>&nbsp;<br>参数值<code>&quot;threadcreate&quot;</code>会使<code>Lookup</code>函数去收集一些堆栈跟踪信息。这些堆栈跟踪信息中的每一个都会描绘出一个代码调用链，这些调用链上的代码都导致新的操作系统线程产生。这样的<code>Profile</code>值的输出规格也只有两种，取决于我们传给其<code>WriteTo</code>方法的参数值是否大于<code>0</code>。<br>&nbsp;<br>再说<code>&quot;block&quot;</code>和<code>&quot;mutex&quot;</code>。<code>&quot;block&quot;</code>代表的是，因争用同步原语而被阻塞的那些代码的堆栈跟踪信息。还记得吗？这就是我们在前面讲过的阻塞概要信息。<br>&nbsp;<br>与之相对应，<code>&quot;mutex&quot;</code>代表的是，曾经作为同步原语持有者的那些代码，它们的堆栈跟踪信息。它们的输出规格也都只有两种，取决于<code>debug</code>是否大于<code>0</code>。<br>&nbsp;<br>这里所说的同步原语，指的是存在于 Go 语言运行时系统内部的一种底层的同步工具，或者说一种同步机制。<br>&nbsp;<br>它是直接面向内存地址的，并以异步信号量和原子操作作为实现手段。我们已经熟知的通道、互斥锁、条件变量、<code>WaitGroup</code>，以及 Go 语言运行时系统本身，都会利用它来实现自己的功能。</p>
+<p><img src="https://raw.githubusercontent.com/wht6/image/master/img/lookup_2022319.png" alt></p>
+<p><strong>如何为基于 HTTP 协议的网络服务添加性能分析接口？</strong><br>&nbsp;<br>这个问题说起来还是很简单的。这是因为我们在一般情况下只要在程序中导入<code>net/http/pprof</code>代码包就可以了，就像这样：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> _ <span class="string">&quot;net/http/pprof&quot;</span></span><br></pre></td></tr></table></figure>
+<p>然后，启动网络服务并开始监听，比如：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">log.Println(http.ListenAndServe(<span class="string">&quot;localhost:8082&quot;</span>, <span class="literal">nil</span>))</span><br></pre></td></tr></table></figure>
+<p>在运行这个程序之后，我们就可以通过在网络浏览器中访问<code>http://localhost:8082/debug/pprof</code>这个地址看到一个简约的网页。如果你认真地看了上一个问题的话，那么肯定可以快速搞明白这个网页中各个部分的含义。<br>&nbsp;<br>在<code>/debug/pprof/</code>这个 URL 路径下还有很多可用的子路径，这一点你通过点选网页中的链接就可以了解到。像<code>allocs</code>、<code>block</code>、<code>goroutine</code>、<code>heap</code>、<code>mutex</code>、<code>threadcreate</code>这 6 个子路径，在底层其实都是通过<code>Lookup</code>函数来处理的。关于这个函数，你应该已经很熟悉了。<br>&nbsp;<br>这些子路径都可以接受查询参数<code>debug</code>。它用于控制概要信息的格式和详细程度。至于它的可选值，我就不再赘述了。它的缺省值是<code>0</code>。另外，还有一个名叫<code>gc</code>的查询参数。它用于控制是否在获取概要信息之前强制地执行一次垃圾回收。只要它的值大于<code>0</code>，程序就会这样做。不过，这个参数仅在<code>/debug/pprof/heap</code>路径下有效。<br>&nbsp;<br>一旦<code>/debug/pprof/profile</code>路径被访问，程序就会去执行对 CPU 概要信息的采样。它接受一个名为<code>seconds</code>的查询参数。该参数的含义是，采样工作需要持续多少秒。如果这个参数未被显式地指定，那么采样工作会持续<code>30</code>秒。注意，在这个路径下，程序只会响应经 protocol buffers 转换的字节流。我们可以通过<code>go tool pprof</code>工具直接读取这样的 HTTP 响应，例如：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">go</span> tool pprof http:<span class="comment">//localhost:6060/debug/pprof/profile?seconds=60</span></span><br></pre></td></tr></table></figure>
+<p>除此之外，还有一个值得我们关注的路径，即：<code>/debug/pprof/trace</code>。在这个路径下，程序主要会利用<code>runtime/trace</code>代码包中的 API 来处理我们的请求。<br>&nbsp;<br>更具体地说，程序会先调用<code>trace.Start</code>函数，然后在查询参数<code>seconds</code>指定的持续时间之后再调用<code>trace.Stop</code>函数。这里的<code>seconds</code>的缺省值是<code>1</code>秒。<br>&nbsp;<br>前面说的这些 URL 路径都是固定不变的。这是默认情况下的访问规则。我们还可以对它们进行定制，就像这样：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">mux := http.NewServeMux()</span><br><span class="line">pathPrefix := <span class="string">&quot;/d/pprof/&quot;</span></span><br><span class="line">mux.HandleFunc(pathPrefix,</span><br><span class="line">	<span class="function"><span class="keyword">func</span><span class="params">(w http.ResponseWriter, r *http.Request)</span></span> &#123;</span><br><span class="line">		name := strings.TrimPrefix(r.URL.Path, pathPrefix)</span><br><span class="line">		<span class="keyword">if</span> name != <span class="string">&quot;&quot;</span> &#123;</span><br><span class="line">			pprof.Handler(name).ServeHTTP(w, r)</span><br><span class="line">			<span class="keyword">return</span></span><br><span class="line">		&#125;</span><br><span class="line">		pprof.Index(w, r)</span><br><span class="line">	&#125;)</span><br><span class="line">mux.HandleFunc(pathPrefix+<span class="string">&quot;cmdline&quot;</span>, pprof.Cmdline)</span><br><span class="line">mux.HandleFunc(pathPrefix+<span class="string">&quot;profile&quot;</span>, pprof.Profile)</span><br><span class="line">mux.HandleFunc(pathPrefix+<span class="string">&quot;symbol&quot;</span>, pprof.Symbol)</span><br><span class="line">mux.HandleFunc(pathPrefix+<span class="string">&quot;trace&quot;</span>, pprof.Trace)</span><br><span class="line"> </span><br><span class="line">server := http.Server&#123;</span><br><span class="line">	Addr:    <span class="string">&quot;localhost:8083&quot;</span>,</span><br><span class="line">	Handler: mux,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到，我们几乎只使用了<code>net/http/pprof</code>代码包中的几个程序实体，就完成了这样的定制。这在我们使用第三方的网络服务开发框架时尤其有用。<br>&nbsp;<br>我们自定义的 HTTP 请求多路复用器<code>mux</code>所包含的访问规则与默认的规则很相似，只不过 URL 路径的前缀更短了一些而已。<br>&nbsp;<br>我们定制<code>mux</code>的过程与<code>net/http/pprof</code>包中的<code>init</code>函数所做的事情也是类似的。这个<code>init</code>函数的存在，其实就是我们在前面仅仅导入<code>net/http/pprof</code>代码包就能够访问相关路径的原因。<br>&nbsp;<br>在我们编写网络服务程序的时候，使用<code>net/http/pprof</code>包要比直接使用<code>runtime/pprof</code>包方便和实用很多。通过合理运用，这个代码包可以为网络服务的监测提供有力的支撑。<br>&nbsp;<br><strong><code>runtime/trace</code>代码包的功用是什么？</strong><br>&nbsp;<br>简单来说，这个代码包是用来帮助 Go 程序实现内部跟踪操作的。其中的程序实体可以帮助我们记录程序中各个 goroutine 的状态、各种系统调用的状态，与 GC 有关的各种事件，以及内存相关和 CPU 相关的变化，等等。<br>&nbsp;<br>通过它们生成的跟踪记录可以通过<code>go tool trace</code>命令来查看。更具体的说明可以参看<code>runtime/trace</code>代码包的文档。<br>&nbsp;<br>有了<code>runtime/trace</code>代码包，我们就可以为 Go 程序加装上可以满足个性化需求的跟踪器了。Go 语言标准库中有的代码包正是通过使用该包实现了自身的功能，例如<code>net/http/pprof</code>包。<br>&nbsp;</p>
+<p>&nbsp;<br>参考链接：<a target="_blank" rel="noopener" href="https://time.geekbang.org/column/intro/112">https://time.geekbang.org/column/intro/112</a></p>
+
+            <div class="post-copyright">
+    <div class="content">
+        <p>最后更新： 2022年03月18日 19:30</p>
+        <p>原始链接： <a class="post-url" href="/posts/bb96.html" title="程序性能分析基础">http://wht6.github.io/posts/bb96.html</a></p>
+        <footer>
+            <a href="http://wht6.github.io">
+                <img src="/images/logo.png" alt="并指如刀">
+                并指如刀
+            </a>
+        </footer>
+    </div>
+</div>
+
+      
+        
+            
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;">赏</a>
+</div>
+
+<div id="reward" class="post-modal reward-lay">
+    <a class="close" href="javascript:;" id="reward-close">×</a>
+    <span class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        请我吃糖~
+        <i class="icon icon-quote-right"></i>
+    </span>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/images/wechat_code.jpg" alt="打赏二维码">
+        </div>
+        <div class="reward-select">
+            
+            <label class="reward-select-item checked" data-id="wechat" data-wechat="/images/wechat_code.jpg">
+                <img class="reward-select-item-wechat" src="/images/wechat.png" alt="微信">
+            </label>
+            
+            
+            <label class="reward-select-item" data-id="alipay" data-alipay="/images/alipay_code.jpg">
+                <img class="reward-select-item-alipay" src="/images/alipay.png" alt="支付宝">
+            </label>
+            
+        </div>
+    </div>
+</div>
+
+
+        
+    </div>
+    <footer class="article-footer">
+        
+        
+<div class="post-share">
+    <a href="javascript:;" id="share-sub" class="post-share-fab">
+        <i class="fa fa-share-alt"></i>
+    </a>
+    <div class="post-share-list" id="share-list">
+        <ul class="share-icons">
+          <li>
+            <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://wht6.github.io/posts/bb96.html&title=《程序性能分析基础》 — WHT&pic=/images/featureimages/64.jpg" data-title="微博">
+              <i class="fa fa-weibo"></i>
+            </a>
+          </li>
+          <li>
+            <a class="weixin share-sns" id="wxFab" href="javascript:;" data-title="微信">
+              <i class="fa fa-weixin"></i>
+            </a>
+          </li>
+          <li>
+            <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://wht6.github.io/posts/bb96.html&title=《程序性能分析基础》 — WHT&source=分享技术,分享知识,分享感悟" data-title="QQ">
+              <i class="fa fa-qq"></i>
+            </a>
+          </li>
+          <li>
+            <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://wht6.github.io/posts/bb96.html" data-title="Facebook">
+              <i class="fa fa-facebook"></i>
+            </a>
+          </li>
+          <li>
+            <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《程序性能分析基础》 — WHT&url=http://wht6.github.io/posts/bb96.html&via=http://wht6.github.io" data-title="Twitter">
+              <i class="fa fa-twitter"></i>
+            </a>
+          </li>
+          <li>
+            <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://wht6.github.io/posts/bb96.html" data-title="Google+">
+              <i class="fa fa-google-plus"></i>
+            </a>
+          </li>
+        </ul>
+     </div>
+</div>
+<div class="post-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;" id="wxShare-close">×</a>
+    <p>扫一扫，分享到微信</p>
+    <img src="//api.qrserver.com/v1/create-qr-code/?data=http://wht6.github.io/posts/bb96.html" alt="微信分享二维码">
+</div>
+
+<div class="mask"></div>
+
+        
+        <ul class="article-footer-menu">
+            
+            
+  <li class="article-footer-tags">
+    <i class="fa fa-tags"></i>
+      
+    <a href="/tags/Go语言/" class="color5">Go语言</a>
+      
+  </li>
+
+        </ul>
+        
+    </footer>
+  </div>
+</article>
+
+
+
+<nav id="article-nav">
+  
+  
+    <a href="/posts/235e.html" id="article-nav-older" class="article-nav-link-wrap">
+      <span class="article-nav-title">访问网络服务</span>
+      <i class="fa fa-hand-o-right" aria-hidden="true"></i>
+    </a>
+  
+</nav>
+
+
+
+    
+</section>
+        
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+      <p>
+        Powered by  <a href="http://hexo.io/" target="_blank">Hexo</a>
+        Theme <a href="//github.com/wongminho/hexo-theme-miho" target="_blank">MiHo</a>
+      &copy; 2022 并指如刀<br>
+      </p>
+    </div>
+  </div>
+</footer>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="//cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+<script>
+  var mihoConfig = {
+      root: "http://wht6.github.io",
+      animate: true,
+      isHome: false,
+      share: true,
+      reward: 1
+  }
+</script>
+<div class="sidebar">
+    <div id="sidebar-search" title="Search">
+        <i class="fa fa-search"></i>
+    </div>
+    <div id="sidebar-category" title="Categories">
+        <i class="fa fa-book"></i>
+    </div>
+    <div id="sidebar-tag" title="Tags">
+        <i class="fa fa-tags"></i>
+    </div>
+    <div id="sidebar-top">
+        <span class="sidebar-top-icon"><i class="fa fa-angle-up"></i></span>
+    </div>
+</div>
+<div class="sidebar-menu-box" id="sidebar-menu-box">
+    <div class="sidebar-menu-box-container">
+        <div id="sidebar-menu-box-categories">
+            <a class="category-link" href="/categories/Linux/">Linux</a><a class="category-link" href="/categories/%E4%B8%AA%E4%BA%BA%E5%85%B4%E8%B6%A3/">个人兴趣</a><a class="category-link" href="/categories/%E4%BA%91%E8%AE%A1%E7%AE%97/">云计算</a><a class="category-link" href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/">嵌入式</a><a class="category-link" href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a><a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a><a class="category-link" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a>
+        </div>
+        <div id="sidebar-menu-box-tags">
+            <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Go%E8%AF%AD%E8%A8%80/" style="font-size: 20px;">Go语言</a> <a href="/tags/Python%E8%AF%AD%E8%A8%80/" style="font-size: 16.67px;">Python语言</a> <a href="/tags/pytorch/" style="font-size: 10px;">pytorch</a> <a href="/tags/%E4%BB%A3%E7%90%86/" style="font-size: 10px;">代理</a> <a href="/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 10px;">包管理</a> <a href="/tags/%E5%AE%9E%E4%BE%8B%E5%88%86%E5%89%B2/" style="font-size: 13.33px;">实例分割</a> <a href="/tags/%E5%AE%B9%E5%99%A8/" style="font-size: 10px;">容器</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 13.33px;">工具</a> <a href="/tags/%E6%80%9D%E7%BB%B4/" style="font-size: 10px;">思维</a> <a href="/tags/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/" style="font-size: 16.67px;">文件系统</a> <a href="/tags/%E6%97%A5%E5%BF%97/" style="font-size: 10px;">日志</a> <a href="/tags/%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86/" style="font-size: 10px;">权限管理</a> <a href="/tags/%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86/" style="font-size: 10px;">用户管理</a> <a href="/tags/%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">磁盘管理</a> <a href="/tags/%E7%AE%A1%E9%81%93/" style="font-size: 10px;">管道</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">系统配置</a> <a href="/tags/%E7%BD%91%E7%AB%99/" style="font-size: 10px;">网站</a> <a href="/tags/%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/" style="font-size: 10px;">网站搭建</a> <a href="/tags/%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">网络配置</a> <a href="/tags/%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1/" style="font-size: 10px;">计划任务</a> <a href="/tags/%E8%B7%AF%E7%94%B1%E5%99%A8/" style="font-size: 10px;">路由器</a> <a href="/tags/%E8%BF%9B%E7%A8%8B/" style="font-size: 10px;">进程</a> <a href="/tags/%E9%81%93%E5%AE%B6/" style="font-size: 10px;">道家</a> <a href="/tags/%E9%87%8D%E5%AE%9A%E5%90%91/" style="font-size: 10px;">重定向</a> <a href="/tags/%E9%98%BF%E9%87%8C%E4%BA%91/" style="font-size: 13.33px;">阿里云</a>
+        </div>
+    </div>
+    <a href="javascript:;" class="sidebar-menu-box-close">&times;</a>
+</div>
+<div class="mobile-header-menu-nav" id="mobile-header-menu-nav">
+    <div class="mobile-header-menu-container">
+        <span class="title">Menus</span>
+        <ul class="mobile-header-menu-navbar">
+            
+            <li>
+                <a  href="/">
+                    <i class="fa fa-home"></i><span>Home</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/archives">
+                    <i class="fa fa-archive"></i><span>Archives</span>
+                </a>
+            </li>
+            
+            <li>
+                <a  href="/about">
+                    <i class="fa fa-user"></i><span>About</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="mobile-header-tag-container">
+        <span class="title">Tags</span>
+        <div id="mobile-header-container-tags">
+            <a href="/tags/DNS/" style="font-size: 10px;">DNS</a> <a href="/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/tags/Go%E8%AF%AD%E8%A8%80/" style="font-size: 20px;">Go语言</a> <a href="/tags/Python%E8%AF%AD%E8%A8%80/" style="font-size: 16.67px;">Python语言</a> <a href="/tags/pytorch/" style="font-size: 10px;">pytorch</a> <a href="/tags/%E4%BB%A3%E7%90%86/" style="font-size: 10px;">代理</a> <a href="/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 10px;">包管理</a> <a href="/tags/%E5%AE%9E%E4%BE%8B%E5%88%86%E5%89%B2/" style="font-size: 13.33px;">实例分割</a> <a href="/tags/%E5%AE%B9%E5%99%A8/" style="font-size: 10px;">容器</a> <a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 13.33px;">工具</a> <a href="/tags/%E6%80%9D%E7%BB%B4/" style="font-size: 10px;">思维</a> <a href="/tags/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/" style="font-size: 16.67px;">文件系统</a> <a href="/tags/%E6%97%A5%E5%BF%97/" style="font-size: 10px;">日志</a> <a href="/tags/%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86/" style="font-size: 10px;">权限管理</a> <a href="/tags/%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86/" style="font-size: 10px;">用户管理</a> <a href="/tags/%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86/" style="font-size: 10px;">磁盘管理</a> <a href="/tags/%E7%AE%A1%E9%81%93/" style="font-size: 10px;">管道</a> <a href="/tags/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">系统配置</a> <a href="/tags/%E7%BD%91%E7%AB%99/" style="font-size: 10px;">网站</a> <a href="/tags/%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/" style="font-size: 10px;">网站搭建</a> <a href="/tags/%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/" style="font-size: 10px;">网络配置</a> <a href="/tags/%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1/" style="font-size: 10px;">计划任务</a> <a href="/tags/%E8%B7%AF%E7%94%B1%E5%99%A8/" style="font-size: 10px;">路由器</a> <a href="/tags/%E8%BF%9B%E7%A8%8B/" style="font-size: 10px;">进程</a> <a href="/tags/%E9%81%93%E5%AE%B6/" style="font-size: 10px;">道家</a> <a href="/tags/%E9%87%8D%E5%AE%9A%E5%90%91/" style="font-size: 10px;">重定向</a> <a href="/tags/%E9%98%BF%E9%87%8C%E4%BA%91/" style="font-size: 13.33px;">阿里云</a>
+        </div>
+    </div>
+</div>
+<div class="search-wrap">
+    <span class="search-close">&times;</span>
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+            <i class="icon icon-lg icon-chevron-left"></i>
+        </a>
+        <input class="search-field" placeholder="Search..." id="keywords">
+        <a id="search-submit" href="javascript:;">
+            <i class="fa fa-search"></i>
+        </a>
+    <div class="search-container" id="search-container">
+        <ul class="search-result" id="search-result">
+        </ul>
+    </div>
+</div>
+
+<div id="search-tpl">
+    <li class="search-result-item">
+        <a href="{url}" class="search-item-li">
+            <span class="search-item-li-title" title="{title}">{title}</span>
+        </a>
+    </li>
+</div>
+
+<script src="/js/search.js"></script>
+
+
+<script src="/js/main.js"></script>
+
+
+
+  <script src="//cdn.bootcss.com/particles.js/2.0.0/particles.min.js"></script>
+  <div id="particles"></div>
+  
+<script src="/js/particles.js"></script>
+
+
+
+
+
+
+
+
+  
+<link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+
+  <script src="//cdn.bootcss.com/scrollReveal.js/3.0.5/scrollreveal.js"></script>
+  
+<script src="/js/animate.js"></script>
+
+
+
+  
+<script src="/js/pop-img.js"></script>
+
+  <script>
+     $(".article-entry p img").popImg();
+  </script>
+
+  </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/ Relative)","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"left","width":100,"height":180},"mobile":{"show":false},"react":{"opacityDefault":0.7}});</script></body>
+</html>
