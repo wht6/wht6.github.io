@@ -1,32 +1,312 @@
-extends includes/layout.pug
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Go语言的基本流程控制语句 | WHT</title><meta name="keywords" content="Go语言"><meta name="author" content="并指如刀"><meta name="copyright" content="并指如刀"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="if语句、for语句和switch语句都属于 Go 语言的基本流程控制语句。 &amp;nbsp; 携带range子句的for语句&amp;nbsp;1234567numbers1 :&#x3D; []int&amp;#123;1, 2, 3, 4, 5, 6&amp;#125;for i :&#x3D; range numbers1 &amp;#123;	if i &#x3D;&#x3D; 3 &amp;#123;		numbers1[i] |&#x3D; i	&amp;#125;&amp;#125;fmt">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Go语言的基本流程控制语句">
+<meta property="og:url" content="http://wht6.github.io/posts/b742.html">
+<meta property="og:site_name" content="WHT">
+<meta property="og:description" content="if语句、for语句和switch语句都属于 Go 语言的基本流程控制语句。 &amp;nbsp; 携带range子句的for语句&amp;nbsp;1234567numbers1 :&#x3D; []int&amp;#123;1, 2, 3, 4, 5, 6&amp;#125;for i :&#x3D; range numbers1 &amp;#123;	if i &#x3D;&#x3D; 3 &amp;#123;		numbers1[i] |&#x3D; i	&amp;#125;&amp;#125;fmt">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
+<meta property="article:published_time" content="2022-03-03T10:00:00.000Z">
+<meta property="article:modified_time" content="2022-03-03T09:05:34.629Z">
+<meta property="article:author" content="并指如刀">
+<meta property="article:tag" content="Go语言">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://wht6.github.io/posts/b742"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Go语言的基本流程控制语句',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-03-03 17:05:34'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
 
-block content
-  #post
-    if top_img === false
-      include includes/header/post-info.pug
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
 
-    article#article-container.post-content!=page.content
-    include includes/post/post-copyright.pug
-    .tag_share
-      if (theme.post_meta.post.tags)
-        .post-meta__tag-list
-          each item, index in page.tags.data
-            a(href=url_for(item.path)).post-meta__tags #[=item.name]
-      include includes/third-party/share/index.pug
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
         
-    if theme.reward.enable && theme.reward.QR_code
-      !=partial('includes/post/reward', {}, {cache: true})
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><style type="text/css" lang="css">
+    #loading-container{
+        position: fixed;
+        top: 0;
+        left: 0;
+        min-height: 100vh;
+        width: 100vw;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: #FFF;
+        text-align: center;
+        /* loader页面消失采用渐隐的方式*/
+        -webkit-transition: opacity 1s ease;
+        -moz-transition: opacity 1s ease;
+        -o-transition: opacity 1s ease;
+        transition: opacity 1s ease;
+    }
+    .loading-image{
+        width: 120px;
+        height: 50px;
+        transform: translate(-50%);
+    }
+    
+    .loading-image div:nth-child(2) {
+        -webkit-animation: pacman-balls 1s linear 0s infinite;
+        animation: pacman-balls 1s linear 0s infinite
+    }
 
-    //- ad
-    if theme.ad && theme.ad.post
-      .ads-wrap!=theme.ad.post
+    .loading-image div:nth-child(3) {
+        -webkit-animation: pacman-balls 1s linear .33s infinite;
+        animation: pacman-balls 1s linear .33s infinite
+    }
 
-    if theme.post_pagination
-      include includes/pagination.pug
-    if theme.related_post && theme.related_post.enable
-      != related_posts(page,site.posts)
+    .loading-image div:nth-child(4) {
+        -webkit-animation: pacman-balls 1s linear .66s infinite;
+        animation: pacman-balls 1s linear .66s infinite
+    }
 
-    if page.comments !== false && theme.comments && theme.comments.use
-      - var commentsJsLoad = true
-      !=partial('includes/third-party/comments/index', {}, {cache: true})
-      
+    .loading-image div:nth-child(5) {
+        -webkit-animation: pacman-balls 1s linear .99s infinite;
+        animation: pacman-balls 1s linear .99s infinite
+    }
+    
+   .loading-image div:first-of-type {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_up .5s 0s infinite;
+        animation: rotate_pacman_half_up .5s 0s infinite;
+    }
+    .loading-image div:nth-child(2) {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_down .5s 0s infinite;
+        animation: rotate_pacman_half_down .5s 0s infinite;
+        margin-top: -50px;
+    }
+    @-webkit-keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @-webkit-keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+
+    @keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+    
+    @-webkit-keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+
+    @keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+    
+   
+    .loading-image div:nth-child(3),
+    .loading-image div:nth-child(4),
+    .loading-image div:nth-child(5),
+    .loading-image div:nth-child(6){
+        background-color: #49b1f5;
+        width: 15px;
+        height: 15px;
+        border-radius: 100%;
+        margin: 2px;
+        width: 10px;
+        height: 10px;
+        position: absolute;
+        transform: translateY(-6.25px);
+        top: 25px;
+        left: 100px;
+    }
+    .loading-text{
+        margin-bottom: 20vh;
+        text-align: center;
+        color: #2c3e50;
+        font-size: 2rem;
+        box-sizing: border-box;
+        padding: 0 10px;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    @media only screen and (max-width: 500px) {
+         .loading-text{
+            font-size: 1.5rem;
+         }
+    }
+    .fadeout {
+        opacity: 0;
+        filter: alpha(opacity=0);
+    }
+    /* logo出现动画 */
+    @-webkit-keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);transform:translate3d(0,-100%,0)}100%{opacity:1;-webkit-transform:none;transform:none}}
+    @keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);}}
+ </style>
+ <script>
+(function () {
+    const loaded = function(){
+       setTimeout(function(){
+            const loader = document.getElementById("loading-container");
+            loader.className="fadeout" ;//使用渐隐的方法淡出loading page
+            // document.getElementById("body-wrap").style.display="flex";
+            setTimeout(function(){
+                loader.style.display="none";
+            },1000); 
+        },1000);//强制显示loading page 1s  
+    };
+    loaded();
+})()
+ </script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="WHT" type="application/atom+xml">
+</head>
+ <div id="loading-container">
+     <p class="loading-text">玩命加载中 . . . </p> 
+     <div class="loading-image">
+         <div></div>
+         <div></div>
+         <div></div>
+         <div></div> 
+         <div></div>
+     </div>
+ </div><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">65</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">29</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div></div><hr/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">WHT</a></span><div id="menus"><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Go语言的基本流程控制语句</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-03-03T10:00:00.000Z" title="发表于 2022-03-03 18:00:00">2022-03-03</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-03-03T09:05:34.629Z" title="更新于 2022-03-03 17:05:34">2022-03-03</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Go语言的基本流程控制语句"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p><code>if</code>语句、<code>for</code>语句和<code>switch</code>语句都属于 Go 语言的基本流程控制语句。</p>
+<p>&nbsp;</p>
+<h3 id="携带range子句的for语句"><a href="#携带range子句的for语句" class="headerlink" title="携带range子句的for语句"></a>携带<code>range</code>子句的<code>for</code>语句</h3><p>&nbsp;<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">numbers1 := []<span class="keyword">int</span>&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>&#125;</span><br><span class="line"><span class="keyword">for</span> i := <span class="keyword">range</span> numbers1 &#123;</span><br><span class="line">	<span class="keyword">if</span> i == <span class="number">3</span> &#123;</span><br><span class="line">		numbers1[i] |= i</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">fmt.Println(numbers1)</span><br></pre></td></tr></table></figure><br>&nbsp;</p>
+<p>先声明了一个元素类型为<code>int</code>的切片类型的变量<code>numbers1</code>，在该切片中有 6 个元素值，分别是从<code>1</code>到<code>6</code>的整数。用一条携带<code>range</code>子句的<code>for</code>语句去迭代<code>numbers1</code>变量中的所有元素值。</p>
+<p>&nbsp;<br>在这条<code>for</code>语句中，只有一个迭代变量<code>i</code>。我在每次迭代时，都会先去判断<code>i</code>的值是否等于<code>3</code>，如果结果为<code>true</code>，那么就让<code>numbers1</code>的第<code>i</code>个元素值与<code>i</code>本身做按位或的操作，再把操作结果作为<code>numbers1</code>的新的第<code>i</code>个元素值。最后我会打印出<code>numbers1</code>的值。<br>&nbsp;<br>这段代码打印的内容是<code>[1 2 3 7 5 6]</code>。<br>&nbsp;<br>当<code>for</code>语句被执行的时候，在<code>range</code>关键字右边的<code>numbers1</code>会先被求值。<br>&nbsp;<br>这个位置上的代码被称为<code>range</code>表达式。<code>range</code>表达式的结果值可以是数组、数组的指针、切片、字符串、字典或者允许接收操作的通道中的某一个，并且结果值只能有一个。<br>&nbsp;<br>对于不同种类的<code>range</code>表达式结果值，<code>for</code>语句的迭代变量的数量可以有所不同。<br>&nbsp;<br>就拿我们这里的<code>numbers1</code>来说，它是一个切片，那么迭代变量就可以有两个，右边的迭代变量代表当次迭代对应的某一个元素值，而左边的迭代变量则代表该元素值在切片中的索引值。<br>&nbsp;<br>那么，如果像本题代码中的<code>for</code>语句那样，只有一个迭代变量的情况意味着什么呢？这意味着，该迭代变量只会代表当次迭代对应的元素值的索引值。<br>&nbsp;<br>更宽泛地讲，当只有一个迭代变量的时候，数组、数组的指针、切片和字符串的元素值都是无处安放的，我们只能拿到按照从小到大顺序给出的一个个索引值。<br>&nbsp;<br>因此，这里的迭代变量<code>i</code>的值会依次是从<code>0</code>到<code>5</code>的整数。当<code>i</code>的值等于<code>3</code>的时候，与之对应的是切片中的第 4 个元素值<code>4</code>。对<code>4</code>和<code>3</code>进行按位或操作得到的结果是<code>7</code>。这就是答案中的第 4 个整数是<code>7</code>的原因了。<br>&nbsp;<br>稍稍修改一下上面的代码。<br>&nbsp;<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">numbers2 := [...]<span class="keyword">int</span>&#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>&#125;</span><br><span class="line">maxIndex2 := <span class="built_in">len</span>(numbers2) - <span class="number">1</span></span><br><span class="line"><span class="keyword">for</span> i, e := <span class="keyword">range</span> numbers2 &#123;</span><br><span class="line">	<span class="keyword">if</span> i == maxIndex2 &#123;</span><br><span class="line">		numbers2[<span class="number">0</span>] += e</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		numbers2[i+<span class="number">1</span>] += e</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">fmt.Println(numbers2)</span><br></pre></td></tr></table></figure><br>&nbsp;</p>
+<p>注意，我把迭代的对象换成了<code>numbers2</code>。<code>numbers2</code>中的元素值同样是从<code>1</code>到<code>6</code>的 6 个整数，并且元素类型同样是<code>int</code>，但它是一个数组而不是一个切片。</p>
+<p>&nbsp;<br>在<code>for</code>语句中，我总是会对紧挨在当次迭代对应的元素后边的那个元素，进行重新赋值，新的值会是这两个元素的值之和。当迭代到最后一个元素时，我会把此<code>range</code>表达式结果值中的第一个元素值，替换为它的原值与最后一个元素值的和，最后，我会打印出<code>numbers2</code>的值。<br>&nbsp;<br>这段代码打印的内容是<code>[7 3 5 7 9 11]</code>。<br>&nbsp;<br>当<code>for</code>语句被执行的时候，在<code>range</code>关键字右边的<code>numbers2</code>会先被求值。<br>&nbsp;<br>这里需要注意两点：<br>&nbsp;</p>
+<ol>
+<li><code>range</code>表达式只会在<code>for</code>语句开始执行时被求值一次，无论后边会有多少次迭代；</li>
+<li><code>range</code>表达式的求值结果会被复制，也就是说，被迭代的对象是<code>range</code>表达式结果值的副本而不是原值。</li>
+</ol>
+<p>&nbsp;<br>基于这两个规则，我们接着往下看。在第一次迭代时，我改变的是<code>numbers2</code>的第二个元素的值，新值为<code>3</code>，也就是<code>1</code>和<code>2</code>之和。</p>
+<p>&nbsp;<br>但是，被迭代的对象的第二个元素却没有任何改变，毕竟它与<code>numbers2</code>已经是毫不相关的两个数组了。因此，在第二次迭代时，会把<code>numbers2</code>的第三个元素的值修改为<code>5</code>，即被迭代对象的第二个元素值<code>2</code>和第三个元素值<code>3</code>的和。</p>
+<p>以此类推，之后的<code>numbers2</code>的元素值依次会是<code>7</code>、<code>9</code>和<code>11</code>。当迭代到最后一个元素时，我会把<code>numbers2</code>的第一个元素的值修改为<code>1</code>和<code>6</code>之和。<br>&nbsp;<br>把<code>numbers2</code>的值由一个数组改成一个切片，其中的元素值都不要变。打印的结果又会是什么？<br>&nbsp;<br>打印的结果是<code>[22 3 6 10 15 21]</code>。原因是切片与数组是不同的，前者是引用类型的，而后者是值类型的。（我的理解：引用类型可以看做指针，对于切片，其指向的是底层数组，因为range表达式的求值结果会被复制，迭代对象是结果值的副本，所以指针也会被复制，但是指针的副本仍然是指向底层数组的，所以对切片副本的修改，会影响到底层数组）<br>&nbsp;</p>
+<h3 id="switch表达式和case表达式"><a href="#switch表达式和case表达式" class="headerlink" title="switch表达式和case表达式"></a><code>switch</code>表达式和<code>case</code>表达式</h3><p>&nbsp;<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">value1 := [...]<span class="keyword">int8</span>&#123;<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>&#125;</span><br><span class="line"><span class="keyword">switch</span> <span class="number">1</span> + <span class="number">3</span> &#123;</span><br><span class="line"><span class="keyword">case</span> value1[<span class="number">0</span>], value1[<span class="number">1</span>]:</span><br><span class="line">	fmt.Println(<span class="string">&quot;0 or 1&quot;</span>)</span><br><span class="line"><span class="keyword">case</span> value1[<span class="number">2</span>], value1[<span class="number">3</span>]:</span><br><span class="line">	fmt.Println(<span class="string">&quot;2 or 3&quot;</span>)</span><br><span class="line"><span class="keyword">case</span> value1[<span class="number">4</span>], value1[<span class="number">5</span>], value1[<span class="number">6</span>]:</span><br><span class="line">	fmt.Println(<span class="string">&quot;4 or 5 or 6&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>&nbsp;</p>
+<p>先声明了一个数组类型的变量<code>value1</code>，该变量的元素类型是<code>int8</code>。在后边的<code>switch</code>语句中，被夹在<code>switch</code>关键字和左花括号<code>&#123;</code>之间的是<code>1 + 3</code>，这个位置上的代码被称为<code>switch</code>表达式。这个<code>switch</code>语句还包含了三个<code>case</code>子句，而每个<code>case</code>子句又各包含了一个<code>case</code>表达式和一条打印语句。</p>
+<p>&nbsp;<br>所谓的<code>case</code>表达式一般由<code>case</code>关键字和一个表达式列表组成，表达式列表中的多个表达式之间需要有英文逗号<code>,</code>分割，比如，上面代码中的<code>case value1[0], value1[1]</code>就是一个<code>case</code>表达式，其中的两个子表达式都是由索引表达式表示的。<br>&nbsp;<br>另外的两个<code>case</code>表达式分别是<code>case value1[2], value1[3]</code>和<code>case value1[4], value1[5], value1[6]</code>。<br>&nbsp;<br>此外，在这里的每个<code>case</code>子句中的那些打印语句，会分别打印出不同的内容，这些内容用于表示<code>case</code>子句被选中的原因，比如，打印内容<code>0 or 1</code>表示当前<code>case</code>子句被选中是因为<code>switch</code>表达式的结果值等于<code>0</code>或<code>1</code>中的某一个。另外两条打印语句会分别打印出<code>2 or 3</code>和<code>4 or 5 or 6</code>。<br>&nbsp;<br>只要<code>switch</code>表达式的结果值与某个<code>case</code>表达式中的任意一个子表达式的结果值相等，该<code>case</code>表达式所属的<code>case</code>子句就会被选中。<br>&nbsp;<br>并且，一旦某个<code>case</code>子句被选中，其中的附带在<code>case</code>表达式后边的那些语句就会被执行。与此同时，其他的所有<code>case</code>子句都会被忽略。<br>&nbsp;<br>当然了，如果被选中的<code>case</code>子句附带的语句列表中包含了<code>fallthrough</code>语句，那么紧挨在它下边的那个<code>case</code>子句附带的语句也会被执行。<br>&nbsp;<br>正因为存在上述判断相等的操作（以下简称判等操作），<code>switch</code>语句对<code>switch</code>表达式的结果类型，以及各个<code>case</code>表达式中子表达式的结果类型都是有要求的。毕竟，在 Go 语言中，只有类型相同的值之间才有可能被允许进行判等操作。<br>&nbsp;<br>如果<code>switch</code>表达式的结果值是无类型的常量，比如<code>1 + 3</code>的求值结果就是无类型的常量<code>4</code>，那么这个常量会被自动地转换为此种常量的默认类型的值，比如整数<code>4</code>的默认类型是<code>int</code>，又比如浮点数<code>3.14</code>的默认类型是<code>float64</code>。<br>&nbsp;<br>因此，由于上述代码中的<code>switch</code>表达式的结果类型是<code>int</code>，而那些<code>case</code>表达式中子表达式的结果类型却是<code>int8</code>，它们的类型并不相同，所以这条<code>switch</code>语句是无法通过编译的。<br>&nbsp;<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">value2 := [...]<span class="keyword">int8</span>&#123;<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>&#125;</span><br><span class="line"><span class="keyword">switch</span> value2[<span class="number">4</span>] &#123;</span><br><span class="line"><span class="keyword">case</span> <span class="number">0</span>, <span class="number">1</span>:</span><br><span class="line">	fmt.Println(<span class="string">&quot;0 or 1&quot;</span>)</span><br><span class="line"><span class="keyword">case</span> <span class="number">2</span>, <span class="number">3</span>:</span><br><span class="line">	fmt.Println(<span class="string">&quot;2 or 3&quot;</span>)</span><br><span class="line"><span class="keyword">case</span> <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>:</span><br><span class="line">	fmt.Println(<span class="string">&quot;4 or 5 or 6&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>&nbsp;</p>
+<p>其中的变量<code>value2</code>与<code>value1</code>的值是完全相同的。但不同的是，我把<code>switch</code>表达式换成了<code>value2[4]</code>，并把下边那三个<code>case</code>表达式分别换为了<code>case 0, 1</code>、<code>case 2, 3</code>和<code>case 4, 5, 6</code>。</p>
+<p>&nbsp;<br>如此一来，<code>switch</code>表达式的结果值是<code>int8</code>类型的，而那些<code>case</code>表达式中子表达式的结果值却是无类型的常量了。这与之前的情况恰恰相反。那么，这样的<code>switch</code>语句可以通过编译吗？<br>&nbsp;<br>答案是肯定的。因为，如果<code>case</code>表达式中子表达式的结果值是无类型的常量，那么它的类型会被自动地转换为<code>switch</code>表达式的结果类型，又由于上述那几个整数都可以被转换为<code>int8</code>类型的值，所以对这些表达式的结果值进行判等操作是没有问题的。<br>&nbsp;<br>当然了，如果这里说的自动转换没能成功，那么<code>switch</code>语句照样通不过编译。<br>&nbsp;<br><img src="https://raw.githubusercontent.com/wht6/image/master/img/switchcase_202233.png" alt><br>&nbsp;<br>通过上面这两道题，你应该可以搞清楚<code>switch</code>表达式和<code>case</code>表达式之间的联系了。由于需要进行判等操作，所以前者和后者中的子表达式的结果类型需要相同。<br>&nbsp;<br><code>switch</code>语句会进行有限的类型转换，但肯定不能保证这种转换可以统一它们的类型。还要注意，如果这些表达式的结果类型有某个接口类型，那么一定要小心检查它们的动态值是否都具有可比性（或者说是否允许判等操作）。<br>&nbsp;<br>因为，如果答案是否定的，虽然不会造成编译错误，但是后果会更加严重：引发 panic（也就是运行时恐慌）。<br>&nbsp;<br><code>switch</code>语句在<code>case</code>子句的选择上是具有唯一性的。<br>&nbsp;<br>正因为如此，<code>switch</code>语句不允许<code>case</code>表达式中的子表达式结果值存在相等的情况，不论这些结果值相等的子表达式，是否存在于不同的<code>case</code>表达式中，都会是这样的结果。具体请看这段代码：<br>&nbsp;<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">value3 := [...]<span class="keyword">int8</span>&#123;<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>&#125;</span><br><span class="line"><span class="keyword">switch</span> value3[<span class="number">4</span>] &#123;</span><br><span class="line"><span class="keyword">case</span> <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>:</span><br><span class="line">	fmt.Println(<span class="string">&quot;0 or 1 or 2&quot;</span>)</span><br><span class="line"><span class="keyword">case</span> <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>:</span><br><span class="line">	fmt.Println(<span class="string">&quot;2 or 3 or 4&quot;</span>)</span><br><span class="line"><span class="keyword">case</span> <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>:</span><br><span class="line">	fmt.Println(<span class="string">&quot;4 or 5 or 6&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>&nbsp;</p>
+<p>变量<code>value3</code>的值同<code>value1</code>，依然是由从<code>0</code>到<code>6</code>的 7 个整数组成的数组，元素类型是<code>int8</code>。<code>switch</code>表达式是<code>value3[4]</code>，三个<code>case</code>表达式分别是<code>case 0, 1, 2</code>、<code>case 2, 3, 4</code>和<code>case 4, 5, 6</code>。</p>
+<p>&nbsp;<br>由于在这三个<code>case</code>表达式中存在结果值相等的子表达式，所以这个<code>switch</code>语句无法通过编译。不过，好在这个约束本身还有个约束，那就是只针对结果值为常量的子表达式。<br>&nbsp;<br>比如，子表达式<code>1+1</code>和<code>2</code>不能同时出现，<code>1+3</code>和<code>4</code>也不能同时出现。有了这个约束的约束，我们就可以想办法绕过这个对子表达式的限制了。再看一段代码：<br>&nbsp;<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">value5 := [...]<span class="keyword">int8</span>&#123;<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>&#125;</span><br><span class="line"><span class="keyword">switch</span> value5[<span class="number">4</span>] &#123;</span><br><span class="line"><span class="keyword">case</span> value5[<span class="number">0</span>], value5[<span class="number">1</span>], value5[<span class="number">2</span>]:</span><br><span class="line">	fmt.Println(<span class="string">&quot;0 or 1 or 2&quot;</span>)</span><br><span class="line"><span class="keyword">case</span> value5[<span class="number">2</span>], value5[<span class="number">3</span>], value5[<span class="number">4</span>]:</span><br><span class="line">	fmt.Println(<span class="string">&quot;2 or 3 or 4&quot;</span>)</span><br><span class="line"><span class="keyword">case</span> value5[<span class="number">4</span>], value5[<span class="number">5</span>], value5[<span class="number">6</span>]:</span><br><span class="line">	fmt.Println(<span class="string">&quot;4 or 5 or 6&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>&nbsp;</p>
+<p>变量名换成了<code>value5</code>，但这不是重点。重点是，我把<code>case</code>表达式中的常量都换成了诸如<code>value5[0]</code>这样的索引表达式。</p>
+<p>&nbsp;<br>虽然第一个<code>case</code>表达式和第二个<code>case</code>表达式都包含了<code>value5[2]</code>，并且第二个<code>case</code>表达式和第三个<code>case</code>表达式都包含了<code>value5[4]</code>，但这已经不是问题了。这条<code>switch</code>语句可以成功通过编译。<br>&nbsp;<br>不过，这种绕过方式对用于类型判断的<code>switch</code>语句（以下简称为类型<code>switch</code>语句）就无效了。因为类型<code>switch</code>语句中的<code>case</code>表达式的子表达式，都必须直接由类型字面量表示，而无法通过间接的方式表示。代码如下：<br>&nbsp;<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">value6 := <span class="keyword">interface</span>&#123;&#125;(<span class="keyword">byte</span>(<span class="number">127</span>))</span><br><span class="line"><span class="keyword">switch</span> t := value6.(<span class="keyword">type</span>) &#123;</span><br><span class="line"><span class="keyword">case</span> <span class="keyword">uint8</span>, <span class="keyword">uint16</span>:</span><br><span class="line">	fmt.Println(<span class="string">&quot;uint8 or uint16&quot;</span>)</span><br><span class="line"><span class="keyword">case</span> <span class="keyword">byte</span>:</span><br><span class="line">	fmt.Printf(<span class="string">&quot;byte&quot;</span>)</span><br><span class="line"><span class="keyword">default</span>:</span><br><span class="line">	fmt.Printf(<span class="string">&quot;unsupported type: %T&quot;</span>, t)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>&nbsp;</p>
+<p>变量<code>value6</code>的值是空接口类型的。该值包装了一个<code>byte</code>类型的值<code>127</code>。我在后面使用类型<code>switch</code>语句来判断<code>value6</code>的实际类型，并打印相应的内容。</p>
+<p>&nbsp;<br>这里有两个普通的<code>case</code>子句，还有一个<code>default case</code>子句。前者的<code>case</code>表达式分别是<code>case uint8, uint16</code>和<code>case byte</code>。你还记得吗？<code>byte</code>类型是<code>uint8</code>类型的别名类型。<br>&nbsp;<br>因此，它们两个本质上是同一个类型，只是类型名称不同罢了。在这种情况下，这个类型<code>switch</code>语句是无法通过编译的，因为子表达式<code>byte</code>和<code>uint8</code>重复了。<br>&nbsp;<br>普通<code>case</code>子句的编写顺序很重要，最上边的<code>case</code>子句中的子表达式总是会被最先求值，在判等的时候顺序也是这样。因此，如果某些子表达式的结果值有重复并且它们与<code>switch</code>表达式的结果值相等，那么位置靠上的<code>case</code>子句总会被选中。<br>&nbsp;<br>&nbsp;</p>
+<p>参考链接：<a target="_blank" rel="noopener" href="https://time.geekbang.org/column/intro/112">https://time.geekbang.org/column/intro/112</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">并指如刀</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://wht6.github.io/posts/b742.html">http://wht6.github.io/posts/b742.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://wht6.github.io" target="_blank">WHT</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Go%E8%AF%AD%E8%A8%80/">Go语言</a></div><div class="post_share"><div class="social-share" data-image="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/posts/3d09.html"><img class="prev-cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">错误处理</div></div></a></div><div class="next-post pull-right"><a href="/posts/fd28.html"><img class="next-cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">go语句及其执行规则</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/posts/4dc9.html" title="Golang的数组和切片"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-02-25</div><div class="title">Golang的数组和切片</div></div></a></div><div><a href="/posts/8fcc.html" title="Golang的指针"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-03-02</div><div class="title">Golang的指针</div></div></a></div><div><a href="/posts/1094.html" title="Go语言基础知识"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-02-21</div><div class="title">Go语言基础知识</div></div></a></div><div><a href="/posts/24dd.html" title="Go语言的函数"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-02-28</div><div class="title">Go语言的函数</div></div></a></div><div><a href="/posts/60b9.html" title="container包中的容器-链表"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-02-26</div><div class="title">container包中的容器-链表</div></div></a></div><div><a href="/posts/d8b5.html" title="strings包与字符串操作"><img class="cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-03-11</div><div class="title">strings包与字符串操作</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">并指如刀</div><div class="author-info__description">分享技术,分享知识,分享感悟</div></div><div class="card-info-data is-center"><div class="card-info-data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">65</div></a></div><div class="card-info-data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">29</div></a></div><div class="card-info-data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%90%BA%E5%B8%A6range%E5%AD%90%E5%8F%A5%E7%9A%84for%E8%AF%AD%E5%8F%A5"><span class="toc-number">1.</span> <span class="toc-text">携带range子句的for语句</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#switch%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%92%8Ccase%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="toc-number">2.</span> <span class="toc-text">switch表达式和case表达式</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/8db7.html" title="LVS+Keepalived架构理解"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="LVS+Keepalived架构理解"/></a><div class="content"><a class="title" href="/posts/8db7.html" title="LVS+Keepalived架构理解">LVS+Keepalived架构理解</a><time datetime="2022-03-19T12:00:00.000Z" title="发表于 2022-03-19 20:00:00">2022-03-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/bb96.html" title="程序性能分析基础"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="程序性能分析基础"/></a><div class="content"><a class="title" href="/posts/bb96.html" title="程序性能分析基础">程序性能分析基础</a><time datetime="2022-03-19T02:00:00.000Z" title="发表于 2022-03-19 10:00:00">2022-03-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/235e.html" title="访问网络服务"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="访问网络服务"/></a><div class="content"><a class="title" href="/posts/235e.html" title="访问网络服务">访问网络服务</a><time datetime="2022-03-18T10:00:00.000Z" title="发表于 2022-03-18 18:00:00">2022-03-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/a29a.html" title="使用os包中的API"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="使用os包中的API"/></a><div class="content"><a class="title" href="/posts/a29a.html" title="使用os包中的API">使用os包中的API</a><time datetime="2022-03-18T03:00:00.000Z" title="发表于 2022-03-18 11:00:00">2022-03-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/b456.html" title="bufio包中的数据类型"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="bufio包中的数据类型"/></a><div class="content"><a class="title" href="/posts/b456.html" title="bufio包中的数据类型">bufio包中的数据类型</a><time datetime="2022-03-17T12:00:00.000Z" title="发表于 2022-03-17 20:00:00">2022-03-17</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By 并指如刀</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/ Relative)","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"left","width":100,"height":180},"mobile":{"show":false},"react":{"opacityDefault":0.7}});</script></body></html>

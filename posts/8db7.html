@@ -1,32 +1,322 @@
-extends includes/layout.pug
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>LVS+Keepalived架构理解 | WHT</title><meta name="keywords" content="负载均衡,高可用"><meta name="author" content="并指如刀"><meta name="copyright" content="并指如刀"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="架构简介在LVS+Keepalived架构中，LVS起到负载均衡的作用，Keepalived保证服务的高可用。LVS按照一定的调度算法，把不同客户端请求转发到不同的后端真实的服务器（RS，Real Server），平衡各个后端服务器的负载。keepalived 为LVS中负载均衡器（LB，LoadBalancer）提供一个冗余备份，当主LB故障时，随时切换到从LB。keepalived 还会对RS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LVS+Keepalived架构理解">
+<meta property="og:url" content="http://wht6.github.io/posts/8db7.html">
+<meta property="og:site_name" content="WHT">
+<meta property="og:description" content="架构简介在LVS+Keepalived架构中，LVS起到负载均衡的作用，Keepalived保证服务的高可用。LVS按照一定的调度算法，把不同客户端请求转发到不同的后端真实的服务器（RS，Real Server），平衡各个后端服务器的负载。keepalived 为LVS中负载均衡器（LB，LoadBalancer）提供一个冗余备份，当主LB故障时，随时切换到从LB。keepalived 还会对RS">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
+<meta property="article:published_time" content="2022-03-19T12:00:00.000Z">
+<meta property="article:modified_time" content="2022-03-19T06:06:01.233Z">
+<meta property="article:author" content="并指如刀">
+<meta property="article:tag" content="负载均衡">
+<meta property="article:tag" content="高可用">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://wht6.github.io/posts/8db7"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'LVS+Keepalived架构理解',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-03-19 14:06:01'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
 
-block content
-  #post
-    if top_img === false
-      include includes/header/post-info.pug
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
 
-    article#article-container.post-content!=page.content
-    include includes/post/post-copyright.pug
-    .tag_share
-      if (theme.post_meta.post.tags)
-        .post-meta__tag-list
-          each item, index in page.tags.data
-            a(href=url_for(item.path)).post-meta__tags #[=item.name]
-      include includes/third-party/share/index.pug
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
         
-    if theme.reward.enable && theme.reward.QR_code
-      !=partial('includes/post/reward', {}, {cache: true})
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><style type="text/css" lang="css">
+    #loading-container{
+        position: fixed;
+        top: 0;
+        left: 0;
+        min-height: 100vh;
+        width: 100vw;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: #FFF;
+        text-align: center;
+        /* loader页面消失采用渐隐的方式*/
+        -webkit-transition: opacity 1s ease;
+        -moz-transition: opacity 1s ease;
+        -o-transition: opacity 1s ease;
+        transition: opacity 1s ease;
+    }
+    .loading-image{
+        width: 120px;
+        height: 50px;
+        transform: translate(-50%);
+    }
+    
+    .loading-image div:nth-child(2) {
+        -webkit-animation: pacman-balls 1s linear 0s infinite;
+        animation: pacman-balls 1s linear 0s infinite
+    }
 
-    //- ad
-    if theme.ad && theme.ad.post
-      .ads-wrap!=theme.ad.post
+    .loading-image div:nth-child(3) {
+        -webkit-animation: pacman-balls 1s linear .33s infinite;
+        animation: pacman-balls 1s linear .33s infinite
+    }
 
-    if theme.post_pagination
-      include includes/pagination.pug
-    if theme.related_post && theme.related_post.enable
-      != related_posts(page,site.posts)
+    .loading-image div:nth-child(4) {
+        -webkit-animation: pacman-balls 1s linear .66s infinite;
+        animation: pacman-balls 1s linear .66s infinite
+    }
 
-    if page.comments !== false && theme.comments && theme.comments.use
-      - var commentsJsLoad = true
-      !=partial('includes/third-party/comments/index', {}, {cache: true})
-      
+    .loading-image div:nth-child(5) {
+        -webkit-animation: pacman-balls 1s linear .99s infinite;
+        animation: pacman-balls 1s linear .99s infinite
+    }
+    
+   .loading-image div:first-of-type {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_up .5s 0s infinite;
+        animation: rotate_pacman_half_up .5s 0s infinite;
+    }
+    .loading-image div:nth-child(2) {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_down .5s 0s infinite;
+        animation: rotate_pacman_half_down .5s 0s infinite;
+        margin-top: -50px;
+    }
+    @-webkit-keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @-webkit-keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+
+    @keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+    
+    @-webkit-keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+
+    @keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+    
+   
+    .loading-image div:nth-child(3),
+    .loading-image div:nth-child(4),
+    .loading-image div:nth-child(5),
+    .loading-image div:nth-child(6){
+        background-color: #49b1f5;
+        width: 15px;
+        height: 15px;
+        border-radius: 100%;
+        margin: 2px;
+        width: 10px;
+        height: 10px;
+        position: absolute;
+        transform: translateY(-6.25px);
+        top: 25px;
+        left: 100px;
+    }
+    .loading-text{
+        margin-bottom: 20vh;
+        text-align: center;
+        color: #2c3e50;
+        font-size: 2rem;
+        box-sizing: border-box;
+        padding: 0 10px;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    @media only screen and (max-width: 500px) {
+         .loading-text{
+            font-size: 1.5rem;
+         }
+    }
+    .fadeout {
+        opacity: 0;
+        filter: alpha(opacity=0);
+    }
+    /* logo出现动画 */
+    @-webkit-keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);transform:translate3d(0,-100%,0)}100%{opacity:1;-webkit-transform:none;transform:none}}
+    @keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);}}
+ </style>
+ <script>
+(function () {
+    const loaded = function(){
+       setTimeout(function(){
+            const loader = document.getElementById("loading-container");
+            loader.className="fadeout" ;//使用渐隐的方法淡出loading page
+            // document.getElementById("body-wrap").style.display="flex";
+            setTimeout(function(){
+                loader.style.display="none";
+            },1000); 
+        },1000);//强制显示loading page 1s  
+    };
+    loaded();
+})()
+ </script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="WHT" type="application/atom+xml">
+</head>
+ <div id="loading-container">
+     <p class="loading-text">玩命加载中 . . . </p> 
+     <div class="loading-image">
+         <div></div>
+         <div></div>
+         <div></div>
+         <div></div> 
+         <div></div>
+     </div>
+ </div><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">65</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">29</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div></div><hr/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">WHT</a></span><div id="menus"><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">LVS+Keepalived架构理解</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-03-19T12:00:00.000Z" title="发表于 2022-03-19 20:00:00">2022-03-19</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-03-19T06:06:01.233Z" title="更新于 2022-03-19 14:06:01">2022-03-19</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E8%BF%90%E7%BB%B4/">运维</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="LVS+Keepalived架构理解"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h3 id="架构简介"><a href="#架构简介" class="headerlink" title="架构简介"></a>架构简介</h3><p>在LVS+Keepalived架构中，LVS起到负载均衡的作用，Keepalived保证服务的高可用。LVS按照一定的调度算法，把不同客户端请求转发到不同的后端真实的服务器（RS，Real Server），平衡各个后端服务器的负载。keepalived 为LVS中负载均衡器（LB，LoadBalancer）提供一个冗余备份，当主LB故障时，随时切换到从LB。keepalived 还会对RS做健康检查，发现不健康的 RS，就把它从LVS集群中剔除。<br>&nbsp;</p>
+<h3 id="Keepalived"><a href="#Keepalived" class="headerlink" title="Keepalived"></a>Keepalived</h3><p>在此之前，先理解什么是虚拟IP（VIP）。<br>&nbsp;</p>
+<h4 id="虚拟IP"><a href="#虚拟IP" class="headerlink" title="虚拟IP"></a>虚拟IP</h4><p>虚拟IP，就是一个未分配给真实主机的IP，也就是说对外提供服务器的主机除了有一个真实IP外还有一个虚IP，使用这两个IP中的任意一个都可以连接到这台主机。虚拟IP一般用作达到HA(High Availability)的目的,比如让所有项目中数据库链接一项配置的都是这个虚IP，当主服务器发生故障无法对外提供服务时，动态将这个虚IP切换到备用服务器。<br>&nbsp;<br>因为ip地址只是一个逻辑地址，在以太网中MAC地址才是真正用来进行数据传输的物理地址，每台主机中都有一个ARP高速缓存，存储同一个网络内的IP地址与MAC地址的对应关 系，以太网中的主机发送数据时会先从这个缓存中查询目标IP对应的MAC地址，会向这个MAC地址发送数据。操作系统会自动维护这个缓存。<br>&nbsp;<br>虚拟IP实际上就是临时绑定在物理网卡上的别名<strong>，</strong>如eth0:x ，x为0-255的任意数字，你可以在一块网卡上绑定多个别名。这个VIP可以看作是你上网的QQ网名、昵称、外号等。在实际生产环境中，需要在DNS配置中把网站域名地址解析到这个VIP地址，由这个VIP对用户提供服务。这样做的好处就是当提供服务的服务器宕机以后，在接管的服务器上会直接自动配置上同样的VIP提供服务。<br>&nbsp;<br>Linux系统给网卡配置VIP的方法常见的有两种，即别名IP（alias ip）以及辅助IP（secondary ip address）。ip alias 和 secondary ip address 是两种不同的实现方式，用来在 Linux 系统中给同一个物理网卡增加多个ip地址。<strong>提示：</strong> heartbeat 和 keepalived 在启动时就是分别利用上面命令来配置VIP的。在停止时利用下面的命令来删除VIP。以上两种方式配置VIP，在高可用环境中的作用是一样的，没什么区别，只是由于当时的系统环境等历史原因，选择的配置命令方式不同。heartbeat3 版本起，不在使用别名，而是使用辅助IP提供服务，而 keepalived 软件一直都是使用的辅助IP技术。<strong>注意：</strong>别名IP将被遗弃，用辅助IP替代<br>&nbsp;</p>
+<h4 id="Keepalived原理"><a href="#Keepalived原理" class="headerlink" title="Keepalived原理"></a>Keepalived原理</h4><p>Keepalived是基于VRRP协议的一款高可用软件。Keepailived有一台主服务器和多台备份服务器，在主服务器和备份服务器上面部署相同的服务配置，使用一个虚拟IP地址对外提供服务，当主服务器出现故障时，<strong>虚拟IP地址会自动漂移到备份服务器</strong>。<br>&nbsp;<br>VRRP（Virtual Router Redundancy Protocol，虚拟路由器冗余协议），VRRP是为了解决静态路由的高可用。VRRP的基本架构虚拟路由器由多个路由器组成，每个路由器都有各自的IP和共同的VRID(0-255)，其中一个VRRP路由器通过竞选成为MASTER，占有VIP，对外提供路由服务，其他成为BACKUP，MASTER以IP组播（组播地址：224.0.0.18）形式发送VRRP协议包，与BACKUP保持心跳连接，若MASTER不可用（或BACKUP接收不到VRRP协议包），则BACKUP通过竞选产生新的MASTER并继续对外提供路由服务，从而实现高可用。<br>&nbsp;<br>Keepalived起初就是为LVS设计的，因此通常搭配LVS实现高可用。Keepalived的实现就是它自身启动为一个服务，工作在多个LVS主机节点上，当前活动的节点叫做Master，备用节点叫做Backup，Master会不停的向Backup节点通告自己的心跳，这种通告是基于VRRP协议的。Backup节点一旦接收不到Master的通告信息，从Backup中选择一个新的Master，将LVS的VIP和ipvs的规则在该节点上生效，从而替代Master节点。<br>&nbsp;<br>Keepalived启动后以后会有一个主进程Master，它会生成还有2个子进程，一个是VRRP Stack负责VRRP（也就是VRRP协议的实现）、一个是Checkers负责IPVS的后端的应用服务器的健康检查，当检测失败就会调用IPVS规则删除后端服务器的IP地址，检测成功了再加回来。当检测后端有失败的情况可以使用SMTP通知管理员。另外VRRP如果检测到另外一个Keepalive失败也可以通过SMTP通知管理员。<br>&nbsp;</p>
+<h3 id="LVS"><a href="#LVS" class="headerlink" title="LVS"></a>LVS</h3><h4 id="LVS概念"><a href="#LVS概念" class="headerlink" title="LVS概念"></a>LVS概念</h4><p>LVS（Linux Virtual Server）即Linux虚拟服务器，是一个负载均衡项目，目前LVS已被集成到Linux内核模块中，因此性能较高。<br>&nbsp;<br>LVS属于四层负载均衡，不支持七层规则修改，机制庞大，不适合小规模应用。<br>&nbsp;<br>优势：<code>高并发连接</code>：LVS基于内核工作，有超强的承载能力和并发处理能力。单台LVS负载均衡器，可支持上万并发连接。<code>稳定性强</code>：是工作在网络4层之上仅作分发之用，这个特点也决定了它在负载均衡软件里的性能最强，稳定性最好，对内存和cpu资源消耗极低。<code>成本低廉</code>：硬件负载均衡器少则十几万，多则几十万上百万，LVS只需一台服务器和就能免费部署使用，性价比极高。<code>配置简单</code>：LVS配置非常简单，仅需几行命令即可完成配置，也可写成脚本进行管理。<code>支持多种算法</code>：支持多种论调算法，可根据业务场景灵活调配进行使用。<code>支持多种工作模型</code>：可根据业务场景，使用不同的工作模式来解决生产环境请求处理问题。<code>应用范围广</code>：因为LVS工作在4层，所以它几乎可以对所有应用做负载均衡，包括http、数据库、DNS、ftp服务等等。<br>&nbsp;<br>LVS核心组件：管理工具ipvsadm：用户空间的命令行工具，用于管理集群服务及集群服务上的RS等；内核模块ipvs：工作于内核上的程序，可根据用户定义的集群实现请求转发；<br>&nbsp;<br>IPVS是LVS项目重要组成部分，是一款运行在Linux kernel当中的4层负载均衡器，性能异常优秀。IPVS依赖于netfilter框架，位于内核源码的net/netfilter/ipvs目录下。<code>k8s</code>引入了<code>IPVS</code>模式，<code>IPVS</code>模式与<code>iptables</code>同样基于<code>Netfilter</code>，但是采用的<code>hash</code>表，因此当<code>service</code>数量达到一定规模时，hash查表的速度优势就会显现出来，从而提高<code>service</code>的服务性能。<br>&nbsp;</p>
+<h4 id="LVS的转发模式"><a href="#LVS的转发模式" class="headerlink" title="LVS的转发模式"></a>LVS的转发模式</h4><p>NAT模式<strong>(</strong><code>NAT</code>)：进站和出站的数据流量都要经过负载均衡器。负载均衡器（也叫Director Server）具有公网IP和内网IP，真实服务器只有内网IP。接收到目的地址为VIP的数据包，根据调度算法从后端群集中选择一个RS（real server），<strong>将数据包的目标IP地址重写为所选RS的IP地址</strong>，然后将数据包转发到RS。当RS处理完请求之后，会把回复数据包返回给LB，此时LB会<strong>将数据包的源IP地址重写为自己的IP地址</strong>，然后发送给客户端。</p>
+<p><img src="https://raw.githubusercontent.com/wht6/image/master/img/natm_2022319.png" alt></p>
+<blockquote>
+<p>RS 应该使用私有地址，RS 的网关必须指向负载均衡器。</p>
+</blockquote>
+<ul>
+<li><strong>优点</strong>：集群中的物理服务器可以使用任何支持TCP/IP操作系统，只有负载均衡器需要一个合法的IP地址，并且支持端口映射，可修改请求报文的端口。NAT 模式的优势在于配置及管理简单，由于了使用 NAT 技术，LVS 调度器及应用服务器可以在不同网段中，网络架构更灵活，应用服务器只需要进行简单的网络设定即可加入集群。</li>
+<li><strong>缺点</strong>：扩展性有限。当服务器节点（普通PC服务器）增长过多时,负载均衡器将成为整个系统的瓶颈。因为所有的请求包和应答包的流向都经过负载均衡器。当服务器节点过多时大量的数据包都交汇在负载均衡器那，速度就会变慢！</li>
+</ul>
+<p>&nbsp;<br>直接路由模式(<code>DR</code>) ：只有进站的数据流量经过负载均衡器。LB（LoadBalancer）接收到目的地址为VIP的数据包，根据调度算法从后端群集中选择一个RS（real server），<strong>将所选RS的MAC地址封装到数据包上</strong>，将数据包转发给RS。当RS处理完请求之后，会直接发送给客户端。这里LB和RS都使用同一个VIP对外服务但只有LB对ARP请求进行响应，网关会把对这个VIP的请求全部定向给LB，LB再将请求分发给RS。处理完成之后，由于IP一致，则等于直接从客户端收到这个数据包无异，可以直接将数据返给客户。限制：由于负载均衡器要对二层包头进行改换,所以负载均衡器和RS之间必须在一个广播域，也可以简单的理解为在同一台交换机上。</p>
+<p><img src="https://raw.githubusercontent.com/wht6/image/master/img/drm_2022319.png" alt></p>
+<blockquote>
+<p>保证前端路由将目标地址为 VIP 报文统统发给LB，而不是 RS。实现方案：修改 RS 上内核参数（arp_ignore 和 arp_announce）将 RS 上的 VIP 配置在 lo 接口的别名上，并限制其不能响应对 VIP 地址解析请求。</p>
+<p>RS 可以使用私有地址；也可以是公网地址，如果使用公网地址，此时可以通过互联网对 RIP 进行直接访问。</p>
+<p>RS 的网关绝不允许指向LB。</p>
+</blockquote>
+<ul>
+<li>优点：和TUN（隧道模式）一样，负载均衡器也只是分发请求，应答包通过单独的路由方法返回给客户端，但是与TUN相比，DR这种实现方式不需要隧道结构，因此可以使用大多数操作系统做为物理服务器。</li>
+<li>缺点：RS节点需要合法IP，要求负载均衡器的网卡必须与物理网卡在一个物理段上。</li>
+</ul>
+<p>&nbsp;<br>隧道模式(<code>TUN</code>)：只有进站的数据流量经过负载均衡器。接收到目的地址为VIP的数据包，根据调度算法从后端群集中选择一个RS（real server），<strong>将所选RS的IP地址封装到数据包上</strong>，将数据包转发给RS。RS收到后，先把数据包的头解开，还原数据包，处理后，会直接发送给客户端。注意，由于RS需要对负载均衡器发过来的数据包进行还原,所以说必须支持IPTUNNEL协议，所以,在RS的内核中,必须编译支持IPTUNNEL这个选项。</p>
+<p><img src="https://raw.githubusercontent.com/wht6/image/master/img/tunm_2022319.png" alt></p>
+<blockquote>
+<p>后端服务器地址、网关地址、负载均衡器地址全是公网地址。</p>
+<p>RS 的网关不会也不可能指向LB</p>
+</blockquote>
+<ul>
+<li>优点：负载均衡器只负责将请求包分发给后端节点服务器，而RS将应答包直接发给用户。所以，减少了负载均衡器的大量数据流动，负载均衡器不再是系统的瓶颈，就能处理很巨大的请求量。这种方式，一台负载均衡器能够为很多RS进行分发。而且跑在公网上就能进行不同地域的分发。</li>
+<li>缺点：隧道模式的RS节点需要合法IP，需要所有的服务器支持”IP Tunneling”(IP Encapsulation)协议，服务器可能只局限在部分Linux系统上。</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">并指如刀</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://wht6.github.io/posts/8db7.html">http://wht6.github.io/posts/8db7.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://wht6.github.io" target="_blank">WHT</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/">负载均衡</a><a class="post-meta__tags" href="/tags/%E9%AB%98%E5%8F%AF%E7%94%A8/">高可用</a></div><div class="post_share"><div class="social-share" data-image="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/posts/bb96.html"><img class="next-cover" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">程序性能分析基础</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">并指如刀</div><div class="author-info__description">分享技术,分享知识,分享感悟</div></div><div class="card-info-data is-center"><div class="card-info-data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">65</div></a></div><div class="card-info-data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">29</div></a></div><div class="card-info-data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%B6%E6%9E%84%E7%AE%80%E4%BB%8B"><span class="toc-number">1.</span> <span class="toc-text">架构简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Keepalived"><span class="toc-number">2.</span> <span class="toc-text">Keepalived</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%99%9A%E6%8B%9FIP"><span class="toc-number">2.1.</span> <span class="toc-text">虚拟IP</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Keepalived%E5%8E%9F%E7%90%86"><span class="toc-number">2.2.</span> <span class="toc-text">Keepalived原理</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#LVS"><span class="toc-number">3.</span> <span class="toc-text">LVS</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#LVS%E6%A6%82%E5%BF%B5"><span class="toc-number">3.1.</span> <span class="toc-text">LVS概念</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#LVS%E7%9A%84%E8%BD%AC%E5%8F%91%E6%A8%A1%E5%BC%8F"><span class="toc-number">3.2.</span> <span class="toc-text">LVS的转发模式</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/8db7.html" title="LVS+Keepalived架构理解"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="LVS+Keepalived架构理解"/></a><div class="content"><a class="title" href="/posts/8db7.html" title="LVS+Keepalived架构理解">LVS+Keepalived架构理解</a><time datetime="2022-03-19T12:00:00.000Z" title="发表于 2022-03-19 20:00:00">2022-03-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/bb96.html" title="程序性能分析基础"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="程序性能分析基础"/></a><div class="content"><a class="title" href="/posts/bb96.html" title="程序性能分析基础">程序性能分析基础</a><time datetime="2022-03-19T02:00:00.000Z" title="发表于 2022-03-19 10:00:00">2022-03-19</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/235e.html" title="访问网络服务"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="访问网络服务"/></a><div class="content"><a class="title" href="/posts/235e.html" title="访问网络服务">访问网络服务</a><time datetime="2022-03-18T10:00:00.000Z" title="发表于 2022-03-18 18:00:00">2022-03-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/a29a.html" title="使用os包中的API"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="使用os包中的API"/></a><div class="content"><a class="title" href="/posts/a29a.html" title="使用os包中的API">使用os包中的API</a><time datetime="2022-03-18T03:00:00.000Z" title="发表于 2022-03-18 11:00:00">2022-03-18</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/b456.html" title="bufio包中的数据类型"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="bufio包中的数据类型"/></a><div class="content"><a class="title" href="/posts/b456.html" title="bufio包中的数据类型">bufio包中的数据类型</a><time datetime="2022-03-17T12:00:00.000Z" title="发表于 2022-03-17 20:00:00">2022-03-17</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By 并指如刀</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/ Relative)","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"left","width":100,"height":180},"mobile":{"show":false},"react":{"opacityDefault":0.7}});</script></body></html>
