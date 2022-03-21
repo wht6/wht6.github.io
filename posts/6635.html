@@ -7,7 +7,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://wht6.github.io/img/featureimages/66.jpg">
 <meta property="article:published_time" content="2022-03-20T08:00:00.000Z">
-<meta property="article:modified_time" content="2022-03-21T07:57:27.839Z">
+<meta property="article:modified_time" content="2022-03-21T08:06:05.078Z">
 <meta property="article:author" content="并指如刀">
 <meta property="article:tag" content="Docker">
 <meta property="article:tag" content="容器">
@@ -54,7 +54,7 @@
   isHome: false,
   isHighlightShrink: false,
   isToc: true,
-  postUpdate: '2022-03-21 15:57:27'
+  postUpdate: '2022-03-21 16:06:05'
 }</script><noscript><style type="text/css">
   #nav {
     opacity: 1
@@ -284,15 +284,15 @@
          <div></div> 
          <div></div>
      </div>
- </div><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/logo.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">66</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">29</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/featureimages/66.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">WHT</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">理解Docker的文件系统</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-03-20T08:00:00.000Z" title="发表于 2022-03-20 16:00:00">2022-03-20</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-03-21T07:57:27.839Z" title="更新于 2022-03-21 15:57:27">2022-03-21</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E4%BA%91%E8%AE%A1%E7%AE%97/">云计算</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="理解Docker的文件系统"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="01-Docker存储"><a href="#01-Docker存储" class="headerlink" title="01|Docker存储"></a>01|Docker存储</h2><h3 id="镜像如何存储"><a href="#镜像如何存储" class="headerlink" title="镜像如何存储"></a>镜像如何存储</h3><p>UnionFS（联合文件系统）是一种分层、轻量级并且高性能的文件系统，它支持将对文件系统的修改作为一次提交操作来一层层的叠加，同时可以将不同目录挂载到同一个虚拟文件系统下。overlay2 是目前 Docker 默认的存储驱动，Docker支持选择其他的存储驱动。</p>
+ </div><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/logo.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">66</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">29</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/featureimages/66.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">WHT</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">理解Docker的文件系统</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-03-20T08:00:00.000Z" title="发表于 2022-03-20 16:00:00">2022-03-20</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-03-21T08:06:05.078Z" title="更新于 2022-03-21 16:06:05">2022-03-21</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E4%BA%91%E8%AE%A1%E7%AE%97/">云计算</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="理解Docker的文件系统"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="01-Docker存储"><a href="#01-Docker存储" class="headerlink" title="01|Docker存储"></a>01|Docker存储</h2><h3 id="镜像如何存储"><a href="#镜像如何存储" class="headerlink" title="镜像如何存储"></a>镜像如何存储</h3><p>UnionFS（联合文件系统）是一种分层、轻量级并且高性能的文件系统，它支持将对文件系统的修改作为一次提交操作来一层层的叠加，同时可以将不同目录挂载到同一个虚拟文件系统下。overlay2 是目前 Docker 默认的存储驱动，Docker支持选择其他的存储驱动。</p>
 <p>文件系统在linux主机上只有两层，一个目录在下层，用来保存镜像（docker），另外一个目录在上层，用来存储容器信息。</p>
 <p>镜像不包含任何动态数据，其内容在构建之后也不会被改变。Docker 镜像层次结构： </p>
 <ul>
-<li><p>1、base image：基础镜像 </p>
+<li><p>base image：基础镜像 </p>
 </li>
-<li><p>2、image：固化了一个标准运行环境，镜像本身的功能-封装一组功能性的文件，通过统一的方式，文件格式提供出来（只读） </p>
+<li><p>image：固化了一个标准运行环境，镜像本身的功能-封装一组功能性的文件，通过统一的方式，文件格式提供出来（只读） </p>
 </li>
-<li><p>3、container：容器层（读写）</p>
+<li><p>container：容器层（读写）</p>
 </li>
 </ul>
 <blockquote>
@@ -318,7 +318,7 @@
 <p>4、merged：    “视图层”（容器视图）（镜像基础文件与容器的修改变化的合并的抽象视图）</p>
 <p>5、worker：    运行的工作目录</p>
 </blockquote>
-<p><img src="/posts/6635.htm/Hexo\source\_posts\理解Docker的文件系统\construc_2022321.png" alt></p>
+<p><img src="https://raw.githubusercontent.com/wht6/image/master/img/construc_2022321.png" alt="cons"></p>
 <p>nginx的LowerDir包含四个目录（diff表示只存储不同），生成顺序也是从下往上，最下面的目录就是nginx的底层linux系统根目录，我们进入该目录，通过<code>ls -i</code>查看文件的inode，然后我们用这个nginx镜像以交互的形式启动一个容器，然后再通过<code>ls -i</code>查看文件的inode，会发现inode一模一样，说明是同一个文件，因为容器的基础文件系统就是镜像提供的。通过<code>docker ps -s</code>可以查看容器实际占用的存储，如果是刚启动的容器，其自身并不占用多少存储空间，因为容器用的是镜像的文件。</p>
 <blockquote>
 <p>virtual size：容器使用的用于只读镜像数据的数据量加上容器的可写镜像层大小。</p>
