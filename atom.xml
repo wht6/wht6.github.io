@@ -39,60 +39,6 @@
     
     <category term="{{ tag.name }}" scheme="{{ tag.permalink }}"/>
     
-    <category term="{{ tag.name }}" scheme="{{ tag.permalink }}"/>
-    
-  </entry>
-  
-  <entry>
-    <title>{{ post.title }}</title>
-    <link href="{{ post.permalink | uriencode }}"/>
-    <id>{{ post.permalink | uriencode }}</id>
-    <published>{{ post.date.toISOString() }}</published>
-    <updated>{{ post.updated.toISOString() }}</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">{{ short_content.substring(0, delim_pos) }}</summary>
-        
-      
-    
-    
-    
-    <category term="{{ category.name }}" scheme="{{ category.permalink }}"/>
-    
-    
-    <category term="{{ tag.name }}" scheme="{{ tag.permalink }}"/>
-    
-    <category term="{{ tag.name }}" scheme="{{ tag.permalink }}"/>
-    
-  </entry>
-  
-  <entry>
-    <title>{{ post.title }}</title>
-    <link href="{{ post.permalink | uriencode }}"/>
-    <id>{{ post.permalink | uriencode }}</id>
-    <published>{{ post.date.toISOString() }}</published>
-    <updated>{{ post.updated.toISOString() }}</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">{{ short_content.substring(0, delim_pos) }}</summary>
-        
-      
-    
-    
-    
-    <category term="{{ category.name }}" scheme="{{ category.permalink }}"/>
-    
-    
-    <category term="{{ tag.name }}" scheme="{{ tag.permalink }}"/>
-    
   </entry>
   
   <entry>
@@ -197,6 +143,35 @@
     
     <category term="{{ tag.name }}" scheme="{{ tag.permalink }}"/>
     
+    <category term="{{ tag.name }}" scheme="{{ tag.permalink }}"/>
+    
+  </entry>
+  
+  <entry>
+    <title>{{ post.title }}</title>
+    <link href="{{ post.permalink | uriencode }}"/>
+    <id>{{ post.permalink | uriencode }}</id>
+    <published>{{ post.date.toISOString() }}</published>
+    <updated>{{ post.updated.toISOString() }}</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">{{ short_content.substring(0, delim_pos) }}</summary>
+        
+      
+    
+    
+    
+    <category term="{{ category.name }}" scheme="{{ category.permalink }}"/>
+    
+    
+    <category term="{{ tag.name }}" scheme="{{ tag.permalink }}"/>
+    
+    <category term="{{ tag.name }}" scheme="{{ tag.permalink }}"/>
+    
   </entry>
   
   <entry>
@@ -261,31 +236,6 @@
       
         
         
-    <summary type="html">{{ short_content }}</summary>
-        
-      
-    
-    
-    
-    <category term="{{ category.name }}" scheme="{{ category.permalink }}"/>
-    
-    
-    <category term="{{ tag.name }}" scheme="{{ tag.permalink }}"/>
-    
-  </entry>
-  
-  <entry>
-    <title>{{ post.title }}</title>
-    <link href="{{ post.permalink | uriencode }}"/>
-    <id>{{ post.permalink | uriencode }}</id>
-    <published>{{ post.date.toISOString() }}</published>
-    <updated>{{ post.updated.toISOString() }}</updated>
-    
-    
-      
-      
-        
-        
     <summary type="html">{{ short_content.substring(0, delim_pos) }}</summary>
         
       
@@ -294,8 +244,6 @@
     
     <category term="{{ category.name }}" scheme="{{ category.permalink }}"/>
     
-    
-    <category term="{{ tag.name }}" scheme="{{ tag.permalink }}"/>
     
     <category term="{{ tag.name }}" scheme="{{ tag.permalink }}"/>
     
@@ -363,6 +311,58 @@
       
         
         
+    <summary type="html">{{ short_content.substring(0, delim_pos) }}</summary>
+        
+      
+    
+    
+    
+    <category term="{{ category.name }}" scheme="{{ category.permalink }}"/>
+    
+    
+    <category term="{{ tag.name }}" scheme="{{ tag.permalink }}"/>
+    
+    <category term="{{ tag.name }}" scheme="{{ tag.permalink }}"/>
+    
+  </entry>
+  
+  <entry>
+    <title>{{ post.title }}</title>
+    <link href="{{ post.permalink | uriencode }}"/>
+    <id>{{ post.permalink | uriencode }}</id>
+    <published>{{ post.date.toISOString() }}</published>
+    <updated>{{ post.updated.toISOString() }}</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">{{ short_content.substring(0, delim_pos) }}</summary>
+        
+      
+    
+    
+    
+    <category term="{{ category.name }}" scheme="{{ category.permalink }}"/>
+    
+    
+    <category term="{{ tag.name }}" scheme="{{ tag.permalink }}"/>
+    
+  </entry>
+  
+  <entry>
+    <title>{{ post.title }}</title>
+    <link href="{{ post.permalink | uriencode }}"/>
+    <id>{{ post.permalink | uriencode }}</id>
+    <published>{{ post.date.toISOString() }}</published>
+    <updated>{{ post.updated.toISOString() }}</updated>
+    
+    
+      
+      
+        
+        
     <summary type="html">{{ short_content }}</summary>
         
       
@@ -388,7 +388,7 @@
       
         
         
-    <summary type="html">{{ short_content.substring(0, delim_pos) }}</summary>
+    <summary type="html">{{ short_content }}</summary>
         
       
     
