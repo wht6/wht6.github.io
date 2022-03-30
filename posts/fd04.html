@@ -1,0 +1,444 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>阿里云重要知识点 | WHT</title><meta name="keywords" content="阿里云"><meta name="author" content="并指如刀"><meta name="copyright" content="并指如刀"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="referrer" content="no-referrer"><meta name="description" content="健康检查失败时间窗&#x3D;响应超时时间×不健康阈值+检查间隔×（不健康阈值-1），健康检查成功时间窗&#x3D; （健康检查成功响应时间×健康阈值）+检查间隔×（健康阈值-1）。  在阿里云上开通安骑士功能可以减少密码被暴力破解的可能。  DDoS基础防护阀值只有5GB，无法保证业务需要保持在99.9%以上，高防IP可以。  公网IP是购买负载均衡SLB时候系统分配的，或者你单独购买EIP后单独给负载均衡SLB">
+<meta property="og:type" content="article">
+<meta property="og:title" content="阿里云重要知识点">
+<meta property="og:url" content="http://wht6.github.io/posts/fd04.html">
+<meta property="og:site_name" content="WHT">
+<meta property="og:description" content="健康检查失败时间窗&#x3D;响应超时时间×不健康阈值+检查间隔×（不健康阈值-1），健康检查成功时间窗&#x3D; （健康检查成功响应时间×健康阈值）+检查间隔×（健康阈值-1）。  在阿里云上开通安骑士功能可以减少密码被暴力破解的可能。  DDoS基础防护阀值只有5GB，无法保证业务需要保持在99.9%以上，高防IP可以。  公网IP是购买负载均衡SLB时候系统分配的，或者你单独购买EIP后单独给负载均衡SLB">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://wht6.github.io/img/featureimages/31.jpg">
+<meta property="article:published_time" content="2022-01-21T02:00:00.000Z">
+<meta property="article:modified_time" content="2022-03-26T02:43:09.873Z">
+<meta property="article:author" content="并指如刀">
+<meta property="article:tag" content="阿里云">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://wht6.github.io/img/featureimages/31.jpg"><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="http://wht6.github.io/posts/fd04"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 并指如刀","link":"链接: ","source":"来源: WHT","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '阿里云重要知识点',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2022-03-26 10:43:09'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><style type="text/css" lang="css">
+    #loading-container{
+        position: fixed;
+        top: 0;
+        left: 0;
+        min-height: 100vh;
+        width: 100vw;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: #FFF;
+        text-align: center;
+        /* loader页面消失采用渐隐的方式*/
+        -webkit-transition: opacity 1s ease;
+        -moz-transition: opacity 1s ease;
+        -o-transition: opacity 1s ease;
+        transition: opacity 1s ease;
+    }
+    .loading-image{
+        width: 120px;
+        height: 50px;
+        transform: translate(-50%);
+    }
+    
+    .loading-image div:nth-child(2) {
+        -webkit-animation: pacman-balls 1s linear 0s infinite;
+        animation: pacman-balls 1s linear 0s infinite
+    }
+
+    .loading-image div:nth-child(3) {
+        -webkit-animation: pacman-balls 1s linear .33s infinite;
+        animation: pacman-balls 1s linear .33s infinite
+    }
+
+    .loading-image div:nth-child(4) {
+        -webkit-animation: pacman-balls 1s linear .66s infinite;
+        animation: pacman-balls 1s linear .66s infinite
+    }
+
+    .loading-image div:nth-child(5) {
+        -webkit-animation: pacman-balls 1s linear .99s infinite;
+        animation: pacman-balls 1s linear .99s infinite
+    }
+    
+   .loading-image div:first-of-type {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_up .5s 0s infinite;
+        animation: rotate_pacman_half_up .5s 0s infinite;
+    }
+    .loading-image div:nth-child(2) {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_down .5s 0s infinite;
+        animation: rotate_pacman_half_down .5s 0s infinite;
+        margin-top: -50px;
+    }
+    @-webkit-keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @-webkit-keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+
+    @keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+    
+    @-webkit-keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+
+    @keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+    
+   
+    .loading-image div:nth-child(3),
+    .loading-image div:nth-child(4),
+    .loading-image div:nth-child(5),
+    .loading-image div:nth-child(6){
+        background-color: #49b1f5;
+        width: 15px;
+        height: 15px;
+        border-radius: 100%;
+        margin: 2px;
+        width: 10px;
+        height: 10px;
+        position: absolute;
+        transform: translateY(-6.25px);
+        top: 25px;
+        left: 100px;
+    }
+    .loading-text{
+        margin-bottom: 20vh;
+        text-align: center;
+        color: #2c3e50;
+        font-size: 2rem;
+        box-sizing: border-box;
+        padding: 0 10px;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    @media only screen and (max-width: 500px) {
+         .loading-text{
+            font-size: 1.5rem;
+         }
+    }
+    .fadeout {
+        opacity: 0;
+        filter: alpha(opacity=0);
+    }
+    /* logo出现动画 */
+    @-webkit-keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);transform:translate3d(0,-100%,0)}100%{opacity:1;-webkit-transform:none;transform:none}}
+    @keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);}}
+ </style>
+ <script>
+(function () {
+    const loaded = function(){
+       setTimeout(function(){
+            const loader = document.getElementById("loading-container");
+            loader.className="fadeout" ;//使用渐隐的方法淡出loading page
+            // document.getElementById("body-wrap").style.display="flex";
+            setTimeout(function(){
+                loader.style.display="none";
+            },1000); 
+        },1000);//强制显示loading page 1s  
+    };
+    loaded();
+})()
+ </script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="WHT" type="application/atom+xml">
+</head>
+ <div id="loading-container">
+     <p class="loading-text">玩命加载中 . . . </p> 
+     <div class="loading-image">
+         <div></div>
+         <div></div>
+         <div></div>
+         <div></div> 
+         <div></div>
+     </div>
+ </div><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/logo.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">73</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">33</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/featureimages/31.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">WHT</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">阿里云重要知识点</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-01-21T02:00:00.000Z" title="发表于 2022-01-21 10:00:00">2022-01-21</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-03-26T02:43:09.873Z" title="更新于 2022-03-26 10:43:09">2022-03-26</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E4%BA%91%E5%8E%9F%E7%94%9F/">云原生</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">6.3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>19分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="阿里云重要知识点"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><ul>
+<li><p>健康检查失败时间窗=响应超时时间×不健康阈值+检查间隔×（不健康阈值-1），健康检查成功时间窗= （健康检查成功响应时间×健康阈值）+检查间隔×（健康阈值-1）。</p>
+</li>
+<li><p>在阿里云上开通安骑士功能可以减少密码被暴力破解的可能。</p>
+</li>
+<li><p>DDoS基础防护阀值只有5GB，无法保证业务需要保持在99.9%以上，高防IP可以。</p>
+</li>
+<li><p>公网IP是购买负载均衡SLB时候系统分配的，或者你单独购买EIP后单独给负载均衡SLB绑定。并不是在你在负载均衡的配置和管理里面可以设定的。</p>
+</li>
+<li><p>“最新创建的实例”不管是自动创建还是手动创建，都会被移出，而“最早伸缩配置对应的实例”会优先移除系统自动创建的实例，跳过手动创建的实例。</p>
+</li>
+<li><p>VPC实例的状态变为Available之后,表示VPC创建成功,可以进行下一步的管理操作</p>
+</li>
+<li><p>在OSS的控制台的属性设置里面，是没有设置OSS文件被访问时的HTTP头（Header）这个操作</p>
+</li>
+<li><p>ECS外部系统可以通过API在请求时传入参数来指定返回的数据格式,默认XML格式</p>
+</li>
+<li><p>防敏感信息泄露是WAF的功能，收费。</p>
+</li>
+<li><p>SLB的UploadServerCertificate接口一次只能上传一份服务器证书和对应的私钥。</p>
+</li>
+<li><p>OSS目前不具备OCR文字识别的处理能力。</p>
+</li>
+<li><p>单表的有效最大表尺寸通常受限于操作系统的文件尺寸限制，而不是受MySQL内部机制的限制。 由于RDS MySQL实例的最大尺寸为 2TB， 因此单表的最大尺寸为略小于2TB（因为会有些元数据等的开销）。若RDS MySQL实例有多张表，多张表的总和也不能超过2TB。单表的最大记录数在2000万条以内。</p>
+</li>
+<li><p>阿里云CDN支持对同名更新的实时更新，用户只要做相关配置后，在用户不主动提交请求的时候，CDN不会自动去实现刷新请求。</p>
+</li>
+<li><p>开通ECS实例后，ddos基础防护和阿里绿网和安骑士都是免费的，服务器安全托管是要收费的。</p>
+</li>
+<li><p>OPDS即MaxCompute不能创建为专有网络类型。</p>
+</li>
+<li><p>ECS创建之后，系统盘的设备名应该是/dev/xvda，所以挂载到数据盘不能再使用这个名字。</p>
+</li>
+<li><p>OSS支持文件读取，创建和删除，不支持修改。</p>
+</li>
+<li><p>同一个负载均衡SLB实例的后端服务器池中可以包含多个伸缩组。</p>
+</li>
+<li><p>Channel 是IMG（图片处理服务）上的命名空间，也是计费、权限控制、日志记录等高级功能的管理实体。IMG名称在整个图片处理服务中具有全局唯一性，且不能修改。一个用户最多可创建10个Channel，但每个Channel中存放的object的数量没有限制，所以每个Channel的容量是没有上限的。</p>
+</li>
+<li><p>将VPC中ECS服务器切换/迁移到同VPC下的其他交换机的步骤：1）打开云服务器管理控制台；2）找到对应的需要切换/迁移的云服务器；3）修改云服务器的私网地址；4）选择您所需的交换机,同时指定新交换机下的IP。</p>
+</li>
+<li><p>安骑士可以进行木马文件检查、高危漏洞修复、防密码暴力破解和异地登录报警，但是不能防web应用系统密码破解。</p>
+</li>
+<li><p>ECS支持强制停止，但是会丢失内存中的数据。</p>
+</li>
+<li><p>如果在配置阿里云的负载均衡SLB实例的监听时,开启了“获取真实访问IP”,针对7层服务可以通过http头部中的X-Forwarded-For字段获取来访者真实IP。</p>
+</li>
+<li><p>ECS带宽临时升级：可以按天进行升级,升级后如果云服务器ECS续费,仍然按照原基础带宽进行续费。</p>
+</li>
+<li><p>目前阿里云的负载均衡SLB只支持PEM格式的证书。</p>
+</li>
+<li><p>用户在阿里云以外的服务器上安装“安骑士客户端”后,通过“在管理控制台生成的安装验证key”的方式与指定的阿里云官网帐号关联。</p>
+</li>
+<li><p>弹性伸缩目前只支持ECS及其数据盘的弹性伸缩,不支持云数据库RDS、负载均衡等云产品的弹性伸缩。</p>
+</li>
+<li><p>修改云服务器ECS的私网IP地址需要云服务器ECS处于停止的状态。</p>
+</li>
+<li><p>ECS只有在稳定( 运行中, 已停止) 状态才能挂载磁盘, 其他状态都不行。</p>
+</li>
+<li><p>HTTPDNS是面向移动开发者推出的一款域名解析产品,具有域名防劫持、精准调度等特性。主要是用在客户端的时候请求URL防止域名劫持的情况。</p>
+</li>
+<li><p>升级云服务器ECS实例的CPU和内存后,必须通过阿里云的管理控制台重启ECS实例才能生效,在ECS实例内重启无效。</p>
+</li>
+<li><p>回滚磁盘必须要求云盘必须已经挂载到某台ECS实例上,而且已经停止实例。</p>
+</li>
+<li><p>用户可以卸载阿里云的云服务器ECS实例上的云盾安骑士客户端,在需要的时候可以再次安装。</p>
+</li>
+<li><p>阿里云对象存储OSS的存储空间Bucket支持删除操作,在删除Bucket前必须先删除Bucket中的所有文件,包括未完成的分片文件。</p>
+</li>
+<li><p>在安全管理方面，云计算服务网络安全管理的基本要求，提出了“安全管理责任不变，数据归属关系不变，安全管理标准不变，敏感信息不出境”四条基本要求。不包含”运维管理方式不变”。</p>
+</li>
+<li><p>使用阿里云OSS产品实现在线的音视频内容直播时,必须要和阿里云的多媒体转码服务MTS产品一起配合实现。</p>
+</li>
+<li><p>AccessKeySecret是用于加密签名字符串和服务器端验证签名字符串的密钥，AccessKeySecret并不支持通过控制台直接查看，AccessKeySecret只能一次生成，后续不支持再次查看。如果忘记AccessKeySecret，只能在授权登录后在控制台重新生成。</p>
+</li>
+<li><p>您可以将不希望被移出伸缩组的ECS实例转为保护状态，处于保护状态的ECS实例负载均衡权重不受影响。AS不会检查处于保护状态的ECS实例健康状态，也不会释放ECS实例。需要用户手动管理该台ECS实例生命周期。</p>
+</li>
+<li><p>扩容云盘只是扩大存储容量，但不会扩容ECS实例的文件系统（应该是扩容的那部分容量并没有以磁盘的形式进行挂载）。您还需要登录实例，然后进行扩容文件系统的操作。</p>
+</li>
+<li><p>Windows系统盘扩容后磁盘可用空间反而变少：因为虚拟内存被开启且设置的是系统自动管理。</p>
+</li>
+<li><p>linux系统的服务器不支持开启Selinux服务,如果开启了Selinux服务,会导致系统异常并无法启动。</p>
+</li>
+<li><p>在使用部署集之前，您需要注意：部署集之间不支持相互合并。部署集内不能创建抢占式实例。部署集不支持创建专有宿主机。</p>
+</li>
+<li><p>四层是通过SLB中设定的转发策略和规则和报文中的目标IP地址和端口分发流量，七层是通过报文中真正有意义的应用层内容和负载均衡SLB中设定的转发策略和规则分发流量。负载均衡SLB的四层服务的会话保持是基于源IP实现的，七层服务的会话保持是基于Cookie实现的。</p>
+</li>
+<li><p>存储空间创建成功后，其名称、所处地域、存储类型不能修改。</p>
+</li>
+<li><p>在阿里云上创建专有网络VPC时，VPC会自动为用户创建1条系统路由，这条路由的作用是用于专有网络内的云产品实例访问专有网络外的云服务（该云服务支持VPC内的云产品实例直接访问）。</p>
+</li>
+<li><p>阿里云的云盾数据风控可以很好地解决WEB应用中常见的垃圾注册、刷库等业务风险识别的难题， 要想使用这项服务首先得进行业务数据的采集，对于WEB应用系统，可以采用JavaScript方式来采集信息。（数据风控目前只支持在Web中插入指定的JS代码，其他的暂时还不支持）</p>
+</li>
+<li><p>出于改善性能的考虑，将正在使用的1核2G云服务器的配置提升至2核8G，这种操作在云计算中被称为垂直扩展。升级ECS的配置，所以称之为垂直扩展，通过弹性伸缩来完成的拓展，称之为水平扩展。</p>
+</li>
+<li><p>定时任务独立于伸缩组存在，不依赖伸缩组的生命周期管理，删除伸缩组不会删除定时任务；云监控报警任务独立于伸缩组存在，不依赖伸缩组的生命周期管理，删除伸缩组不会删除报警任务。</p>
+</li>
+<li><p>伸缩组中包含的云服务器ECS实例有两种类型，一种是根据用户的伸缩配置和伸缩规则由弹性伸缩服务自动创建的云服务器ECS实例，另外一种是由用户手工添加到伸缩组中的ECS实例。当ECS实例被弹性伸缩从伸缩组中移出时，对于自动创建的ECS实例会停止和释放，对于手工添加的ECS实例则不会停止和释放。</p>
+</li>
+<li><p>在使用阿里云弹性伸缩(Auto Scaling)时,希望能根据计算资源的使用情况来增加或者减少云服务器ECS实例,如当CPU利用率小于等于30%时则减少一台云服务器ECS实例,首先配置伸缩规则为“减少1台ECS”,然后还需要（创建报警任务）来实现。</p>
+</li>
+<li>自动快照是保存在OSS里面，但是是保存在独立于用户自己的OSS Bucket里面，而不能保存在用户的Bucket里面。</li>
+<li>Aliyun Linux和Centos都属于RedHat一家的。兼容Red Hat。其中包括（Red Hat Enterprise Linux， Fedora，CentOS，Scientific Linux， Oracle Linux）</li>
+<li>OSS每小时结算一次调用 OSS API 的请求费用。目前只支持按量付费：每万次请求的单价 * 每小时实际请求次数/10000。</li>
+<li>阿里云负载均衡服务SLB支持用户可以同时设置实例维度上的“后端服务器”、监听维度上的“虚拟服务器组”和“转发规则”，那么当用户流量经过负载均衡某端口时，我们首先判断其是否能够匹配上某条“转发规则”，如果匹配，则将流量转发到该规则的后端服务器组上；若不匹配并且在该监听上设置了虚拟服务器组，那么将流量转发到该虚拟服务器组上；若用户没有在该监听上设置虚拟服务器组，即将流量转发到实例级别添加的各后端服务器中。</li>
+<li>如果您使用OSS自带域名，如<a target="_blank" rel="noopener" href="http://bucketname.oss.aliyuncs.com/objcet">http://bucketname.oss.aliyuncs.com/objcet</a>访问静态文件时（文件类型包括：txt、html、htm、图片格式、视频格式、音频格式等），均限制在浏览器中以“另存为”下载的方式打开文件，而不能直接浏览该文件。因此您需要将自定义的域名访问绑定在属于自己的Bucket上面，即CNAME。域名绑定成功后，为了使用域名正常访问 OSS，还需要添加 CNAME 记录指向存储空间对应的外网域名。</li>
+<li>在使用阿里云负载均衡SLB时后端服务器可以设置主备服务器组,当主机工作正常时，流量将直接走主机；当主机宕机时，流量将走到备机。主备服务器组是在监听维度上维护的，并且只支持四层监听。</li>
+<li>健康检查四层是通过<strong>端口检查是否超时</strong>，七层则是检查<strong>服务器端返回的状态码</strong>。</li>
+<li>专用网络VPC下面的ECS，不管是否绑定了EIP，在设置安全组的时候，只可以设置内网规则，外网规则是不可以选的。因为对于其来说，内网规则等同于外网规则。</li>
+<li>伸缩活动中，最后一个ECS实例加入或移出完成后，整个伸缩组冷却时间才开始计时，伸缩活动结束并不代表最后一个ECS实例已经加入或移出完成。</li>
+<li>数据风控由阿里聚安全提供，是基于阿里大数据计算能力，通过业内领先的风险决策引擎，解决企业账号、活动、交在的易等关键业务环节存欺诈威胁，降低企业经济损失。</li>
+<li>云服务器ECS实例与OSS之间的请求次数，不分内外网都会计费。走内网流量是不收费的，但是每次的请求次数还是收费。</li>
+<li>当文件所在的Bucket的读写权限为“私有”时，OSS分享链接采用的安全机制是在管理控制台中获取文件访问URL时设置分享链接有效的时间，<strong>超过设定时间就无法下载</strong>。出于安全考虑，目前控制台针对私有bucket的获取URL链接签名操作做了优化，使用的AccessKey是临时生成的密钥对，主账号用户最长有效时间是64800秒（18小时），RAM子账号用户以及sts用户最长有效时间是3600秒（1小时），超时后链接就无法访问了。</li>
+<li>云监控的http提交指令为post。</li>
+<li>停用伸缩组以后，之前的冷却时间即失效。所以后面伸缩活动不会受到冷却时间的影响。</li>
+<li>管理云盾加密服务的密钥时，必须通过身份卡(USB Key)方式的认证。</li>
+<li>针对7层（HTTP协议）服务，由于采取替换HTTP头文件IP地址的方式来进行请求转发，所以后端云服务器看到的访问IP是SLB系统的本地IP而不是实际来访者的真实IP。所以系统支持用户采用X-Forwarded-For的方式获取访问者真实IP，前提是用户必须在配置7层（HTTP协议）服务监听时开启了“获取真实访问IP”功能。</li>
+<li>先知计划为企业提供的是为企业收集情报（漏洞）服务。</li>
+<li>操作系统级别监控指标包含内存使用率、平均负载、磁盘 IO 读/写、磁盘使用率、TCP 连接数、进程总数等。请注意CPU使用率不属于操作系统级别监控。</li>
+<li>安全组只允许公网TCP 80端口和25端口访问并不能达到禁止用户pingECS是否在线的效果。选项”先将ECS IP解析到一个不常用的四级域名，然后将对外推广的域名通过CNAME指向以上四级域名”可以隐藏了ECS的真实IP地址，所以一定程度上可以防止ECS被ping到。</li>
+<li>阿里云云安全中心提供的是一种SaaS类型的服务。</li>
+<li>加速域名日志中记录的流量数据，是我们应用层日志统计出的流量，但是实际产生的网络流量却要比应用层统计到的流量要高出7%-15%；这个主要的原因有两个：1、TCP/IP包头的消耗，2、TCP重传。</li>
+<li>在<strong>创建伸缩组时候可以配置RDS的实例，但是并不能指定RDS的实例的配置</strong>，RDS的实例的配置需要在购买RDS的时候来指定的。在创建伸缩组时只支持指定ECS的指定配置，不支持指定ECS的最大配置。</li>
+<li>OSS中，<strong>用户只有通过URL签名或者匿名访问Object时，才会做防盗链验证</strong>。请求Header中有Authorization字段时，不会做防盗链验证。</li>
+<li>若SLB未结合弹性伸缩一起使用，<strong>后端ECS实例宕机SLB会将其隔离而不是移除</strong>（不再给其分发请求），直到该ECS健康检查恢复正常后，还会从隔离区移出，继续分发请求。</li>
+<li>回滚磁盘必须要求云盘必须已经 挂载到某台ECS实例上，而且已经 停止实例。</li>
+<li>SLB中的四层负载均衡采用开源软件LVS，并根据云计算的需求对其官方进行了定制化，下列哪些属于阿里云在LVS官方问题上进行了定制化？答：<strong>DDoS攻击防御功能+采用LVS集群部署方式+优化keepalived性能</strong></li>
+<li>简单上传适用情况：<strong>上传文件最大不超过5GB+在上传单个文件过程中可以携带meta信息+基于PUT方式或POST方式的http请求上传。</strong>简单上传指的是使用OSS API中的PutObject方法上传单个文件（Object）。简单上传不需要支持断点上传，也就是断点续传功能一定不是简单上传。简单上传适用于一次HTTP请求交互即可完成上传的场景，比如小文件（小于5GB）的上传。上传文件时支持设置Object Meta。</li>
+<li>阿里云弹性伸缩（Auto Scaling）的伸缩配置（Scaling Configuration）中支持设置的镜像类型包含自定义镜像+公共镜像+共享镜像。<strong>弹性伸缩设置ECS配置的时候，不支持使用云市场的镜像</strong>，主要是因为部分云市场的镜像是收费的，阿里云控制台没有云市场镜像的选项。</li>
+<li>在删除阿里云弹性伸缩(Auto Scaling)的伸缩组时有两种模式：强制删除和非强制删除。在非强制删除模式下，必须满足“伸缩组没有任何伸缩活动正在执行<code>+</code>伸缩组当前的ECS实例数量为0”的条件才可以删除。</li>
+<li>负载均衡SLB不提供CNAME地址，需要直接将域名解析到负载约衡SLB提供的服务IP地址上。</li>
+<li>CDN节点系统关键组件：<strong>LVS做四层均衡负载；Tengine做七层负载均衡；Swift做HTTP缓存</strong>。</li>
+<li>.阿里云负载均衡服务SLB提供性能保障型实例，该类型实例提供了可保障的性能指标, 那么它的关键指标有：<strong>最大连接数-Max Connection、每秒新建连接数-Connection Per Second (CPS)、每秒查询数-Query Per Second (QPS)</strong>。</li>
+<li>一台ECS实例最多能挂载16块云盘作数据盘用，且<strong>云盘只能挂载到同一地域下同一可用区内的实例上</strong>，不能跨可用区挂载。</li>
+<li>自定义监控：用户可以对自己关心的业务进行监控，将采集到监控数据上报至云监控，由云监控进行数据的处理，并根据结果进行报警。自定义的监控项的数量是没有上限的，上报监控数据的程序可以部署在阿里云的云服务器以外的机器。</li>
+<li>虽然用户是可以自己上传本地镜像的，但是上传的本地镜像需要用户把本地镜像制作为自定义镜像，所以在创建云服务器ECS的时候是没有用户上传的镜像的选项的。</li>
+<li>云服务器ECS系统资源监控DashBoard页面内容有CPU使用率+磁盘IO+网络带宽。<strong>DashBoard不支持对TPS的监控</strong></li>
+<li>伸缩组中手工加入ECS实例的步骤：1）判断伸缩组的健康状态、边界条件和 ECS 实例的状态、类型。2）分配 ActivityId 和执行伸缩活动。3）加入 ECS 实例。4）修改 Total Capacity。5）添加 RDS 白名单。6）挂载负载均衡，将权重设为当前伸缩组中已激活的伸缩配置上指定的“负载均衡权重”。此处使用了伸缩配置上指定的“负载均衡权重”。7）伸缩活动完成，启动 cooldown。</li>
+<li>“访客真实IP”保存在HTTP协议的“X—Forwarded-For”Header中，可以在Apache和Nginx的自定义LOG中直接获取到 ， Windows平台下，如果使用IIS，需要安装一个“F5XForwardedFor”的扩展模块，才能在日志里看到“访客真实IP” 。</li>
+<li>CDN仅支持PEM格式的证书，更新HTTPS证书1分钟后全网生效。</li>
+<li>查看CDN节点是否生效：方法一：通过ping或dig的方式查看所添加的加速域名；方法二：在CDN控制台中查看节点是否生效；方法三：获取对应加速域名资源的response查看节点是否生效。</li>
+<li>OSS 提供服务端加密和客户端加密。服务端加密方式：使用KMS托管密钥进行加解密，使用OSS完全托管加密。客户端加密方式：使用KMS托管用户主密钥，使用用户自主管理密钥。<strong>客户端不支持OSS完全托管加密</strong>。</li>
+<li>OSS跨区域复制可以指定文件前缀进行同步，可以进行写同步（增/改），可以进行增/删/改同步。不可以指定文件后缀进行同步。</li>
+<li>网络ACL的规则是无状态的，即设置入方向规则的允许请求后，需要同时设置相应的出方向规则，否则可能会导致请求无法响应。网络ACL<strong>无任何规则时，会拒绝所有出入方向的访问</strong>。新创建的网络ACL，<strong>默认会在出方向和入方向分别生成一条规则，表示允许所有出、入方向流量</strong>。您可以删除默认规则。</li>
+<li><strong>阿里云的交换机是三层交换机，绑定路由表</strong>。</li>
+<li>SLB后端ECS实例的两种状态区别：保护状态和备用状态的相同点是都会实现“弹性伸缩不会检查ECS实例健康状态,也不会释放ECS实例”，不同点是<strong>保护状态的ECS还会继续提供服务，备用状态的ECS的权重会被设置为0，不对外提供服务</strong>。</li>
+<li><strong>OSS的存储费用支持包年包月和按量付费，API请求费用只有按量付费</strong>。</li>
+<li><strong>普通快照是存储在OSS中，属于跨地域容灾，创建速度慢，本地快照是存储在云盘中，属于同城容灾，创建速度快。自动快照主要强调周期性，固定时间等，对时间有要求</strong>。</li>
+<li>实例健康状况侧重于监视实例的健康状态，如异常活动、网络和软硬件问题，可以配合云监控使用。自助诊断系统是在你的资源出现问题的时候可以一键诊断，提交结果等。</li>
+<li>性能保障型实例的关键指标：最大连接数，每秒新建连接数，每秒查询数。</li>
+<li>专有网络VPC（Virtual Private Cloud）的<strong>高级功能包括网络ACL、自定义路由表和DHCP选项集</strong>。如果VPC中创建了ECS实例规格族限制中的ECS实例，则该VPC不支持使用高级功能。</li>
+<li>伸缩组支持关联传统型负载均衡CLB（原SLB）实例，前提条件：1）您持有一个或多个处于运行中状态的CLB实例。2）CLB实例和伸缩组必须位于同一地域。3）如果CLB实例和伸缩组的网络类型均为专有网络，则必须位于同一专有网络。4）当CLB实例的网络类型为经典网络，伸缩组的网络类型为专有网络时，如果CLB实例的后端服务器组中包含专有网络ECS实例，该ECS实例必须与伸缩组位于同一专有网络。5）CLB实例配置至少一个监听。6）CLB实例必须开启健康检查。</li>
+<li><strong>TCP监听支持HTTP和TCP两种健康检查方式</strong>：1）TCP协议健康检查通过发送SYN握手报文，检测服务器端口是否存活。2）HTTP协议健康检查通过发送HEAD或GET请求，模拟浏览器的访问行为来检查服务器应用是否健康。</li>
+<li><strong>交换机创建完成之后,无法修改CIDRBlock,且新建交换机所使用的CIDRBlock不可以与已经存在的交换机的CIDRBlock重复</strong>。</li>
+<li>伸缩配置包括：<strong>标签，SSH密钥对，实例RAM角色，实例自定义数据</strong></li>
+<li><strong>伸缩组具有以下三种状态:Active、Inacitve和Deleting，伸缩配置具有以下两种状态:Active和Inacitve</strong>。</li>
+<li>OSS图片处理限制：1）图片格式只支持JPG、PNG、BMP、GIF、WebP、TIFF。2）<strong>原图大小不能超过20 MB</strong>。3）<strong>图片旋转对应的原图高或者宽不能超过4,096 px</strong>。4）<strong>原图高或者宽不能超过30,000 px</strong>。</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">并指如刀</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://wht6.github.io/posts/fd04.html">http://wht6.github.io/posts/fd04.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://wht6.github.io" target="_blank">WHT</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E9%98%BF%E9%87%8C%E4%BA%91/">阿里云</a></div><div class="post_share"><div class="social-share" data-image="/img/featureimages/31.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/posts/925d.html"><img class="prev-cover" src="/img/featureimages/59.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">道家的睡方与睡功</div></div></a></div><div class="next-post pull-right"><a href="/posts/da88.html"><img class="next-cover" src="/img/featureimages/30.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">阿里云的一些重要概念</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/posts/da88.html" title="阿里云的一些重要概念"><img class="cover" src="/img/featureimages/30.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-01-09</div><div class="title">阿里云的一些重要概念</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/logo.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">并指如刀</div><div class="author-info__description">分享技术,分享知识,分享感悟</div></div><div class="card-info-data is-center"><div class="card-info-data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">73</div></a></div><div class="card-info-data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">33</div></a></div><div class="card-info-data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="mailto:wanght586@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/3009.html" title="深入解析Pod对象"><img src="/img/featureimages/73.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="深入解析Pod对象"/></a><div class="content"><a class="title" href="/posts/3009.html" title="深入解析Pod对象">深入解析Pod对象</a><time datetime="2022-03-31T08:00:00.000Z" title="发表于 2022-03-31 16:00:00">2022-03-31</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/1cf9.html" title="Shell实践模板"><img src="/img/featureimages/71.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Shell实践模板"/></a><div class="content"><a class="title" href="/posts/1cf9.html" title="Shell实践模板">Shell实践模板</a><time datetime="2022-03-29T08:00:00.000Z" title="发表于 2022-03-29 16:00:00">2022-03-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/3588.html" title="Kubernetes集群搭建与实践"><img src="/img/featureimages/69.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Kubernetes集群搭建与实践"/></a><div class="content"><a class="title" href="/posts/3588.html" title="Kubernetes集群搭建与实践">Kubernetes集群搭建与实践</a><time datetime="2022-03-27T08:00:00.000Z" title="发表于 2022-03-27 16:00:00">2022-03-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/bbe1.html" title="Docker容器实现原理"><img src="/img/featureimages/68.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Docker容器实现原理"/></a><div class="content"><a class="title" href="/posts/bbe1.html" title="Docker容器实现原理">Docker容器实现原理</a><time datetime="2022-03-26T08:00:00.000Z" title="发表于 2022-03-26 16:00:00">2022-03-26</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/a2bb.html" title="Shell脚本复习"><img src="/img/featureimages/67.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Shell脚本复习"/></a><div class="content"><a class="title" href="/posts/a2bb.html" title="Shell脚本复习">Shell脚本复习</a><time datetime="2022-03-23T08:00:00.000Z" title="发表于 2022-03-23 16:00:00">2022-03-23</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By 并指如刀</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/ Relative)","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"left","width":100,"height":180},"mobile":{"show":false},"react":{"opacityDefault":0.7}});</script></body></html>

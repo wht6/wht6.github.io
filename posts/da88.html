@@ -1,0 +1,317 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>阿里云的一些重要概念 | WHT</title><meta name="keywords" content="阿里云"><meta name="author" content="并指如刀"><meta name="copyright" content="并指如刀"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="referrer" content="no-referrer"><meta name="description" content="弹性计算服务器ECSECS是阿里云的云服务器，单个云服务器被称为实例，一个实例即一个虚拟服务器，具有CPU、内存、操作系统、网络和磁盘。 地域和可用区阿里云在不同的地域建设许多机房，每个地域划分成多个可用区，一个可用区可以看成一个机房。地域内的所有可用区内网互联，地域之间通信要经过公网。跨地域部署会有网络延迟和经费问题，所以ECS的虚拟化是针对单个地域的，可用区之间可以迁移，但是ECS创建后不可以">
+<meta property="og:type" content="article">
+<meta property="og:title" content="阿里云的一些重要概念">
+<meta property="og:url" content="http://wht6.github.io/posts/da88.html">
+<meta property="og:site_name" content="WHT">
+<meta property="og:description" content="弹性计算服务器ECSECS是阿里云的云服务器，单个云服务器被称为实例，一个实例即一个虚拟服务器，具有CPU、内存、操作系统、网络和磁盘。 地域和可用区阿里云在不同的地域建设许多机房，每个地域划分成多个可用区，一个可用区可以看成一个机房。地域内的所有可用区内网互联，地域之间通信要经过公网。跨地域部署会有网络延迟和经费问题，所以ECS的虚拟化是针对单个地域的，可用区之间可以迁移，但是ECS创建后不可以">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://wht6.github.io/img/featureimages/30.jpg">
+<meta property="article:published_time" content="2022-01-09T02:00:00.000Z">
+<meta property="article:modified_time" content="2022-03-26T02:42:45.847Z">
+<meta property="article:author" content="并指如刀">
+<meta property="article:tag" content="阿里云">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://wht6.github.io/img/featureimages/30.jpg"><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="http://wht6.github.io/posts/da88"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 并指如刀","link":"链接: ","source":"来源: WHT","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '阿里云的一些重要概念',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-03-26 10:42:45'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><style type="text/css" lang="css">
+    #loading-container{
+        position: fixed;
+        top: 0;
+        left: 0;
+        min-height: 100vh;
+        width: 100vw;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: #FFF;
+        text-align: center;
+        /* loader页面消失采用渐隐的方式*/
+        -webkit-transition: opacity 1s ease;
+        -moz-transition: opacity 1s ease;
+        -o-transition: opacity 1s ease;
+        transition: opacity 1s ease;
+    }
+    .loading-image{
+        width: 120px;
+        height: 50px;
+        transform: translate(-50%);
+    }
+    
+    .loading-image div:nth-child(2) {
+        -webkit-animation: pacman-balls 1s linear 0s infinite;
+        animation: pacman-balls 1s linear 0s infinite
+    }
+
+    .loading-image div:nth-child(3) {
+        -webkit-animation: pacman-balls 1s linear .33s infinite;
+        animation: pacman-balls 1s linear .33s infinite
+    }
+
+    .loading-image div:nth-child(4) {
+        -webkit-animation: pacman-balls 1s linear .66s infinite;
+        animation: pacman-balls 1s linear .66s infinite
+    }
+
+    .loading-image div:nth-child(5) {
+        -webkit-animation: pacman-balls 1s linear .99s infinite;
+        animation: pacman-balls 1s linear .99s infinite
+    }
+    
+   .loading-image div:first-of-type {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_up .5s 0s infinite;
+        animation: rotate_pacman_half_up .5s 0s infinite;
+    }
+    .loading-image div:nth-child(2) {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_down .5s 0s infinite;
+        animation: rotate_pacman_half_down .5s 0s infinite;
+        margin-top: -50px;
+    }
+    @-webkit-keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @-webkit-keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+
+    @keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+    
+    @-webkit-keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+
+    @keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+    
+   
+    .loading-image div:nth-child(3),
+    .loading-image div:nth-child(4),
+    .loading-image div:nth-child(5),
+    .loading-image div:nth-child(6){
+        background-color: #49b1f5;
+        width: 15px;
+        height: 15px;
+        border-radius: 100%;
+        margin: 2px;
+        width: 10px;
+        height: 10px;
+        position: absolute;
+        transform: translateY(-6.25px);
+        top: 25px;
+        left: 100px;
+    }
+    .loading-text{
+        margin-bottom: 20vh;
+        text-align: center;
+        color: #2c3e50;
+        font-size: 2rem;
+        box-sizing: border-box;
+        padding: 0 10px;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    @media only screen and (max-width: 500px) {
+         .loading-text{
+            font-size: 1.5rem;
+         }
+    }
+    .fadeout {
+        opacity: 0;
+        filter: alpha(opacity=0);
+    }
+    /* logo出现动画 */
+    @-webkit-keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);transform:translate3d(0,-100%,0)}100%{opacity:1;-webkit-transform:none;transform:none}}
+    @keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);}}
+ </style>
+ <script>
+(function () {
+    const loaded = function(){
+       setTimeout(function(){
+            const loader = document.getElementById("loading-container");
+            loader.className="fadeout" ;//使用渐隐的方法淡出loading page
+            // document.getElementById("body-wrap").style.display="flex";
+            setTimeout(function(){
+                loader.style.display="none";
+            },1000); 
+        },1000);//强制显示loading page 1s  
+    };
+    loaded();
+})()
+ </script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="WHT" type="application/atom+xml">
+</head>
+ <div id="loading-container">
+     <p class="loading-text">玩命加载中 . . . </p> 
+     <div class="loading-image">
+         <div></div>
+         <div></div>
+         <div></div>
+         <div></div> 
+         <div></div>
+     </div>
+ </div><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/logo.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">73</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">33</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/featureimages/30.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">WHT</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">阿里云的一些重要概念</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-01-09T02:00:00.000Z" title="发表于 2022-01-09 10:00:00">2022-01-09</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-03-26T02:42:45.847Z" title="更新于 2022-03-26 10:42:45">2022-03-26</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E4%BA%91%E5%8E%9F%E7%94%9F/">云原生</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>6分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="阿里云的一些重要概念"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="弹性计算服务器ECS"><a href="#弹性计算服务器ECS" class="headerlink" title="弹性计算服务器ECS"></a>弹性计算服务器ECS</h2><p>ECS是阿里云的云服务器，单个云服务器被称为实例，一个实例即一个虚拟服务器，具有CPU、内存、操作系统、网络和磁盘。</p>
+<h3 id="地域和可用区"><a href="#地域和可用区" class="headerlink" title="地域和可用区"></a>地域和可用区</h3><p>阿里云在不同的地域建设许多机房，每个地域划分成多个可用区，一个可用区可以看成一个机房。地域内的所有可用区内网互联，地域之间通信要经过公网。跨地域部署会有网络延迟和经费问题，所以ECS的虚拟化是针对单个地域的，可用区之间可以迁移，但是ECS创建后不可以跨地域。</p>
+<p>同样，阿里云的负载均衡、对象存储和数据库服务都是针对单个地域部署的，负载均衡只能在地域内做，对象存储创建好的Budget不能切换地域，对象存储和数据库跨地域迁移都要计费。</p>
+<h3 id="块存储"><a href="#块存储" class="headerlink" title="块存储"></a>块存储</h3><p>块存储可以说就是虚拟磁盘，分为本地盘和云盘，本地盘应该就是物理服务器自带的磁盘虚拟化的结果，而云盘是将一堆磁盘放一起用来提供存储服务，类似于NAS。本地盘直接连接在主板上，所以访问速度快，云盘即使是内网连接也需要经过网线，所以稍微慢一些。</p>
+<p>阿里云还提供了一个共享块存储，支持多个ECS实例并发读写访问，这个主要用于共享访问的场景，可以防止单点故障。</p>
+<p>云盘分为普通云盘、高效云盘、SSD云盘、ESSD云盘，速度由慢到快。</p>
+<h3 id="安全组"><a href="#安全组" class="headerlink" title="安全组"></a>安全组</h3><p>安全组是一组实例集合，这些实例使用同样规则的虚拟防火墙，用于网络访问控制。创建一个安全组，配置一套ACL规则，将实例加入该安全组，那么这个实例的就会配置一个具有上述规则的防火墙。</p>
+<h2 id="虚拟专有网络VPC"><a href="#虚拟专有网络VPC" class="headerlink" title="虚拟专有网络VPC"></a>虚拟专有网络VPC</h2><p>VPC底层用到的是网络虚拟化和软件定义网络SDN，目的是提供隔离的网络环境。每一个VPC都由一个私有网段、一个路由器和至少一个交换机组成。</p>
+<h3 id="弹性IP"><a href="#弹性IP" class="headerlink" title="弹性IP"></a>弹性IP</h3><p>阿里云的弹性IP简称EIP，购买之后会得到一个公网IP，弹性提现在该公网IP不与实例绑定而是与账号绑定，就是可以把该公网IP切换到任意一个实例上，具体怎么做到的咱也不知道。</p>
+<h3 id="云企业网"><a href="#云企业网" class="headerlink" title="云企业网"></a>云企业网</h3><p>云企业网（Cloud Enterprise Network）的作用就是提供一个跨越公网的安全环境，比如两个不同地域的VPC的通信，以及混合云的部署。VPN网关也可以做到。</p>
+<h2 id="负载均衡SLB"><a href="#负载均衡SLB" class="headerlink" title="负载均衡SLB"></a>负载均衡SLB</h2><p><img src="https://raw.githubusercontent.com/wht6/image/master/img/slb20220109.png" alt></p>
+<h3 id="监听"><a href="#监听" class="headerlink" title="监听"></a>监听</h3><p>监听支持的协议有TCP、UDP、HTTP和HTTPS，目的是监听这些基于这四种协议的请求，比如HTTP的请求，每次监听到HTTP的一个请求，就做一次转发，基于配置负载均衡的策略转发到特定的服务器。还可以根据cookie还进行会话保持，将相同cookie的请求转发到同一个服务器。</p>
+<h2 id="弹性伸缩AS"><a href="#弹性伸缩AS" class="headerlink" title="弹性伸缩AS"></a>弹性伸缩AS</h2><p>使用弹性伸缩（Auto Scaling）可以根据业务需求和策略设置伸缩规则，在业务需求增长时自动为您增加ECS实例以保证服务端计算能力，在业务需求下降时自动减少ECS实例数量以节省成本。例如触发条件：平均vCPU使用率 &gt; 80%时，添加一台实例。平均vCPU使用率 &lt; 30%时，减少一台实例。</p>
+<h3 id="伸缩组"><a href="#伸缩组" class="headerlink" title="伸缩组"></a>伸缩组</h3><p>这个概念有点类似于安全组，也是将一组实例划分成一个伸缩组，但是安全组中的安全规则是针对每个实例的，而伸缩组的规则是针对所有实例的。伸缩组包括伸缩配置，伸缩规则和伸缩活动，伸缩配置就是针对每个实例的配置，伸缩规则是具体扩展或收缩的规则，伸缩活动就是实际伸缩情况，伸缩规则成功触发后就会产生一条伸缩活动。</p>
+<p>除了自定义规则来触发伸缩之外，还可以任务触发，如定时任务，报警任务。</p>
+<h2 id="对象存储服务OSS"><a href="#对象存储服务OSS" class="headerlink" title="对象存储服务OSS"></a>对象存储服务OSS</h2><p>对象（Object）由元信息(Metadata)、用户数据(Data)和文件名(Key)组成。对象由存储空间内部唯一的Key来标识。对象元信息是是一组键值对，表示了对象的一些属性，比如最后修改时间、大小等信息，同时也可以在元信息中存储一些自定义的信息。</p>
+<h3 id="存储空间"><a href="#存储空间" class="headerlink" title="存储空间"></a>存储空间</h3><p>存储空间（Budget）是用户用于存储对象(Object)的容器，所有的对象都必须隶属于某个存储空间。存储空间具有各种配置属性，包括地域、访问权限、存储类型等。每个存储空间属于某个地域，存储空间创建之后不能修改地域。</p>
+<h3 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h3><p>对象的生命周期是从上传到删除为止。可以创建生命周期规则来批量转换或批量删除。</p>
+<h3 id="访问域名和访问密钥"><a href="#访问域名和访问密钥" class="headerlink" title="访问域名和访问密钥"></a>访问域名和访问密钥</h3><p>Endpoint（访问域名）：OSS对外服务的访问域名。不同地域下的域名不一样。内网和外网的域名也不一样。</p>
+<p>AccessKey（访问密钥）：用于身份验证。</p>
+<h3 id="下载方式"><a href="#下载方式" class="headerlink" title="下载方式"></a>下载方式</h3><p>OSS中的对象可以在控制台下载，也可以用URL下载。</p>
+<h3 id="防盗链"><a href="#防盗链" class="headerlink" title="防盗链"></a>防盗链</h3><ul>
+<li>对象存储OSS是按照使用量收费的服务，为了减少存储于OSS的数据被其他人盗链而产生额外费用，OSS支持设置基于HTTP和HTTPS header中表头字段Referer的防盗链方法。可以通过控制台为存储空间设置Referer字段的白名单和是否允许Refer字段为空的请求访问。</li>
+<li>参数：<code>Refer白名单</code>：仅允许指定域名访问OSS资源。<code>是否允许空Referer</code>：如果不允许空Referer，则只有HTTP和HTTPS header中包含Referer字段的请求才能访问OSS资源。</li>
+</ul>
+<h2 id="云数据库RDS"><a href="#云数据库RDS" class="headerlink" title="云数据库RDS"></a>云数据库RDS</h2><p>阿里云关系型数据库(Relational Database Service，简称RDS)是一种稳定可靠的、可弹性伸缩的在线数据库服务。支持市场上主流的数据库系统和引擎。</p>
+<h3 id="读写分离"><a href="#读写分离" class="headerlink" title="读写分离"></a>读写分离</h3><p>主实例和只读实例都有独立的连接地址，当开启读写分离功能后，系统会额外提供一个读写分离地址，联动主实例及其下的所有只读实例，实现了自动的读写分离。应用程序连接读写分离地址，读写分离模块会自动将写入请求发往主实例，将读请求发往只读实例。</p>
+<p>主要满足特定的业务场景，有些业务场景写很少，大部分都是读，读写分离主要适用于这种场景。</p>
+<h2 id="内容分发网络CDN"><a href="#内容分发网络CDN" class="headerlink" title="内容分发网络CDN"></a>内容分发网络CDN</h2><p>阿里云内容分发网络(Alibaba Cloud Content Delivery Network，简称CDN)将用户源站资源缓存到阿里云遍布全球的加速节点上。当终端用户请求访问和获取这些资源时，无需回源，系统将就近调用CDN节点上已经缓存的资源。</p>
+<h3 id="加速域名"><a href="#加速域名" class="headerlink" title="加速域名"></a>加速域名</h3><p>你自己首先有个域名，开通CDN服务后，会得到一个加速域名，然后你在域名服务器上添加CNAME记录，将你的域名映射到加速域名，那么别人访问你的域名的时候就会解析到CDN服务器，CDN服务器再通过一定的策略将距离用户最近的CDN节点的IP地址返回。</p>
+<h3 id="回源策略"><a href="#回源策略" class="headerlink" title="回源策略"></a>回源策略</h3><p>回源就是不去访问CDN节点，而去直接访问你的服务器。回源策略是什么情况下回源，回源的时候访问哪个IP（对于你有多个IP域名的情况）。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">并指如刀</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://wht6.github.io/posts/da88.html">http://wht6.github.io/posts/da88.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://wht6.github.io" target="_blank">WHT</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E9%98%BF%E9%87%8C%E4%BA%91/">阿里云</a></div><div class="post_share"><div class="social-share" data-image="/img/featureimages/30.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/posts/fd04.html"><img class="prev-cover" src="/img/featureimages/31.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">阿里云重要知识点</div></div></a></div><div class="next-post pull-right"><a href="/posts/a302.html"><img class="next-cover" src="/img/featureimages/29.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Linux系统配置</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/posts/fd04.html" title="阿里云重要知识点"><img class="cover" src="/img/featureimages/31.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-01-21</div><div class="title">阿里云重要知识点</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/logo.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">并指如刀</div><div class="author-info__description">分享技术,分享知识,分享感悟</div></div><div class="card-info-data is-center"><div class="card-info-data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">73</div></a></div><div class="card-info-data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">33</div></a></div><div class="card-info-data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="mailto:wanght586@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%B9%E6%80%A7%E8%AE%A1%E7%AE%97%E6%9C%8D%E5%8A%A1%E5%99%A8ECS"><span class="toc-number">1.</span> <span class="toc-text">弹性计算服务器ECS</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%B0%E5%9F%9F%E5%92%8C%E5%8F%AF%E7%94%A8%E5%8C%BA"><span class="toc-number">1.1.</span> <span class="toc-text">地域和可用区</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9D%97%E5%AD%98%E5%82%A8"><span class="toc-number">1.2.</span> <span class="toc-text">块存储</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E5%85%A8%E7%BB%84"><span class="toc-number">1.3.</span> <span class="toc-text">安全组</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%99%9A%E6%8B%9F%E4%B8%93%E6%9C%89%E7%BD%91%E7%BB%9CVPC"><span class="toc-number">2.</span> <span class="toc-text">虚拟专有网络VPC</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%B9%E6%80%A7IP"><span class="toc-number">2.1.</span> <span class="toc-text">弹性IP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%91%E4%BC%81%E4%B8%9A%E7%BD%91"><span class="toc-number">2.2.</span> <span class="toc-text">云企业网</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1SLB"><span class="toc-number">3.</span> <span class="toc-text">负载均衡SLB</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%91%E5%90%AC"><span class="toc-number">3.1.</span> <span class="toc-text">监听</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%B9%E6%80%A7%E4%BC%B8%E7%BC%A9AS"><span class="toc-number">4.</span> <span class="toc-text">弹性伸缩AS</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%B8%E7%BC%A9%E7%BB%84"><span class="toc-number">4.1.</span> <span class="toc-text">伸缩组</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%B9%E8%B1%A1%E5%AD%98%E5%82%A8%E6%9C%8D%E5%8A%A1OSS"><span class="toc-number">5.</span> <span class="toc-text">对象存储服务OSS</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E7%A9%BA%E9%97%B4"><span class="toc-number">5.1.</span> <span class="toc-text">存储空间</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="toc-number">5.2.</span> <span class="toc-text">生命周期</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BF%E9%97%AE%E5%9F%9F%E5%90%8D%E5%92%8C%E8%AE%BF%E9%97%AE%E5%AF%86%E9%92%A5"><span class="toc-number">5.3.</span> <span class="toc-text">访问域名和访问密钥</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD%E6%96%B9%E5%BC%8F"><span class="toc-number">5.4.</span> <span class="toc-text">下载方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%98%B2%E7%9B%97%E9%93%BE"><span class="toc-number">5.5.</span> <span class="toc-text">防盗链</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%91%E6%95%B0%E6%8D%AE%E5%BA%93RDS"><span class="toc-number">6.</span> <span class="toc-text">云数据库RDS</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%BB%E5%86%99%E5%88%86%E7%A6%BB"><span class="toc-number">6.1.</span> <span class="toc-text">读写分离</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E5%AE%B9%E5%88%86%E5%8F%91%E7%BD%91%E7%BB%9CCDN"><span class="toc-number">7.</span> <span class="toc-text">内容分发网络CDN</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A0%E9%80%9F%E5%9F%9F%E5%90%8D"><span class="toc-number">7.1.</span> <span class="toc-text">加速域名</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9E%E6%BA%90%E7%AD%96%E7%95%A5"><span class="toc-number">7.2.</span> <span class="toc-text">回源策略</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/3009.html" title="深入解析Pod对象"><img src="/img/featureimages/73.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="深入解析Pod对象"/></a><div class="content"><a class="title" href="/posts/3009.html" title="深入解析Pod对象">深入解析Pod对象</a><time datetime="2022-03-31T08:00:00.000Z" title="发表于 2022-03-31 16:00:00">2022-03-31</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/1cf9.html" title="Shell实践模板"><img src="/img/featureimages/71.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Shell实践模板"/></a><div class="content"><a class="title" href="/posts/1cf9.html" title="Shell实践模板">Shell实践模板</a><time datetime="2022-03-29T08:00:00.000Z" title="发表于 2022-03-29 16:00:00">2022-03-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/3588.html" title="Kubernetes集群搭建与实践"><img src="/img/featureimages/69.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Kubernetes集群搭建与实践"/></a><div class="content"><a class="title" href="/posts/3588.html" title="Kubernetes集群搭建与实践">Kubernetes集群搭建与实践</a><time datetime="2022-03-27T08:00:00.000Z" title="发表于 2022-03-27 16:00:00">2022-03-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/bbe1.html" title="Docker容器实现原理"><img src="/img/featureimages/68.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Docker容器实现原理"/></a><div class="content"><a class="title" href="/posts/bbe1.html" title="Docker容器实现原理">Docker容器实现原理</a><time datetime="2022-03-26T08:00:00.000Z" title="发表于 2022-03-26 16:00:00">2022-03-26</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/a2bb.html" title="Shell脚本复习"><img src="/img/featureimages/67.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Shell脚本复习"/></a><div class="content"><a class="title" href="/posts/a2bb.html" title="Shell脚本复习">Shell脚本复习</a><time datetime="2022-03-23T08:00:00.000Z" title="发表于 2022-03-23 16:00:00">2022-03-23</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By 并指如刀</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/ Relative)","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"left","width":100,"height":180},"mobile":{"show":false},"react":{"opacityDefault":0.7}});</script></body></html>

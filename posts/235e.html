@@ -1,0 +1,337 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>访问网络服务 | WHT</title><meta name="keywords" content="Go语言"><meta name="author" content="并指如刀"><meta name="copyright" content="并指如刀"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="referrer" content="no-referrer"><meta name="description" content="socket 与 IPC人们常常会使用 Go 语言去编写网络程序（当然了，这方面也是 Go 语言最为擅长的事情）。说到网络编程，我们就不得不提及 socket。 &amp;nbsp; socket，常被翻译为套接字，它应该算是网络编程世界中最为核心的知识之一了。关于 socket，我们可以讨论的东西太多了，因此，在这里只围绕着 Go 语言向你介绍一些关于它的基础知识。&amp;nbsp;所谓 socket，是一种">
+<meta property="og:type" content="article">
+<meta property="og:title" content="访问网络服务">
+<meta property="og:url" content="http://wht6.github.io/posts/235e.html">
+<meta property="og:site_name" content="WHT">
+<meta property="og:description" content="socket 与 IPC人们常常会使用 Go 语言去编写网络程序（当然了，这方面也是 Go 语言最为擅长的事情）。说到网络编程，我们就不得不提及 socket。 &amp;nbsp; socket，常被翻译为套接字，它应该算是网络编程世界中最为核心的知识之一了。关于 socket，我们可以讨论的东西太多了，因此，在这里只围绕着 Go 语言向你介绍一些关于它的基础知识。&amp;nbsp;所谓 socket，是一种">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://wht6.github.io/img/featureimages/63.jpg">
+<meta property="article:published_time" content="2022-03-18T10:00:00.000Z">
+<meta property="article:modified_time" content="2022-03-20T02:01:58.390Z">
+<meta property="article:author" content="并指如刀">
+<meta property="article:tag" content="Go语言">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://wht6.github.io/img/featureimages/63.jpg"><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="http://wht6.github.io/posts/235e"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 并指如刀","link":"链接: ","source":"来源: WHT","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '访问网络服务',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-03-20 10:01:58'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><style type="text/css" lang="css">
+    #loading-container{
+        position: fixed;
+        top: 0;
+        left: 0;
+        min-height: 100vh;
+        width: 100vw;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: #FFF;
+        text-align: center;
+        /* loader页面消失采用渐隐的方式*/
+        -webkit-transition: opacity 1s ease;
+        -moz-transition: opacity 1s ease;
+        -o-transition: opacity 1s ease;
+        transition: opacity 1s ease;
+    }
+    .loading-image{
+        width: 120px;
+        height: 50px;
+        transform: translate(-50%);
+    }
+    
+    .loading-image div:nth-child(2) {
+        -webkit-animation: pacman-balls 1s linear 0s infinite;
+        animation: pacman-balls 1s linear 0s infinite
+    }
+
+    .loading-image div:nth-child(3) {
+        -webkit-animation: pacman-balls 1s linear .33s infinite;
+        animation: pacman-balls 1s linear .33s infinite
+    }
+
+    .loading-image div:nth-child(4) {
+        -webkit-animation: pacman-balls 1s linear .66s infinite;
+        animation: pacman-balls 1s linear .66s infinite
+    }
+
+    .loading-image div:nth-child(5) {
+        -webkit-animation: pacman-balls 1s linear .99s infinite;
+        animation: pacman-balls 1s linear .99s infinite
+    }
+    
+   .loading-image div:first-of-type {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_up .5s 0s infinite;
+        animation: rotate_pacman_half_up .5s 0s infinite;
+    }
+    .loading-image div:nth-child(2) {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_down .5s 0s infinite;
+        animation: rotate_pacman_half_down .5s 0s infinite;
+        margin-top: -50px;
+    }
+    @-webkit-keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @-webkit-keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+
+    @keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+    
+    @-webkit-keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+
+    @keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+    
+   
+    .loading-image div:nth-child(3),
+    .loading-image div:nth-child(4),
+    .loading-image div:nth-child(5),
+    .loading-image div:nth-child(6){
+        background-color: #49b1f5;
+        width: 15px;
+        height: 15px;
+        border-radius: 100%;
+        margin: 2px;
+        width: 10px;
+        height: 10px;
+        position: absolute;
+        transform: translateY(-6.25px);
+        top: 25px;
+        left: 100px;
+    }
+    .loading-text{
+        margin-bottom: 20vh;
+        text-align: center;
+        color: #2c3e50;
+        font-size: 2rem;
+        box-sizing: border-box;
+        padding: 0 10px;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    @media only screen and (max-width: 500px) {
+         .loading-text{
+            font-size: 1.5rem;
+         }
+    }
+    .fadeout {
+        opacity: 0;
+        filter: alpha(opacity=0);
+    }
+    /* logo出现动画 */
+    @-webkit-keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);transform:translate3d(0,-100%,0)}100%{opacity:1;-webkit-transform:none;transform:none}}
+    @keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);}}
+ </style>
+ <script>
+(function () {
+    const loaded = function(){
+       setTimeout(function(){
+            const loader = document.getElementById("loading-container");
+            loader.className="fadeout" ;//使用渐隐的方法淡出loading page
+            // document.getElementById("body-wrap").style.display="flex";
+            setTimeout(function(){
+                loader.style.display="none";
+            },1000); 
+        },1000);//强制显示loading page 1s  
+    };
+    loaded();
+})()
+ </script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="WHT" type="application/atom+xml">
+</head>
+ <div id="loading-container">
+     <p class="loading-text">玩命加载中 . . . </p> 
+     <div class="loading-image">
+         <div></div>
+         <div></div>
+         <div></div>
+         <div></div> 
+         <div></div>
+     </div>
+ </div><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/logo.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">73</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">33</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/featureimages/63.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">WHT</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">访问网络服务</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-03-18T10:00:00.000Z" title="发表于 2022-03-18 18:00:00">2022-03-18</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-03-20T02:01:58.390Z" title="更新于 2022-03-20 10:01:58">2022-03-20</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">6.9k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>21分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="访问网络服务"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h3 id="socket-与-IPC"><a href="#socket-与-IPC" class="headerlink" title="socket 与 IPC"></a>socket 与 IPC</h3><p>人们常常会使用 Go 语言去编写网络程序（当然了，这方面也是 Go 语言最为擅长的事情）。说到网络编程，我们就不得不提及 socket。</p>
+<p>&nbsp;</p>
+<p>socket，常被翻译为套接字，它应该算是网络编程世界中最为核心的知识之一了。关于 socket，我们可以讨论的东西太多了，因此，在这里只围绕着 Go 语言向你介绍一些关于它的基础知识。<br>&nbsp;<br>所谓 socket，是一种 IPC 方法。IPC 是 Inter-Process Communication 的缩写，可以被翻译为进程间通信。顾名思义，IPC 这个概念（或者说规范）主要定义的是多个进程之间，相互通信的方法。<br>&nbsp;<br>这些方法主要包括：系统信号（signal）、管道（pipe）、套接字 （socket）、文件锁（file lock）、消息队列（message queue）、信号灯（semaphore，有的地方也称之为信号量）等。现存的主流操作系统大都对 IPC 提供了强有力的支持，尤其是 socket。<br>&nbsp;<br>你可能已经知道，Go 语言对 IPC 也提供了一定的支持。<br>&nbsp;<br>比如，在<code>os</code>代码包和<code>os/signal</code>代码包中就有针对系统信号的 API。<br>&nbsp;<br>又比如，<code>os.Pipe</code>函数可以创建命名管道，而<code>os/exec</code>代码包则对另一类管道（匿名管道）提供了支持。对于 socket，Go 语言与之相应的程序实体都在其标准库的<code>net</code>代码包中。<br>&nbsp;<br><strong>毫不夸张地说，在众多的 IPC 方法中，socket 是最为通用和灵活的一种。</strong>与其他的 IPC 方法不同，利用 socket 进行通信的进程，可以不局限在同一台计算机当中。<br>&nbsp;<br>实际上，通信的双方无论存在于世界上的哪个角落，只要能够通过计算机的网卡端口以及网络进行互联，就可以使用 socket。<br>&nbsp;<br>支持 socket 的操作系统一般都会对外提供一套 API。<strong>跑在它们之上的应用程序利用这套 API，就可以与互联网上的另一台计算机中的程序、同一台计算机中的其他程序，甚至同一个程序中的其他线程进行通信。</strong><br>&nbsp;<br>例如，在 Linux 操作系统中，用于创建 socket 实例的 API，就是由一个名为<code>socket</code>的系统调用代表的。这个系统调用是 Linux 内核的一部分。</p>
+<blockquote>
+<p>所谓的系统调用，你可以理解为特殊的 C 语言函数。它们是连接应用程序和操作系统内核的桥梁，也是应用程序使用操作系统功能的唯一渠道。</p>
+</blockquote>
+<p>&nbsp;<br>在 Go 语言标准库的<code>syscall</code>代码包中，有一个与这个<code>socket</code>系统调用相对应的函数。这两者的函数签名是基本一致的，它们都会接受三个<code>int</code>类型的参数，并会返回一个可以代表文件描述符的结果。<br>&nbsp;<br>但不同的是，<code>syscall</code>包中的<code>Socket</code>函数本身是平台不相关的。在其底层，Go 语言为它支持的每个操作系统都做了适配，这才使得这个函数无论在哪个平台上，总是有效的。<br>&nbsp;<br>Go 语言的<code>net</code>代码包中的很多程序实体，都会直接或间接地使用到<code>syscall.Socket</code>函数。<br>&nbsp;<br>比如，我们在调用<code>net.Dial</code>函数的时候，会为它的两个参数设定值。其中的第一个参数名为<code>network</code>，它决定着 Go 程序在底层会创建什么样的 socket 实例，并使用什么样的协议与其他程序通信。<br>&nbsp;<br><strong>net.Dial函数的第一个参数network有哪些可选值？</strong><br>&nbsp;<br><code>net.Dial</code>函数会接受两个参数，分别名为<code>network</code>和<code>address</code>，都是<code>string</code>类型的。<br>&nbsp;<br>参数<code>network</code>常用的可选值一共有 9 个。这些值分别代表了程序底层创建的 socket 实例可使用的不同通信协议，罗列如下。</p>
+<ul>
+<li><code>&quot;tcp&quot;</code>：代表 TCP 协议，其基于的 IP 协议的版本根据参数<code>address</code>的值自适应。</li>
+<li><code>&quot;tcp4&quot;</code>：代表基于 IP 协议第四版的 TCP 协议。</li>
+<li><code>&quot;tcp6&quot;</code>：代表基于 IP 协议第六版的 TCP 协议。</li>
+<li><code>&quot;udp&quot;</code>：代表 UDP 协议，其基于的 IP 协议的版本根据参数<code>address</code>的值自适应。</li>
+<li><code>&quot;udp4&quot;</code>：代表基于 IP 协议第四版的 UDP 协议。</li>
+<li><code>&quot;udp6&quot;</code>：代表基于 IP 协议第六版的 UDP 协议。</li>
+<li><code>&quot;unix&quot;</code>：代表 Unix 通信域下的一种内部 socket 协议，以 SOCK_STREAM 为 socket 类型。</li>
+<li><code>&quot;unixgram&quot;</code>：代表 Unix 通信域下的一种内部 socket 协议，以 SOCK_DGRAM 为 socket 类型。</li>
+<li><code>&quot;unixpacket&quot;</code>：代表 Unix 通信域下的一种内部 socket 协议，以 SOCK_SEQPACKET 为 socket 类型。</li>
+</ul>
+<p>为了更好地理解这些可选值的深层含义，我们需要了解一下<code>syscall.Socket</code>函数接受的那三个参数。<br>&nbsp;<br>我在前面说了，这个函数接受的三个参数都是<code>int</code>类型的。这些参数所代表的分别是想要创建的 socket 实例通信域、类型以及使用的协议。<br>&nbsp;<br>Socket 的通信域主要有这样几个可选项：IPv4 域、IPv6 域和 Unix 域。<br>&nbsp;<br><strong>Unix 域</strong>，指的是一种类 Unix 操作系统中特有的通信域。在装有此类操作系统的同一台计算机中，应用程序可以基于此域建立 socket 连接。<br>&nbsp;<br>以上三种通信域分别可以由<code>syscall</code>代码包中的常量<code>AF_INET</code>、<code>AF_INET6</code>和<code>AF_UNIX</code>表示。<br>&nbsp;<br>Socket 的类型一共有 4 种，分别是：<code>SOCK_DGRAM</code>、<code>SOCK_STREAM</code>、<code>SOCK_SEQPACKET</code>以及<code>SOCK_RAW</code>。<code>syscall</code>代码包中也都有同名的常量与之对应。前两者更加常用一些。<br>&nbsp;<br><code>SOCK_DGRAM</code>中的“DGRAM”代表的是 datagram，即数据报文。它是一种有消息边界，但没有逻辑连接的非可靠 socket 类型，我们熟知的基于 UDP 协议的网络通信就属于此类。<br>&nbsp;<br>有消息边界的意思是，与 socket 相关的操作系统内核中的程序（以下简称内核程序）在发送或接收数据的时候是以消息为单位的。<br>&nbsp;<br>你可以把消息理解为带有固定边界的一段数据。内核程序可以自动地识别和维护这种边界，并在必要的时候，把数据切割成一个一个的消息，或者把多个消息串接成连续的数据。如此一来，应用程序只需要面向消息进行处理就可以了。<br>&nbsp;<br>所谓的有逻辑连接是指，通信双方在收发数据之前必须先建立网络连接。待连接建立好之后，双方就可以一对一地进行数据传输了。显然，基于 UDP 协议的网络通信并不需要这样，它是没有逻辑连接的。<br>&nbsp;<br>只要应用程序指定好对方的网络地址，内核程序就可以立即把数据报文发送出去。这有优势，也有劣势。<br>&nbsp;<br>优势是发送速度快，不长期占用网络资源，并且每次发送都可以指定不同的网络地址。但是，无法保证传输的可靠性，不能实现数据的有序性，以及数据只能单向进行传输。<br>&nbsp;<br>而<code>SOCK_STREAM</code>这个 socket 类型，恰恰与<code>SOCK_DGRAM</code>相反。<strong>它没有消息边界，但有逻辑连接，能够保证传输的可靠性和数据的有序性，同时还可以实现数据的双向传输。</strong>众所周知的基于 TCP 协议的网络通信就属于此类。</p>
+<blockquote>
+<p>这样的网络通信传输数据的形式是字节流，而不是数据报文。字节流是以字节为单位的。内核程序无法感知一段字节流中包含了多少个消息，以及这些消息是否完整，这完全需要应用程序自己去把控。</p>
+<p>不过，此类网络通信中的一端，总是会忠实地按照另一端发送数据时的字节排列顺序，接收和缓存它们。所以，应用程序需要根据双方的约定去数据中查找消息边界，并按照边界切割数据，仅此而已。</p>
+</blockquote>
+<p>&nbsp;<br><code>syscall.Socket</code>函数的第三个参数用于表示 socket 实例所使用的协议。<br>&nbsp;<br>通常，只要明确指定了前两个参数的值，我们就无需再去确定第三个参数值了，一般把它置为<code>0</code>就可以了。这时，内核程序会自行选择最合适的协议。<br>&nbsp;<br>比如，当前两个参数值分别为<code>syscall.AF_INET</code>和<code>syscall.SOCK_DGRAM</code>的时候，内核程序会选择 UDP 作为协议。<br>&nbsp;<br>又比如，在前两个参数值分别为<code>syscall.AF_INET6</code>和<code>syscall.SOCK_STREAM</code>时，内核程序可能会选择 TCP 作为协议。</p>
+<p><img src="https://raw.githubusercontent.com/wht6/image/master/img/socket_2022318.png" alt></p>
+<p>不过，你也看到了，在使用<code>net</code>包中的高层次 API 的时候，我们连那前两个参数值都无需给定，只需要把前面罗列的那些字符串字面量的其中一个，作为<code>network</code>参数的值就好了。<br>&nbsp;<br><strong>调用net.DialTimeout函数时给定的超时时间意味着什么？</strong><br>&nbsp;<br>简单来说，这里的超时时间，代表着函数为网络连接建立完成而等待的最长时间。这是一个相对的时间。它会由这个函数的参数<code>timeout</code>的值表示。<br>&nbsp;<br>开始的时间点几乎是我们调用<code>net.DialTimeout</code>函数的那一刻。在这之后，时间会主要花费在“解析参数<code>network</code>和<code>address</code>的值”，以及“创建 socket 实例并建立网络连接”这两件事情上。<br>&nbsp;<br>不论执行到哪一步，只要在绝对的超时时间达到的那一刻，网络连接还没有建立完成，该函数就会返回一个代表了 I/O 操作超时的错误值。<br>&nbsp;<br>值得注意的是，在解析<code>address</code>的值的时候，函数会确定网络服务的 IP 地址、端口号等必要信息，并在需要时访问 DNS 服务。<br>&nbsp;<br>另外，如果解析出的 IP 地址有多个，那么函数会串行或并发地尝试建立连接。但无论用什么样的方式尝试，函数总会以最先建立成功的那个连接为准。<br>&nbsp;<br>同时，它还会根据超时前的剩余时间，去设定针对每次连接尝试的超时时间，以便让它们都有适当的时间执行。<br>&nbsp;<br>再多说一点。在<code>net</code>包中还有一个名为<code>Dialer</code>的结构体类型。该类型有一个名叫<code>Timeout</code>的字段，它与上述的<code>timeout</code>参数的含义是完全一致的。实际上，<code>net.DialTimeout</code>函数正是利用了这个类型的值才得以实现功能的。<br>&nbsp;<br><code>net.Dialer</code>类型值得你好好学习一下，尤其是它的每个字段的功用以及它的<code>DialContext</code>方法。<br>&nbsp;<br>在你调用了<code>net.Dial</code>等函数之后，如果成功就会得到一个代表了网络连接的<code>net.Conn</code>接口类型的值。<br>&nbsp;<br><strong>怎样在<code>net.Conn</code>类型的值上正确地设定针对读操作和写操作的超时时间？</strong><br>&nbsp;<br><code>net.Conn</code>类型有 3 个可用于设置超时时间的方法，分别是：<code>SetDeadline</code>、<code>SetReadDeadline</code>和<code>SetWriteDeadline</code>。<br>&nbsp;<br>这三个方法的签名是一模一样的，只是名称不同罢了。它们都接受一个<code>time.Time</code>类型的参数，并都会返回一个<code>error</code>类型的结果。其中的<code>SetDeadline</code>方法是用来同时设置读操作超时和写操作超时的。<br>&nbsp;<br>有一点需要特别注意，这三个方法都会针对任何正在进行以及未来将要进行的相应操作进行超时设定。<br>&nbsp;<br>因此，如果你要在一个循环中进行读操作或写操作的话，最好在每次迭代中都进行一次超时设定。<br>&nbsp;<br>否则，靠后的操作就有可能因触达超时时间而直接失败。另外，如果有必要，你应该再次调用它们并传入<code>time.Time</code>类型的零值来表达不再限定超时时间。<br>&nbsp;</p>
+<h3 id="HTTP协议通信"><a href="#HTTP协议通信" class="headerlink" title="HTTP协议通信"></a>HTTP协议通信</h3><p>用<code>net.Dial</code>或<code>net.DialTimeout</code>函数来访问基于 HTTP 协议的网络服务是完全没有问题的，因为HTTP 协议是基于 TCP/IP 协议栈的，并且它也是一个面向普通文本的协议。<br>&nbsp;<br>原则上，我们使用任何一个文本编辑器，都可以轻易地写出一个完整的 HTTP 请求报文。只要你搞清楚了请求报文的头部（header）和主体（body）应该包含的内容，这样做就会很容易。所以，在这种情况下，即便直接使用<code>net.Dial</code>函数，你应该也不会感觉到困难。<br>&nbsp;<br>不过，不困难并不意味着很方便。如果我们只是访问基于 HTTP 协议的网络服务的话，那么使用<code>net/http</code>代码包中的程序实体来做，显然会更加便捷。<br>&nbsp;<br>其中，最便捷的是使用<code>http.Get</code>函数。我们在调用它的时候只需要传给它一个 URL 就可以了，比如像下面这样：<br>&nbsp;<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">url1 := <span class="string">&quot;http://google.cn&quot;</span></span><br><span class="line">fmt.Printf(<span class="string">&quot;Send request to %q with method GET ...\n&quot;</span>, url1)</span><br><span class="line">resp1, err := http.Get(url1)</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">	fmt.Printf(<span class="string">&quot;request sending error: %v\n&quot;</span>, err)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">defer</span> resp1.Body.Close()</span><br><span class="line">line1 := resp1.Proto + <span class="string">&quot; &quot;</span> + resp1.Status</span><br><span class="line">fmt.Printf(<span class="string">&quot;The first line of response:\n%s\n&quot;</span>, line1)</span><br></pre></td></tr></table></figure><br>&nbsp;</p>
+<p><code>http.Get</code>函数会返回两个结果值。第一个结果值的类型是<code>*http.Response</code>，它是网络服务给我们传回来的响应内容的结构化表示。</p>
+<p>&nbsp;<br>第二个结果值是<code>error</code>类型的，它代表了在创建和发送 HTTP 请求，以及接收和解析 HTTP 响应的过程中可能发生的错误。<br>&nbsp;<br><code>http.Get</code>函数会在内部使用缺省的 HTTP 客户端，并且调用它的<code>Get</code>方法以完成功能。这个缺省的 HTTP 客户端是由<code>net/http</code>包中的公开变量<code>DefaultClient</code>代表的，其类型是<code>*http.Client</code>。它的基本类型也是可以被拿来使用的，甚至它还是开箱即用的。下面的这两行代码：<br>&nbsp;<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> httpClient1 http.Client</span><br><span class="line">resp2, err := httpClient1.Get(url1)</span><br></pre></td></tr></table></figure><br>&nbsp;</p>
+<p>与前面的这一行代码<code>resp1, err := http.Get(url1)</code>是等价的。</p>
+<p>&nbsp;<br><code>http.Client</code>是一个结构体类型，并且它包含的字段都是公开的。之所以该类型的零值仍然可用，是因为它的这些字段要么存在着相应的缺省值，要么其零值直接就可以使用，且代表着特定的含义。<br>&nbsp;<br><strong><code>http.Client</code>类型中的<code>Transport</code>字段代表着什么？</strong><br>&nbsp;<br><code>http.Client</code>类型中的<code>Transport</code>字段代表着：向网络服务发送 HTTP 请求，并从网络服务接收 HTTP 响应的操作过程。也就是说，该字段的方法<code>RoundTrip</code>应该实现单次 HTTP 事务（或者说基于 HTTP 协议的单次交互）需要的所有步骤。<br>&nbsp;<br>这个字段是<code>http.RoundTripper</code>接口类型的，它有一个由<code>http.DefaultTransport</code>变量代表的缺省值（以下简称<code>DefaultTransport</code>）。当我们在初始化一个<code>http.Client</code>类型的值（以下简称<code>Client</code>值）的时候，如果没有显式地为该字段赋值，那么这个<code>Client</code>值就会直接使用<code>DefaultTransport</code>。<br>&nbsp;<br>顺便说一下，<code>http.Client</code>类型的<code>Timeout</code>字段，代表的正是前面所说的单次 HTTP 事务的超时时间，它是<code>time.Duration</code>类型的。它的零值是可用的，用于表示没有设置超时时间。<br>&nbsp;<br>下面，我们再通过该字段的缺省值<code>DefaultTransport</code>，来深入地了解一下这个<code>Transport</code>字段。<br>&nbsp;<br><code>DefaultTransport</code>的实际类型是<code>*http.Transport</code>，后者即为<code>http.RoundTripper</code>接口的默认实现。这个类型是可以被复用的，也推荐被复用，同时，它也是并发安全的。正因为如此，<code>http.Client</code>类型也拥有着同样的特质。<br>&nbsp;<br><code>http.Transport</code>类型，会在内部使用一个<code>net.Dialer</code>类型的值（以下简称<code>Dialer</code>值），并且，它会把该值的<code>Timeout</code>字段的值，设定为<code>30</code>秒。<br>&nbsp;<br>也就是说，这个<code>Dialer</code>值如果在 30 秒内还没有建立好网络连接，那么就会被判定为操作超时。在<code>DefaultTransport</code>的值被初始化的时候，这样的<code>Dialer</code>值的<code>DialContext</code>方法会被赋给前者的<code>DialContext</code>字段。<br>&nbsp;<br><code>http.Transport</code>类型还包含了很多其他的字段，其中有一些字段是关于操作超时的。</p>
+<ul>
+<li><code>IdleConnTimeout</code>：含义是空闲的连接在多久之后就应该被关闭。</li>
+<li><code>DefaultTransport</code>会把该字段的值设定为<code>90</code>秒。如果该值为<code>0</code>，那么就表示不关闭空闲的连接。注意，这样很可能会造成资源的泄露。</li>
+<li><code>ResponseHeaderTimeout</code>：含义是，从客户端把请求完全递交给操作系统到从操作系统那里接收到响应报文头的最大时长。<code>DefaultTransport</code>并没有设定该字段的值。</li>
+<li><code>ExpectContinueTimeout</code>：含义是，在客户端递交了请求报文头之后，等待接收第一个响应报文头的最长时间。在客户端想要使用 HTTP 的“POST”方法把一个很大的报文体发送给服务端的时候，它可以先通过发送一个包含了“Expect: 100-continue”的请求报文头，来询问服务端是否愿意接收这个大报文体。这个字段就是用于设定在这种情况下的超时时间的。注意，如果该字段的值不大于<code>0</code>，那么无论多大的请求报文体都将会被立即发送出去。这样可能会造成网络资源的浪费。<code>DefaultTransport</code>把该字段的值设定为了<code>1</code>秒。</li>
+<li><code>TLSHandshakeTimeout</code>：TLS 是 Transport Layer Security 的缩写，可以被翻译为传输层安全。这个字段代表了基于 TLS 协议的连接在被建立时的握手阶段的超时时间。若该值为<code>0</code>，则表示对这个时间不设限。<code>DefaultTransport</code>把该字段的值设定为了<code>10</code>秒。</li>
+</ul>
+<p>&nbsp;<br>此外，还有一些与<code>IdleConnTimeout</code>相关的字段值得我们关注，即：<code>MaxIdleConns</code>、<code>MaxIdleConnsPerHost</code>以及<code>MaxConnsPerHost</code>。<br>&nbsp;<br>无论当前的<code>http.Transport</code>类型的值（以下简称<code>Transport</code>值）访问了多少个网络服务，<code>MaxIdleConns</code>字段都只会对空闲连接的总数做出限定。而<code>MaxIdleConnsPerHost</code>字段限定的则是，该<code>Transport</code>值访问的每一个网络服务的最大空闲连接数。<br>&nbsp;<br>每一个网络服务都会有自己的网络地址，可能会使用不同的网络协议，对于一些 HTTP 请求也可能会用到代理。<code>Transport</code>值正是通过这三个方面的具体情况，来鉴别不同的网络服务的。<br>&nbsp;<br><code>MaxIdleConnsPerHost</code>字段的缺省值，由<code>http.DefaultMaxIdleConnsPerHost</code>变量代表，值为<code>2</code>。也就是说，在默认情况下，对于某一个<code>Transport</code>值访问的每一个网络服务，它的空闲连接数都最多只能有两个。<br>&nbsp;<br>与<code>MaxIdleConnsPerHost</code>字段的含义相似的，是<code>MaxConnsPerHost</code>字段。不过，后者限制的是，针对某一个<code>Transport</code>值访问的每一个网络服务的最大连接数，不论这些连接是否是空闲的。并且，该字段没有相应的缺省值，它的零值表示不对此设限。<br>&nbsp;<br><code>DefaultTransport</code>并没有显式地为<code>MaxIdleConnsPerHost</code>和<code>MaxConnsPerHost</code>这两个字段赋值，但是它却把<code>MaxIdleConns</code>字段的值设定为了<code>100</code>。<br>&nbsp;<br>换句话说，在默认情况下，空闲连接的总数最大为<code>100</code>，而针对每个网络服务的最大空闲连接数为<code>2</code>。注意，上述两个与空闲连接数有关的字段的值应该是联动的，所以，你有时候需要根据实际情况来定制它们。<br>&nbsp;<br>当然了，这首先需要我们在初始化<code>Client</code>值的时候，定制它的<code>Transport</code>字段的值。定制这个值的方式，可以参看<code>DefaultTransport</code>变量的声明。<br>&nbsp;<br>最后，我简单说一下为什么会出现空闲的连接。我们都知道，HTTP 协议有一个请求报文头叫做“Connection”。在 HTTP 协议的 1.1 版本中，这个报文头的值默认是“keep-alive”。<br>&nbsp;<br>在这种情况下的网络连接都是持久连接，它们会在当前的 HTTP 事务完成后仍然保持着连通性，因此是可以被复用的。<br>&nbsp;<br>既然连接可以被复用，那么就会有两种可能。一种可能是，针对于同一个网络服务，有新的 HTTP 请求被递交，该连接被再次使用。另一种可能是，不再有对该网络服务的 HTTP 请求，该连接被闲置。<br>&nbsp;<br>显然，后一种可能就产生了空闲的连接。另外，如果分配给某一个网络服务的连接过多的话，也可能会导致空闲连接的产生，因为每一个新递交的 HTTP 请求，都只会征用一个空闲的连接。所以，为空闲连接设定限制，在大多数情况下都是很有必要的，也是需要斟酌的。<br>&nbsp;<br>如果我们想彻底地杜绝空闲连接的产生，那么可以在初始化<code>Transport</code>值的时候把它的<code>DisableKeepAlives</code>字段的值设定为<code>true</code>。这时，HTTP 请求的“Connection”报文头的值就会被设置为“close”。这会告诉网络服务，这个网络连接不必保持，当前的 HTTP 事务完成后就可以断开它了。<br>&nbsp;<br>如此一来，每当一个 HTTP 请求被递交时，就都会产生一个新的网络连接。这样做会明显地加重网络服务以及客户端的负载，并会让每个 HTTP 事务都耗费更多的时间。所以，在一般情况下，我们都不要去设置这个<code>DisableKeepAlives</code>字段。<br>&nbsp;<br>顺便说一句，在<code>net.Dialer</code>类型中，也有一个看起来很相似的字段<code>KeepAlive</code>。不过，它与前面所说的 HTTP 持久连接并不是一个概念，<code>KeepAlive</code>是直接作用在底层的 socket 上的。<br>&nbsp;<br>它的背后是一种针对网络连接（更确切地说，是 TCP 连接）的存活探测机制。它的值用于表示每间隔多长时间发送一次探测包。当该值不大于<code>0</code>时，则表示不开启这种机制。<code>DefaultTransport</code>会把这个字段的值设定为<code>30</code>秒。<br>&nbsp;<br>好了，以上这些内容阐述的就是，<code>http.Client</code>类型中的<code>Transport</code>字段的含义，以及它的值的定制方式。这涉及了<code>http.RoundTripper</code>接口、<code>http.DefaultTransport</code>变量、<code>http.Transport</code>类型，以及<code>net.Dialer</code>类型。<br>&nbsp;<br><strong><code>http.Server</code>类型的<code>ListenAndServe</code>方法都做了哪些事情？</strong><br>&nbsp;<br><code>http.Server</code>类型与<code>http.Client</code>是相对应的。<code>http.Server</code>代表的是基于 HTTP 协议的服务端，或者说网络服务。<br>&nbsp;<br><code>http.Server</code>类型的<code>ListenAndServe</code>方法的功能是：监听一个基于 TCP 协议的网络地址，并对接收到的 HTTP 请求进行处理。这个方法会默认开启针对网络连接的存活探测机制，以保证连接是持久的。同时，该方法会一直执行，直到有严重的错误发生或者被外界关掉。当被外界关掉时，它会返回一个由<code>http.ErrServerClosed</code>变量代表的错误值。<br>&nbsp;<br>这个<code>ListenAndServe</code>方法主要会做下面这几件事情。</p>
+<ol>
+<li>检查当前的<code>http.Server</code>类型的值（以下简称当前值）的<code>Addr</code>字段。该字段的值代表了当前的网络服务需要使用的网络地址，即：IP 地址和端口号。如果这个字段的值为空字符串，那么就用<code>&quot;:http&quot;</code>代替。也就是说，使用任何可以代表本机的域名和 IP 地址，并且端口号为<code>80</code>。</li>
+<li>通过调用<code>net.Listen</code>函数在已确定的网络地址上启动基于 TCP 协议的监听。</li>
+<li>检查<code>net.Listen</code>函数返回的错误值。如果该错误值不为<code>nil</code>，那么就直接返回该值。否则，通过调用当前值的<code>Serve</code>方法准备接受和处理将要到来的 HTTP 请求。</li>
+</ol>
+<p>&nbsp;<br>可以从当前问题直接衍生出的问题一般有两个，一个是“<code>net.Listen</code>函数都做了哪些事情”，另一个是“<code>http.Server</code>类型的<code>Serve</code>方法是怎样接受和处理 HTTP 请求的”。<br>&nbsp;<br>对于第一个直接的衍生问题，如果概括地说，回答可以是：</p>
+<ol>
+<li>解析参数值中包含的网络地址隐含的 IP 地址和端口号；</li>
+<li>根据给定的网络协议，确定监听的方法，并开始进行监听。</li>
+</ol>
+<p>&nbsp;<br>从这里的第二个步骤出发，我们还可以继续提出一些间接的衍生问题。这往往会涉及<code>net.socket</code>函数以及相关的 socket 知识。<br>&nbsp;<br>对于第二个直接的衍生问题，我们可以这样回答：<br>&nbsp;<br>在一个<code>for</code>循环中，网络监听器的<code>Accept</code>方法会被不断地调用，该方法会返回两个结果值；第一个结果值是<code>net.Conn</code>类型的，它会代表包含了新到来的 HTTP 请求的网络连接；第二个结果值是代表了可能发生的错误的<code>error</code>类型值。<br>&nbsp;<br>如果这个错误值不为<code>nil</code>，除非它代表了一个暂时性的错误，否则循环都会被终止。如果是暂时性的错误，那么循环的下一次迭代将会在一段时间之后开始执行。<br>&nbsp;<br>如果这里的<code>Accept</code>方法没有返回非<code>nil</code>的错误值，那么这里的程序将会先把它的第一个结果值包装成一个<code>*http.conn</code>类型的值（以下简称<code>conn</code>值），然后通过在新的 goroutine 中调用这个<code>conn</code>值的<code>serve</code>方法，来对当前的 HTTP 请求进行处理。<br>&nbsp;<br>这个处理的细节还是很多的，所以我们依然可以找出不少的间接的衍生问题。比如，这个<code>conn</code>值的状态有几种，分别代表着处理的哪个阶段？又比如，处理过程中会用到哪些读取器和写入器，它们的作用分别是什么？再比如，这里的程序是怎样调用我们自定义的处理函数的，等等。<br>&nbsp;<br><strong>怎样优雅地停止基于 HTTP 协议的网络服务程序？</strong><br>&nbsp;<br><code>net/http.Server</code>类型有一个名为<code>Shutdown</code>的指针方法可以实现“优雅的停止”。也就是说，它可以在不中断任何正处在活动状态的连接的情况下平滑地关闭当前的服务器。<br>&nbsp;<br>它会先关闭所有的空闲连接，并一直等待。只有活动的连接变为空闲之后，它才会关闭它们。当所有的连接都被平滑地关闭之后，它会关闭当前的服务器并返回。当有错误发生时，它还会把相应的错误值返回。<br>&nbsp;<br>另外，你还可以通过调用<code>Server</code>值的<code>RegisterOnShutdown</code>方法来注册可以在服务器即将关闭时被自动调用的函数。<br>&nbsp;<br>更确切地说，当前服务器的<code>Shutdown</code>方法会以异步的方式调用如此注册的所有函数。我们可以利用这样的函数来通知长连接的客户端“连接即将关闭”。<br>&nbsp;</p>
+<p>&nbsp;<br>参考链接：<a target="_blank" rel="noopener" href="https://time.geekbang.org/column/intro/112">https://time.geekbang.org/column/intro/112</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">并指如刀</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://wht6.github.io/posts/235e.html">http://wht6.github.io/posts/235e.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://wht6.github.io" target="_blank">WHT</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Go%E8%AF%AD%E8%A8%80/">Go语言</a></div><div class="post_share"><div class="social-share" data-image="/img/featureimages/63.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/posts/bb96.html"><img class="prev-cover" src="/img/featureimages/64.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">程序性能分析基础</div></div></a></div><div class="next-post pull-right"><a href="/posts/a29a.html"><img class="next-cover" src="/img/featureimages/62.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">使用os包中的API</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/posts/8fcc.html" title="Golang的指针"><img class="cover" src="/img/featureimages/41.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-03-02</div><div class="title">Golang的指针</div></div></a></div><div><a href="/posts/4dc9.html" title="Golang的数组和切片"><img class="cover" src="/img/featureimages/34.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-02-25</div><div class="title">Golang的数组和切片</div></div></a></div><div><a href="/posts/1094.html" title="Go语言基础知识"><img class="cover" src="/img/featureimages/32.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-02-21</div><div class="title">Go语言基础知识</div></div></a></div><div><a href="/posts/24dd.html" title="Go语言的函数"><img class="cover" src="/img/featureimages/38.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-02-28</div><div class="title">Go语言的函数</div></div></a></div><div><a href="/posts/b742.html" title="Go语言的基本流程控制语句"><img class="cover" src="/img/featureimages/43.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-03-03</div><div class="title">Go语言的基本流程控制语句</div></div></a></div><div><a href="/posts/60b9.html" title="container包中的容器-链表"><img class="cover" src="/img/featureimages/35.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-02-26</div><div class="title">container包中的容器-链表</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/logo.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">并指如刀</div><div class="author-info__description">分享技术,分享知识,分享感悟</div></div><div class="card-info-data is-center"><div class="card-info-data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">73</div></a></div><div class="card-info-data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">33</div></a></div><div class="card-info-data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="mailto:wanght586@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#socket-%E4%B8%8E-IPC"><span class="toc-number">1.</span> <span class="toc-text">socket 与 IPC</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HTTP%E5%8D%8F%E8%AE%AE%E9%80%9A%E4%BF%A1"><span class="toc-number">2.</span> <span class="toc-text">HTTP协议通信</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/3009.html" title="深入解析Pod对象"><img src="/img/featureimages/73.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="深入解析Pod对象"/></a><div class="content"><a class="title" href="/posts/3009.html" title="深入解析Pod对象">深入解析Pod对象</a><time datetime="2022-03-31T08:00:00.000Z" title="发表于 2022-03-31 16:00:00">2022-03-31</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/1cf9.html" title="Shell实践模板"><img src="/img/featureimages/71.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Shell实践模板"/></a><div class="content"><a class="title" href="/posts/1cf9.html" title="Shell实践模板">Shell实践模板</a><time datetime="2022-03-29T08:00:00.000Z" title="发表于 2022-03-29 16:00:00">2022-03-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/3588.html" title="Kubernetes集群搭建与实践"><img src="/img/featureimages/69.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Kubernetes集群搭建与实践"/></a><div class="content"><a class="title" href="/posts/3588.html" title="Kubernetes集群搭建与实践">Kubernetes集群搭建与实践</a><time datetime="2022-03-27T08:00:00.000Z" title="发表于 2022-03-27 16:00:00">2022-03-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/bbe1.html" title="Docker容器实现原理"><img src="/img/featureimages/68.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Docker容器实现原理"/></a><div class="content"><a class="title" href="/posts/bbe1.html" title="Docker容器实现原理">Docker容器实现原理</a><time datetime="2022-03-26T08:00:00.000Z" title="发表于 2022-03-26 16:00:00">2022-03-26</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/a2bb.html" title="Shell脚本复习"><img src="/img/featureimages/67.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Shell脚本复习"/></a><div class="content"><a class="title" href="/posts/a2bb.html" title="Shell脚本复习">Shell脚本复习</a><time datetime="2022-03-23T08:00:00.000Z" title="发表于 2022-03-23 16:00:00">2022-03-23</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By 并指如刀</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/ Relative)","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"left","width":100,"height":180},"mobile":{"show":false},"react":{"opacityDefault":0.7}});</script></body></html>

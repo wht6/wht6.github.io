@@ -1,0 +1,377 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>实例分割框架：SOLO解读 | WHT</title><meta name="keywords" content="实例分割"><meta name="author" content="并指如刀"><meta name="copyright" content="并指如刀"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="referrer" content="no-referrer"><meta name="description" content="实例分割框架：SOLO解读SOLOSOLO思想SOLO通过引入一个“实例类别”的概念，根据实例的位置和大小为实例中的每个像素分配一个“实例类别”，将实例分割任务转换成了一个单阶端的分类任务。 这里可能会难以理解“实例类别”的概念，这个概念其实并不难理解。首先对于图像中的每个目标，都有一个语义类别，比如猫或狗等。但是如果图像上有多只猫，我们就无法通过语义类别来分开不同的猫，因为它们具有相同的语义类别">
+<meta property="og:type" content="article">
+<meta property="og:title" content="实例分割框架：SOLO解读">
+<meta property="og:url" content="http://wht6.github.io/posts/c6fd.html">
+<meta property="og:site_name" content="WHT">
+<meta property="og:description" content="实例分割框架：SOLO解读SOLOSOLO思想SOLO通过引入一个“实例类别”的概念，根据实例的位置和大小为实例中的每个像素分配一个“实例类别”，将实例分割任务转换成了一个单阶端的分类任务。 这里可能会难以理解“实例类别”的概念，这个概念其实并不难理解。首先对于图像中的每个目标，都有一个语义类别，比如猫或狗等。但是如果图像上有多只猫，我们就无法通过语义类别来分开不同的猫，因为它们具有相同的语义类别">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://wht6.github.io/img/featureimages/13.jpg">
+<meta property="article:published_time" content="2021-05-07T11:00:00.000Z">
+<meta property="article:modified_time" content="2022-03-20T01:46:05.700Z">
+<meta property="article:author" content="并指如刀">
+<meta property="article:tag" content="实例分割">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://wht6.github.io/img/featureimages/13.jpg"><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="http://wht6.github.io/posts/c6fd"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 并指如刀","link":"链接: ","source":"来源: WHT","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '实例分割框架：SOLO解读',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-03-20 09:46:05'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><style type="text/css" lang="css">
+    #loading-container{
+        position: fixed;
+        top: 0;
+        left: 0;
+        min-height: 100vh;
+        width: 100vw;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: #FFF;
+        text-align: center;
+        /* loader页面消失采用渐隐的方式*/
+        -webkit-transition: opacity 1s ease;
+        -moz-transition: opacity 1s ease;
+        -o-transition: opacity 1s ease;
+        transition: opacity 1s ease;
+    }
+    .loading-image{
+        width: 120px;
+        height: 50px;
+        transform: translate(-50%);
+    }
+    
+    .loading-image div:nth-child(2) {
+        -webkit-animation: pacman-balls 1s linear 0s infinite;
+        animation: pacman-balls 1s linear 0s infinite
+    }
+
+    .loading-image div:nth-child(3) {
+        -webkit-animation: pacman-balls 1s linear .33s infinite;
+        animation: pacman-balls 1s linear .33s infinite
+    }
+
+    .loading-image div:nth-child(4) {
+        -webkit-animation: pacman-balls 1s linear .66s infinite;
+        animation: pacman-balls 1s linear .66s infinite
+    }
+
+    .loading-image div:nth-child(5) {
+        -webkit-animation: pacman-balls 1s linear .99s infinite;
+        animation: pacman-balls 1s linear .99s infinite
+    }
+    
+   .loading-image div:first-of-type {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_up .5s 0s infinite;
+        animation: rotate_pacman_half_up .5s 0s infinite;
+    }
+    .loading-image div:nth-child(2) {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_down .5s 0s infinite;
+        animation: rotate_pacman_half_down .5s 0s infinite;
+        margin-top: -50px;
+    }
+    @-webkit-keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @-webkit-keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+
+    @keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+    
+    @-webkit-keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+
+    @keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+    
+   
+    .loading-image div:nth-child(3),
+    .loading-image div:nth-child(4),
+    .loading-image div:nth-child(5),
+    .loading-image div:nth-child(6){
+        background-color: #49b1f5;
+        width: 15px;
+        height: 15px;
+        border-radius: 100%;
+        margin: 2px;
+        width: 10px;
+        height: 10px;
+        position: absolute;
+        transform: translateY(-6.25px);
+        top: 25px;
+        left: 100px;
+    }
+    .loading-text{
+        margin-bottom: 20vh;
+        text-align: center;
+        color: #2c3e50;
+        font-size: 2rem;
+        box-sizing: border-box;
+        padding: 0 10px;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    @media only screen and (max-width: 500px) {
+         .loading-text{
+            font-size: 1.5rem;
+         }
+    }
+    .fadeout {
+        opacity: 0;
+        filter: alpha(opacity=0);
+    }
+    /* logo出现动画 */
+    @-webkit-keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);transform:translate3d(0,-100%,0)}100%{opacity:1;-webkit-transform:none;transform:none}}
+    @keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);}}
+ </style>
+ <script>
+(function () {
+    const loaded = function(){
+       setTimeout(function(){
+            const loader = document.getElementById("loading-container");
+            loader.className="fadeout" ;//使用渐隐的方法淡出loading page
+            // document.getElementById("body-wrap").style.display="flex";
+            setTimeout(function(){
+                loader.style.display="none";
+            },1000); 
+        },1000);//强制显示loading page 1s  
+    };
+    loaded();
+})()
+ </script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="WHT" type="application/atom+xml">
+</head>
+ <div id="loading-container">
+     <p class="loading-text">玩命加载中 . . . </p> 
+     <div class="loading-image">
+         <div></div>
+         <div></div>
+         <div></div>
+         <div></div> 
+         <div></div>
+     </div>
+ </div><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/logo.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">73</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">33</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/featureimages/13.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">WHT</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">实例分割框架：SOLO解读</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-05-07T11:00:00.000Z" title="发表于 2021-05-07 19:00:00">2021-05-07</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-03-20T01:46:05.700Z" title="更新于 2022-03-20 09:46:05">2022-03-20</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>10分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="实例分割框架：SOLO解读"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="实例分割框架：SOLO解读"><a href="#实例分割框架：SOLO解读" class="headerlink" title="实例分割框架：SOLO解读"></a>实例分割框架：SOLO解读</h1><h2 id="SOLO"><a href="#SOLO" class="headerlink" title="SOLO"></a>SOLO</h2><h3 id="SOLO思想"><a href="#SOLO思想" class="headerlink" title="SOLO思想"></a>SOLO思想</h3><p>SOLO通过引入一个“实例类别”的概念，根据实例的位置和大小为实例中的每个像素分配一个“实例类别”，将实例分割任务转换成了一个单阶端的分类任务。</p>
+<p>这里可能会难以理解“实例类别”的概念，这个概念其实并不难理解。首先对于图像中的每个目标，都有一个语义类别，比如猫或狗等。但是如果图像上有多只猫，我们就无法通过语义类别来分开不同的猫，因为它们具有相同的语义类别——猫。但是如果我们给每只猫加上一个位置和大小的标签呢，不同的猫显然具有不同的大小和位置。论文这里就把“语义类别+位置和大小”起了个名字，叫做实例类别。</p>
+<p>这里作者为了证明图像中的大多数目标确实具有不同的位置和大小，也进行了调研。</p>
+<blockquote>
+<p>Take the challenging MS COCO dataset [16] for example. There are in total 36; 780 objects in the validation subset, 98:3% of object pairs have center distance greater than 30 pixels. As for the rest 1:7% of object pairs, 40:5% of them have size ratio greater than 1.5×. To conclude, in most cases two instances in an image either have different center locations or have different object sizes.  </p>
+</blockquote>
+<h3 id="SOLO框架"><a href="#SOLO框架" class="headerlink" title="SOLO框架"></a>SOLO框架</h3><p><img src="https://raw.githubusercontent.com/wht6/image/master/img/solo_kuangjia1.png" alt></p>
+<p>SOLO将图像划分成S*S的网格，每个网格代表一个中心位置类。如同语义分割框架FCN那样，SOLO将中心位置类编码到通道轴上。其中每个通道负责一个中心位置类，相关的通道需要预测中心属于此位置的实例mask（如同FCN属于猫类的通道负责预测猫的mask那样）。</p>
+<p>如图中所示，下边的Mask Branch即将中心位置类编码到通道轴的结果，每一个网格对应一个通道，所以一共有$S^2$个通道。</p>
+<p>而上边的Category Branch则是和语义分割FCN相似，但是并非为每个像素分类而是为每个网格进行语义分类。（论文假设每个网格只属于一个单独的实例）</p>
+<h3 id="实现细节"><a href="#实现细节" class="headerlink" title="实现细节"></a>实现细节</h3><p>1）这时你可能会问为什么没考虑尺寸信息呢，当出现相同位置且不同尺寸的两个对象怎么办呢？</p>
+<p>这里SOLO使用了经典的FPN（特征金字塔网络）结构，通过将不同的尺寸的对象分配给不同FPN等级（level）来预测。此时，不同尺寸的对象就被分开处理了。具体做法是计算每个ground truth的面积，将不同面积的实例分配到不同的FPN等级预测。</p>
+<p>FPN的不同层参数共享（7层），最后一层参数不共享。</p>
+<blockquote>
+<p>Weights for the head are shared across different levels. Grid number may varies at different pyramids. Only the last conv is not shared in this scenario.  </p>
+</blockquote>
+<p>2）论文中网格和通道的对应方式：第k个通道对应第i*S+j个网格，如此就可以一一对应了。</p>
+<p>3）如果像FCN那样对中心位置分类，则会因为卷积的空间不变性使得分割对位置不敏感。因此，论文使用了CoorConv的方法将归一化的坐标作为两个通道加入Mask Branch（其中一个通道是x坐标，一个通道是y坐标）。</p>
+<p>4）最后，结合每个网格生成的结果得到一些实例掩码，在用NMS选出最好的分割结果。</p>
+<p>5）正负样本的选择，如果网格落在真实掩膜（ground truth mask）的中心范围，那么视为正样本，其他的为负样本。在代码中，作者将gt_box缩小到1/5（以质心为中心），然后找出覆盖的网格，这些网格就是正样本。接着把类别标签与mask标签放到网格对应的通道上。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># mass center 计算质心</span></span><br><span class="line">gt_masks_pt = torch.from_numpy(gt_masks).to(device=device)</span><br><span class="line">center_ws, center_hs = center_of_mass(gt_masks_pt)</span><br><span class="line">valid_mask_flags = gt_masks_pt.<span class="built_in">sum</span>(dim=-<span class="number">1</span>).<span class="built_in">sum</span>(dim=-<span class="number">1</span>) &gt; <span class="number">0</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 计算质心范围覆盖的网格</span></span><br><span class="line"><span class="comment"># left, top, right, down</span></span><br><span class="line">top_box = <span class="built_in">max</span>(<span class="number">0</span>, <span class="built_in">int</span>(((center_h - half_h) / upsampled_size[<span class="number">0</span>]) // (<span class="number">1.</span> / num_grid)))</span><br><span class="line">down_box = <span class="built_in">min</span>(num_grid - <span class="number">1</span>, <span class="built_in">int</span>(((center_h + half_h) / upsampled_size[<span class="number">0</span>]) // (<span class="number">1.</span> / num_grid)))</span><br><span class="line">left_box = <span class="built_in">max</span>(<span class="number">0</span>, <span class="built_in">int</span>(((center_w - half_w) / upsampled_size[<span class="number">1</span>]) // (<span class="number">1.</span> / num_grid)))</span><br><span class="line">right_box = <span class="built_in">min</span>(num_grid - <span class="number">1</span>, <span class="built_in">int</span>(((center_w + half_w) / upsampled_size[<span class="number">1</span>]) // (<span class="number">1.</span> / num_grid)))</span><br><span class="line"></span><br><span class="line">top = <span class="built_in">max</span>(top_box, coord_h-<span class="number">1</span>)</span><br><span class="line">down = <span class="built_in">min</span>(down_box, coord_h+<span class="number">1</span>)</span><br><span class="line">left = <span class="built_in">max</span>(coord_w-<span class="number">1</span>, left_box)</span><br><span class="line">right = <span class="built_in">min</span>(right_box, coord_w+<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 放置真实标签</span></span><br><span class="line"><span class="comment"># cate</span></span><br><span class="line">cate_label[top:(down+<span class="number">1</span>), left:(right+<span class="number">1</span>)] = gt_label</span><br><span class="line"><span class="comment"># ins</span></span><br><span class="line">seg_mask = mmcv.imrescale(seg_mask, scale=<span class="number">1.</span> / output_stride)</span><br><span class="line">seg_mask = torch.from_numpy(seg_mask).to(device=device)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(top, down+<span class="number">1</span>):</span><br><span class="line">	<span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(left, right+<span class="number">1</span>):</span><br><span class="line">		label = <span class="built_in">int</span>(i * num_grid + j)</span><br><span class="line">		ins_label[label, :seg_mask.shape[<span class="number">0</span>], :seg_mask.shape[<span class="number">1</span>]] = seg_mask  <span class="comment"># 存储在s*s的某个通道上</span></span><br><span class="line">		ins_ind_label[label] = <span class="literal">True</span> <span class="comment"># 哪个通道有实例</span></span><br><span class="line">ins_label_list.append(ins_label)</span><br><span class="line">cate_label_list.append(cate_label)</span><br><span class="line">ins_ind_label_list.append(ins_ind_label)</span><br></pre></td></tr></table></figure>
+<p>6）损失函数：</p>
+<script type="math/tex; mode=display">
+L=L_{cate}+\lambda L_{mask}</script><p>其中$L_{cate}$是类别分支的损失（Focal loss），$L_{mask}$是mask分支的损失（Dice loss）。</p>
+<p>7）置信度分输计算：</p>
+<p>对mask中所有得分大于0.5的像素求和取平均得到mask的置信度分数。</p>
+<p>将mask的置信度分数乘以类别得分得到类别的置信度分数。</p>
+<p>可以看出，SOLO将实例分割转变成两个分类任务，设计了一个无检测、无聚类的端到端学习框架。</p>
+<p>作者给出的改进思路是可以借鉴最新的优秀语义分割方法来改进SOLO的两个分类任务</p>
+<blockquote>
+<p>The proposed SOLO only needs to solve two pixel-level classification tasks, thus it may be possible to borrow some of the<br>recent advances in semantic segmentation for improving SOLO.   </p>
+</blockquote>
+<p>SOLO其实也存在一些缺点，不利于检测尺寸小的目标和目标密集的区域。</p>
+<h2 id="SOLOv2"><a href="#SOLOv2" class="headerlink" title="SOLOv2"></a>SOLOv2</h2><h3 id="SOLOv2创新"><a href="#SOLOv2创新" class="headerlink" title="SOLOv2创新"></a>SOLOv2创新</h3><p>论文认为有三个瓶颈限制了SOLO的表现：</p>
+<p>1）低效的掩膜预测。因为掩膜分支有S*S个通道，会消耗许多资源和算力。并且S在不同的fpn的level值是不同的，每个level的最后一层并不共享参数，这些都导致了掩膜预测效率的低下。</p>
+<p>2）掩膜精细程度差。精细的掩膜需要更高分辨率的mask处理目标的边缘信息。但是大分辨率的mask以为了更复杂的计算。</p>
+<p>3）Mask NMS速度慢。相比于box NMS，Mask NMS会消耗更多的时间。</p>
+<blockquote>
+<p>However, three main bottlenecks limit the performance of SOLO: a) inefficient mask representation and learning; b) not high enough resolution for finer mask predictions; c) slow mask NMS.  </p>
+</blockquote>
+<p>因此，论文提出了两个创新：</p>
+<p>1）使用动态卷积的方法预测掩膜。</p>
+<p>2）设计能够并行计算的Matrix NMS代替传统的NMS。</p>
+<h3 id="实现方案"><a href="#实现方案" class="headerlink" title="实现方案"></a>实现方案</h3><p>SOLO在生成掩膜的过程中，最后一层的输入特征为$F \in {\mathbb{R}^{H \times W \times E}}$，通过一层卷积层输出为$S^2$个通道。这个过程可以建模为：</p>
+<script type="math/tex; mode=display">
+{M_{i,j}} = {G_{i,j}} \circledast F</script><p>其中，${G_{i,j}} \in {\mathbb{R}^{1 \times 1 \times E}}$是卷积核，${M_{i,j}} \in {\mathbb{R}^{H \times W}}$是位置在（i, j）处的实例掩膜。</p>
+<p>M是很大的，消耗许多存储与算力。而实例的位置体现在网格中是稀疏的。所以在$S^2$个卷积核中只有很小一部分发挥作用，而其他的都是冗余的。</p>
+<p>针对上面的问题，论文提出了动态卷积的方法，一个分支预测卷积核G，一个分支预测feature map，最后feature map与学习到的卷积核做卷积生成mask M。</p>
+<h4 id="Mask-kernel-G"><a href="#Mask-kernel-G" class="headerlink" title="Mask kernel G"></a>Mask kernel G</h4><p>在给定backbone与FPN的情况下，为每个FPN的等级预测动态卷积核G。将FPN生成的$H\times W\times C$的feature map对齐到$S\times S\times C$，然后经过四层卷积，最后经过一个$3\times 3\times D$的卷积层得到动态卷积核G。为了保持位置敏感性，在第一个卷积层加入坐标通道。同样每个FPN等级共享参数。</p>
+<h4 id="Mask-Feature-F"><a href="#Mask-Feature-F" class="headerlink" title="Mask Feature F"></a>Mask Feature F</h4><p>FPN每个level经过一个$3\times 3$卷积层，组归一化，RELU和2次的双线性上采样后将P2到P5的特征融合。融合的过程是像素级求和，然后$1\times 1$卷积，组归一化，RELU。在FPN的P5层加入了坐标通道提升位置敏感性。</p>
+<p>在预测阶段，对于类别分支用0.1的阈值剔除得分低的网格。在用网格对应的动态卷积核去预测Mask。（减少计算量就体现在这里）</p>
+<h4 id="Matrix-NMS"><a href="#Matrix-NMS" class="headerlink" title="Matrix NMS"></a>Matrix NMS</h4><p>这里先简单介绍传统的NMS与改进的Soft NMS。</p>
+<h5 id="NMS"><a href="#NMS" class="headerlink" title="NMS"></a>NMS</h5><p>1）对目标按照得分排序</p>
+<p>2）保留得分最高的目标</p>
+<p>3）删除与目标最相近的其他目标（通常是根据IOU，删除与目标IOU大于某个阈值的框）</p>
+<p>4）复1-3直到目标结合中不存在目标</p>
+<p>NMS有个很大的缺点，容易误删。特别是两个相似而又靠近的目标，容易删除较小的目标。</p>
+<h5 id="Soft-NMS"><a href="#Soft-NMS" class="headerlink" title="Soft NMS"></a>Soft NMS</h5><p>Soft NMS剔除的改进方法是将得分乘以一个惩罚项decay来降低相似目标的得分，而非直接暴力地删除。</p>
+<p> 原来的NMS可以描述如下：将IOU大于阈值的目标的得分全部置为0。</p>
+<script type="math/tex; mode=display">
+{s_i} = \left\{ {\begin{array}{*{20}{c}}
+  {{s_i},\quad iou(M,{b_i}) < {N_t}} \\ 
+  {0,\quad iou(M,{b_i}) \geqslant {N_t}} 
+\end{array}} \right.</script><p>Soft NMS的改进，线性加权的方式，decay是与iou有关的线性函数$f(iou)=1-iou$：</p>
+<script type="math/tex; mode=display">
+{s_i} = \left\{ {\begin{array}{*{20}{c}}
+  {{s_i},\quad iou(M,{b_i}) < {N_t}} \\ 
+  {{s_i}(1 - iou(M,{b_i})),\quad iou(M,{b_i}) \geqslant {N_t}} 
+\end{array}} \right.</script><p>还有一种高斯加权的方式，这里不做过多介绍。</p>
+<p>总之，思路都是IOU越大，得分降低的越多。 </p>
+<p>下面介绍Matrix NMS的思路。</p>
+<p>Matrix NMS的思路是在Soft NMS的思路上延申。</p>
+<p>论文认为一个给定Mask的惩罚项decay与两方面有关：</p>
+<p>1）每个与它同类的得分比它高的预测Mask对它的惩罚。这个即$f(iou)$，iou越大，$f(iou)$越小，惩罚力度越强。</p>
+<p>2）每个与它同类的且得分比它高的Mask自身被抑制的概率。而一个mask被抑制的概率与自身相关的最大IOU呈正相关。论文将其设置为$1/f(iou_{max})$，iou越大，越可能被抑制。</p>
+<p>直观理解就是我会被得分高的Mask抑制，但是如果这个得分高的Mask自身被抑制，它很有可能就不是最优的mask，我受它的抑制就需要适当的减弱，就乘以一个与它自身最大IOU成正相关的一个系数，即其被抑制的概率。</p>
+<p>因为要并行处理，所以Matrix NMS的计算全部是矩阵计算。</p>
+<h4 id="实现细节-1"><a href="#实现细节-1" class="headerlink" title="实现细节"></a>实现细节</h4><p>1）最后动态卷积核的生成并没有经过激活函数。</p>
+<p>2）损失函数与SOLO的损失函数的计算方式一样。</p>
+<p>3）Matirx NMS矩阵计算的详细过程：</p>
+<p>筛选top-N的mask，按照得分排序，接着组成$N \times N$的矩阵。</p>
+<p>计算所有的IOU。将每一类得分最高的mask的那一列iou置为0。iou为0即可认为没有相似的mask，主要目的还是保留得分最高的mask。</p>
+<p>计算一个label_matrix。其中同一类的为1，不同类为0。（这里可能会对0产生疑问，0即不被抑制，因为不同类吗，后边会在行最小中删除掉）</p>
+<p>计算列的最大IOU。带入公式计算decay。</p>
+<p>选择行最小的decay为行对应mask的decay。</p>
+<p>decay*score更新score。选出top-k为最终结果。</p>
+<p>4）SOLOv2类别分支改为了四层卷积加最后输出，原本SOLO的深度是7外加一层输出。</p>
+<p>5）类别分支与kernel分支还是5个level的fpn，共享参数，不同level的feature map是S*S，S即网格数。依然是[40, 36, 24, 16, 12]。</p>
+<p>6）Mask feature分支，融合了P2到P5的特征，并没有使用P6的特征。特征融合之后，输出256个通道，相当于网格划分成16*16，然后再与学习的动态卷积核卷积，接着与真实的mask计算loss。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">并指如刀</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://wht6.github.io/posts/c6fd.html">http://wht6.github.io/posts/c6fd.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://wht6.github.io" target="_blank">WHT</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%AE%9E%E4%BE%8B%E5%88%86%E5%89%B2/">实例分割</a></div><div class="post_share"><div class="social-share" data-image="/img/featureimages/13.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/posts/26fe.html"><img class="prev-cover" src="/img/featureimages/8.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">实例分割框架：PolarMask解读</div></div></a></div><div class="next-post pull-right"><a href="/posts/9iyu.html"><img class="next-cover" src="/img/featureimages/5.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">获得因特网的存在：拼好拼图</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/posts/26fe.html" title="实例分割框架：PolarMask解读"><img class="cover" src="/img/featureimages/8.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-05-13</div><div class="title">实例分割框架：PolarMask解读</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/logo.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">并指如刀</div><div class="author-info__description">分享技术,分享知识,分享感悟</div></div><div class="card-info-data is-center"><div class="card-info-data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">73</div></a></div><div class="card-info-data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">33</div></a></div><div class="card-info-data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="mailto:wanght586@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AE%9E%E4%BE%8B%E5%88%86%E5%89%B2%E6%A1%86%E6%9E%B6%EF%BC%9ASOLO%E8%A7%A3%E8%AF%BB"><span class="toc-number">1.</span> <span class="toc-text">实例分割框架：SOLO解读</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#SOLO"><span class="toc-number">1.1.</span> <span class="toc-text">SOLO</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SOLO%E6%80%9D%E6%83%B3"><span class="toc-number">1.1.1.</span> <span class="toc-text">SOLO思想</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SOLO%E6%A1%86%E6%9E%B6"><span class="toc-number">1.1.2.</span> <span class="toc-text">SOLO框架</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82"><span class="toc-number">1.1.3.</span> <span class="toc-text">实现细节</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SOLOv2"><span class="toc-number">1.2.</span> <span class="toc-text">SOLOv2</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SOLOv2%E5%88%9B%E6%96%B0"><span class="toc-number">1.2.1.</span> <span class="toc-text">SOLOv2创新</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E6%96%B9%E6%A1%88"><span class="toc-number">1.2.2.</span> <span class="toc-text">实现方案</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Mask-kernel-G"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">Mask kernel G</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Mask-Feature-F"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">Mask Feature F</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Matrix-NMS"><span class="toc-number">1.2.2.3.</span> <span class="toc-text">Matrix NMS</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#NMS"><span class="toc-number">1.2.2.3.1.</span> <span class="toc-text">NMS</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Soft-NMS"><span class="toc-number">1.2.2.3.2.</span> <span class="toc-text">Soft NMS</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82-1"><span class="toc-number">1.2.2.4.</span> <span class="toc-text">实现细节</span></a></li></ol></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/3009.html" title="深入解析Pod对象"><img src="/img/featureimages/73.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="深入解析Pod对象"/></a><div class="content"><a class="title" href="/posts/3009.html" title="深入解析Pod对象">深入解析Pod对象</a><time datetime="2022-03-31T08:00:00.000Z" title="发表于 2022-03-31 16:00:00">2022-03-31</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/1cf9.html" title="Shell实践模板"><img src="/img/featureimages/71.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Shell实践模板"/></a><div class="content"><a class="title" href="/posts/1cf9.html" title="Shell实践模板">Shell实践模板</a><time datetime="2022-03-29T08:00:00.000Z" title="发表于 2022-03-29 16:00:00">2022-03-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/3588.html" title="Kubernetes集群搭建与实践"><img src="/img/featureimages/69.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Kubernetes集群搭建与实践"/></a><div class="content"><a class="title" href="/posts/3588.html" title="Kubernetes集群搭建与实践">Kubernetes集群搭建与实践</a><time datetime="2022-03-27T08:00:00.000Z" title="发表于 2022-03-27 16:00:00">2022-03-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/bbe1.html" title="Docker容器实现原理"><img src="/img/featureimages/68.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Docker容器实现原理"/></a><div class="content"><a class="title" href="/posts/bbe1.html" title="Docker容器实现原理">Docker容器实现原理</a><time datetime="2022-03-26T08:00:00.000Z" title="发表于 2022-03-26 16:00:00">2022-03-26</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/a2bb.html" title="Shell脚本复习"><img src="/img/featureimages/67.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Shell脚本复习"/></a><div class="content"><a class="title" href="/posts/a2bb.html" title="Shell脚本复习">Shell脚本复习</a><time datetime="2022-03-23T08:00:00.000Z" title="发表于 2022-03-23 16:00:00">2022-03-23</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By 并指如刀</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/ Relative)","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"left","width":100,"height":180},"mobile":{"show":false},"react":{"opacityDefault":0.7}});</script></body></html>
