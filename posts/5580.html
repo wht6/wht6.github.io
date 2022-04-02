@@ -1,13 +1,13 @@
-<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Linux日志管理 | WHT</title><meta name="keywords" content="日志"><meta name="author" content="并指如刀"><meta name="copyright" content="并指如刀"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="referrer" content="no-referrer"><meta name="description" content="日志进程rsyslog日志概念 rsyslogd是系统专职日志程序，它会处理绝大部分的日志记录，也会记录操作系统有关的信息，如登录信息、程序启动关闭信息、错误信息。 除了系统自带的rsyslog，有些应用程序是可以自己记录自己的日志的，比如httpd、MySQL、nginx等。 扩展：有点程序后面会带一个d，这个d是deamon，这个程序通常持续运行，不会运行结束，即不会自动退出系统，需要人为手">
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>Linux日志管理 | WHT</title><meta name="keywords" content="日志"><meta name="author" content="并指如刀"><meta name="copyright" content="并指如刀"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="referrer" content="no-referrer"><meta name="description" content="日志进程rsyslog日志概念 rsyslogd是系统专职日志程序，它会处理绝大部分的日志记录，也会记录操作系统有关的信息，如登录信息、程序启动关闭信息、错误信息。 除了系统自带的rsyslog，有些应用程序是可以自己记录自己的日志的，比如httpd、MySQL、nginx等。  日志文件 系统主日志文件：&#x2F;var&#x2F;log&#x2F;messages。messages文件里面每一行是一段日志，分为若干个字">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Linux日志管理">
 <meta property="og:url" content="http://wht6.github.io/posts/5580.html">
 <meta property="og:site_name" content="WHT">
-<meta property="og:description" content="日志进程rsyslog日志概念 rsyslogd是系统专职日志程序，它会处理绝大部分的日志记录，也会记录操作系统有关的信息，如登录信息、程序启动关闭信息、错误信息。 除了系统自带的rsyslog，有些应用程序是可以自己记录自己的日志的，比如httpd、MySQL、nginx等。 扩展：有点程序后面会带一个d，这个d是deamon，这个程序通常持续运行，不会运行结束，即不会自动退出系统，需要人为手">
+<meta property="og:description" content="日志进程rsyslog日志概念 rsyslogd是系统专职日志程序，它会处理绝大部分的日志记录，也会记录操作系统有关的信息，如登录信息、程序启动关闭信息、错误信息。 除了系统自带的rsyslog，有些应用程序是可以自己记录自己的日志的，比如httpd、MySQL、nginx等。  日志文件 系统主日志文件：&#x2F;var&#x2F;log&#x2F;messages。messages文件里面每一行是一段日志，分为若干个字">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://wht6.github.io/img/featureimages/25.jpg">
 <meta property="article:published_time" content="2021-11-05T02:00:00.000Z">
-<meta property="article:modified_time" content="2022-03-20T01:52:18.895Z">
+<meta property="article:modified_time" content="2022-04-01T08:50:18.047Z">
 <meta property="article:author" content="并指如刀">
 <meta property="article:tag" content="日志">
 <meta name="twitter:card" content="summary">
@@ -53,7 +53,7 @@
   isHome: false,
   isHighlightShrink: false,
   isToc: true,
-  postUpdate: '2022-03-20 09:52:18'
+  postUpdate: '2022-04-01 16:50:18'
 }</script><noscript><style type="text/css">
   #nav {
     opacity: 1
@@ -283,44 +283,70 @@
          <div></div> 
          <div></div>
      </div>
- </div><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/logo.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">74</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">34</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/featureimages/25.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">WHT</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Linux日志管理</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-11-05T02:00:00.000Z" title="发表于 2021-11-05 10:00:00">2021-11-05</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-03-20T01:52:18.895Z" title="更新于 2022-03-20 09:52:18">2022-03-20</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Linux/">Linux</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>4分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Linux日志管理"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><hr>
+ </div><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/logo.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">74</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">34</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">8</div></a></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/featureimages/25.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">WHT</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Linux日志管理</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-11-05T02:00:00.000Z" title="发表于 2021-11-05 10:00:00">2021-11-05</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-04-01T08:50:18.047Z" title="更新于 2022-04-01 16:50:18">2022-04-01</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Linux/">Linux</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.6k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>5分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Linux日志管理"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><hr>
 <h2 id="日志进程rsyslog"><a href="#日志进程rsyslog" class="headerlink" title="日志进程rsyslog"></a>日志进程rsyslog</h2><h3 id="日志概念"><a href="#日志概念" class="headerlink" title="日志概念"></a>日志概念</h3><ul>
-<li>rsyslogd是系统专职日志程序，它会处理绝大部分的日志记录，也会记录操作系统有关的信息，如登录信息、程序启动关闭信息、错误信息。</li>
+<li><strong>rsyslogd</strong>是系统专职日志程序，它会处理绝大部分的日志记录，也会记录操作系统有关的信息，如登录信息、程序启动关闭信息、错误信息。</li>
 <li>除了系统自带的rsyslog，有些应用程序是可以自己记录自己的日志的，比如httpd、MySQL、nginx等。</li>
-<li>扩展：有点程序后面会带一个d，这个d是deamon，这个程序通常持续运行，不会运行结束，即不会自动退出系统，需要人为手动停止。</li>
 </ul>
 <h3 id="日志文件"><a href="#日志文件" class="headerlink" title="日志文件"></a>日志文件</h3><ul>
-<li><p>系统主日志文件：/var/log/messages。messages文件里面每一行是一段日志，分为若干个字段，第一个字段是日期和时间，第二个字段是主机名，第三个字段是消息，也就是具体发生的事件。扩展：tail -f /var/log/messages，-f表示锁定文件尾部，并动态展示，也就是实时更新查看的文件，和watch命令相似。</p>
+<li><p>系统主日志文件：<code>/var/log/messages</code>。messages文件里面每一行是一段日志，分为若干个字段，第一个字段是<strong>日期和时间</strong>，第二个字段是<strong>主机名</strong>，第三个字段是<strong>消息</strong>，也就是具体发生的事件。扩展：<code>tail -f /var/log/messages</code>，-f表示锁定文件尾部，并动态展示，也就是实时更新查看的文件，和watch命令相似。</p>
 </li>
-<li><p>/var/log/secure是安全日志，/var/log/yum.log是YUM日志，/var/log/maillog是邮件日志，/var/log/cron是crond和at进程产生的日志，/var/log/dmesg是和系统启动相关的日志。</p>
+<li><p><code>/var/log/secure</code>是安全日志，<code>/var/log/yum.log</code>是YUM日志，<code>/var/log/maillog</code>是邮件日志，<code>/var/log/cron</code>是crond和at进程产生的日志，<code>/var/log/dmesg</code>是和系统启动相关的日志。</p>
 </li>
-<li><p>rsyslog是系统默认安装的，如果rsyslog程序有问题，可以重新安装，yum install -y rsyslog logrotate。</p>
+<li><p>rsyslog是系统默认安装的，如果rsyslog程序有问题，可以重新安装，<code>yum install -y rsyslog logrotate</code>。</p>
 </li>
-<li><p>启动rsyslog程序，systemctl start rsyslog.service。</p>
+<li><p>启动rsyslog程序，<code>systemctl start rsyslog.service</code>。</p>
 </li>
-<li><p>rpm -q是查询软件包的安装情况，rpm -qa是查询所有安装的的软件包（a是all），rpm -ql rsyslog表示列出rsyslog产生的所有文件（l是list），rpm -qc rsyslog表示查看rsyslog的配置文件（c是config）。</p>
+<li><p><code>rpm -q</code>是查询软件包的安装情况，<code>rpm -qa</code>是查询所有安装的的软件包（a是all），<code>rpm -ql rsyslog</code>表示列出rsyslog产生的所有文件（l是list），<code>rpm -qc rsyslog</code>表示查看rsyslog的配置文件（c是config）。</p>
 </li>
-<li><p>/etc/rsyslog.conf是rsyslogd的主配置文件（关键），/etc/sysconfig/rsyslog是rsyslogd相关文件，定义属性，/etc/logrotate.d/syslog和日志轮转相关。</p>
+<li><p><code>/etc/rsyslog.conf</code>是rsyslogd的主配置文件（关键），<code>/etc/sysconfig/rsyslog</code>是rsyslogd相关配置文件，定义属性，<code>/etc/logrotate.d/syslog</code>和日志轮转相关。</p>
 </li>
-<li><p>扩展：查看命令的使用方法，除了用命令+—help之外，还可以用man+命令，表示查看帮助手册。</p>
+<li><p>扩展：查看命令的使用方法，除了用命令+<code>--help</code>之外，还可以用<code>man</code>+命令，表示查看帮助手册。</p>
 </li>
-<li><p><strong>修改rsyslogd的主配置文件</strong>，告诉rsyslogd的进程，什么日志应该放在哪里。vim /etc/rsyslog.conf，打开文件后找RULES规则，规则分为3个字段，第一个字段Facility是设备（设备是一类程序的统称，设备表示的是一类程序），.后边是第二个字段Level级别，表示事件等级，第三个字段是日志存放的位置（如果前边带一个-，表示异步执行）。如果有多个设备级别，中间用;隔开。如果级别位置是none，则不表示级别，代表排除该设备。*.info;mail.none;authpriv.none;cron.none /var/log/messages表示存放所有设备的info信息，但是排除后边的三个设备。 </p>
+<li><p>Rsyslog 的主配置文件为 <strong>/etc/rsyslog.conf</strong> 文件，在配置文件中，我们通过配置 filter 以及 action 对日志进行管理。在rsyslog配置文件中，使用如下格式定义规则：<code>filter        action</code>。</p>
 </li>
-<li><p>扩展：怎么查看一个程序属于什么设备，例如，grep Facility /etc/ssh/sshd_config。设备类型有SYSLOG（syslogd自身），AUTHPRIV（安全认证），CRON（任务计划），MAIL（邮件系统），USER（用户相关），DEAMON（后台进程），FTP（文件服务器），KERN（内核），LPR（打印机），LOCAL0 到 LOCAL7（用户自定义设备）</p>
+<li><blockquote>
+<p><code>filter</code>的格式：<code>FACILITY.PRIORITY</code>。</p>
+<blockquote>
+<p><code>Facility</code>是设施（用来定义日志消息的来源，方便对日志进行分类）。</p>
+<p>设施类型有<code>SYSLOG</code>（日志系统自身消息），<code>AUTH</code>（认证系统消息），<code>AUTHPRIV</code>（权限系统消息），<code>CRON</code>（定时任务消息），<code>MAIL</code>（邮件系统消息），<code>USER</code>（用户级消息），<code>DEAMON</code>（系统服务消息），<code>FTP</code>（文件服务器），<code>KERN</code>（内核消息），<code>LPR</code>（打印机），<code>LOCAL0</code> 到 <code>LOCAL7</code>（用户自定义设备）</p>
+<p><code>Priority</code>是日志级别（定义不同消息的级别）。</p>
+<p>级别从高到低：<code>EMERG</code>（紧急，致命），<code>ALERT</code>（报警，需立即处理），<code>CRIT</code>（严重行为），<code>ERR</code>（错误），<code>WARNING</code>（警告），<code>NOTICE</code>（正常信息，但是较为重要），<code>INFO</code>（正常信息），<code>DEBUG</code>（调试信息）</p>
+</blockquote>
+<p>前置符号<code>=</code>表明只有该优先级的消息会被捕获，<code>!</code>表明除了该优先级的消息之外的优先级会被捕获。除了前置符号外，可以使用符号<code>*</code>。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kern.*                    # 选择所有优先级的内核日志</span><br><span class="line">mail.crit                 # 选择所有mail 的优先级高于crit的日志</span><br><span class="line">cron.!info,!debug         # 选择除了 info 和 debug 优先级的 cron 日志</span><br></pre></td></tr></table></figure>
+</blockquote>
 </li>
-<li><p>Level级别从高到低：EMERG（紧急，致命），ALERT（报警，需立即处理），CRIT（致命行为），ERR（错误行为），WARNING（警告信息），NOTICE（普通重要的标准信息），INFO（标准信息），DEBUG（调试信息）。</p>
-<p><img src="https://raw.githubusercontent.com/wht6/image/master/img/linuxlog.png" style="zoom:80%;"></p>
+<li><blockquote>
+<p><code>action</code>的格式：</p>
+<ul>
+<li><p>用户：表示将日志发送到特定的用户。<code>kern.=crit user1</code>。</p>
 </li>
-<li><p>如果你修改了rsyslogd的主配置文件，则需要重启程序，让程序重新加载配置。systemctl restart rsyslog。</p>
+<li><p>路径PATH：<code>cron.* /var/log/cron.log</code> 指定了所有的定时任务日志都写入到<code>/var/log/cron.log</code>文件。</p>
+</li>
+<li><p>通过网络发送：<code>rsyslog</code>可以使用网络将日志消息发送或者接受日志，使用这个特性，可以实现使用单一的日志服务器统一管理多台服务器日志。格式：<code>@[(zNUMBER)]HOST:[PORT]</code>，这里的<code>@</code>告诉<code>syslog</code>使用 <em>UDP</em> 协议发送日志，要使用 <em>TCP</em> 的话，使用 <code>@@</code>。可选值<code>zNUMBER</code>设置了是否允许使用<code>zlib</code>对日志压缩（压缩级别1-9）。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">*.* @192.168.0.1        # 使用 UDP 发送，默认端口514</span><br><span class="line">*.* @@example.com:18    # 使用 TCP 发送到端口18， 默认10514</span><br><span class="line">*.* @(z9)[2001:db8::1]  # UDP, ipv6，使用zlib级别9压缩</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>丢弃日志：格式：<code>FILTER    ~</code>。</p>
+</li>
+<li><p>使用模板：格式<code>FILTER   ACTION;模板名称</code>可以为指定的 action 使用该模板格式化日志。</p>
+</li>
+</ul>
+<p>如果要指定多个 ACTION， 使用 <code>&amp;</code>连接多个 ACTION。</p>
+</blockquote>
+</li>
+<li><p>扩展：怎么查看一个程序属于什么设施，例如，<code>grep Facility /etc/ssh/sshd_config</code>。</p>
+</li>
+<li><p>如果你修改了rsyslogd的主配置文件，则需要重启程序，让程序重新加载配置。<code>systemctl restart rsyslog</code>。</p>
 </li>
 </ul>
 <h2 id="日志轮转logrotate"><a href="#日志轮转logrotate" class="headerlink" title="日志轮转logrotate"></a>日志轮转logrotate</h2><ul>
-<li>日志记录了程序产生的各种信息，但是磁盘空间有限，为了节省空间和方便，日志文件通常需要按时间或大小等分成多份，删除时间久远的日志文件。日志轮转就是只记录最近一段时间的发生的事，系统会根据你的要求删除你不想要的日志。</li>
-<li>日志轮转的主配置文件/etc/logrotate.conf，子配置目录/etc/logrotate.d/*，子配置目录用于自定义配置，方便管理。</li>
-<li>日志轮转的主配置文件，<strong>全局配置</strong>：weekly表示按周轮转，rotate 4表示保留4份日志，create表示轮转后创建新文件，dateext表示以时间作为文件的扩展名，compress表示压缩，这些功能可以开启也可以关闭，关闭就是注释掉。include /etc/logrotate.d表示包含该目录下的子配置文件。<strong>具体文件配置</strong>：/var/log/wtmp里边放的是用户登日志，<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;var&#x2F;log&#x2F;wtmp&#123; </span><br><span class="line">    monthly </span><br><span class="line"> minsize&#x3D;1M</span><br><span class="line"> create 0664 root utmp</span><br><span class="line"> rotate 1</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<li>日志记录了程序产生的各种信息，但是磁盘空间有限，为了节省空间和方便，日志文件通常需要按时间或大小等分成多份，删除时间久远的日志文件。<strong>日志轮转就是只记录最近一段时间的发生的事，系统会根据你的要求删除你不想要的日志</strong>。</li>
+<li>日志轮转的主配置文件<code>/etc/logrotate.conf</code>，子配置目录<code>/etc/logrotate.d/*</code>，子配置目录用于自定义配置，方便管理。</li>
+<li>日志轮转的主配置文件，<strong>全局配置</strong>：<code>weekly</code>表示按周轮转，<code>rotate 4</code>表示保留4份日志，<code>create</code>表示轮转后创建新文件，<code>dateext</code>表示以时间作为文件的扩展名，<code>compress</code>表示压缩，<code>missingok</code>表示丢失不执行，<code>notifempty</code>表示空文件不轮转，<code>maxsize 30k</code>表示只要到了30k就轮转。这些功能可以开启也可以关闭，关闭就是注释掉。<code>include /etc/logrotate.d</code>表示包含该目录下的子配置文件。<strong>具体文件配置</strong>：<code>/var/log/wtmp</code>里边放的是用户登日志，<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">/var/log/wtmp&#123; </span><br><span class="line">    monthly </span><br><span class="line"> minsize=1M</span><br><span class="line"> create 0664 root utmp</span><br><span class="line"> rotate 1</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
 <ul>
-<li>这是对单个日志文件的轮转规则配置的格式，这个表示日志文件wtmp按月且最小达到1M才轮转，create是创建新日志文件并设置文件权限，其中root是属主，utmp是属组，rotate 1表示只保留一份，具体文件配置的优先级高于全局配置。（扩展：有一个命令叫w，作用是查看用户的登录情况，可以看到登录的终端是bash还是gnome图形界面）（扩展：配置规则中可能出现的其他字段：missingok表示丢失不执行，notifempty表示空文件不轮转，maxsize 30k表示只要到了30k就轮转）</li>
-<li>重新加载新配置。/usr/sbin/logrotate /etc/logrotate.conf，直接调用logrotate程序加载主配置。</li>
+<li>这是对单个日志文件的轮转规则配置的格式，这个表示日志文件wtmp<strong>按月且最小达到1M才轮转</strong>，create是<strong>创建新日志文件并设置文件权限</strong>，其中root是属主，utmp是属组，rotate 1表示只保留一份，具体文件配置的优先级高于全局配置。（扩展：有一个命令叫<code>w</code>，作用是查看用户的登录情况，可以看到登录的终端是bash还是gnome图形界面）</li>
+<li>重新加载新配置。<code>/usr/sbin/logrotate /etc/logrotate.conf</code>，直接调用logrotate程序加载主配置。</li>
 <li>轮转过程。先给原来的日志重命名，重命名的方法是在原文件名后面加一个时间戳，然后再新建一个和原文件同名的文件。然后根据规则删除不要的日志文件。</li>
 </ul>
 </li>
