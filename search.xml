@@ -657,31 +657,6 @@
             
             <tag> {{ tag.name }} </tag>
             
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>{{ post.title }}</title>
-      <link href="{{ (url + post.path) | uriencode }}"/>
-      <url>{{ (url + post.path) | uriencode }}</url>
-      
-        <content type="html"><![CDATA[{{ post.content | noControlChars | safe }}]]></content>
-      
-      
-      <categories>
-          
-          <category> {{ cate.name }} </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> {{ tag.name }} </tag>
-            
             <tag> {{ tag.name }} </tag>
             
         </tags>
@@ -854,31 +829,6 @@
           
       </categories>
       
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>{{ post.title }}</title>
-      <link href="{{ (url + post.path) | uriencode }}"/>
-      <url>{{ (url + post.path) | uriencode }}</url>
-      
-        <content type="html"><![CDATA[{{ post.content | noControlChars | safe }}]]></content>
-      
-      
-      <categories>
-          
-          <category> {{ cate.name }} </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> {{ tag.name }} </tag>
-            
-        </tags>
       
     </entry>
     

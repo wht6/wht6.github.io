@@ -488,7 +488,7 @@
       
         
         
-    <summary type="html">{{ short_content }}</summary>
+    <summary type="html">{{ short_content.substring(0, delim_pos) }}</summary>
         
       
     
