@@ -1,0 +1,359 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>部署和使用Zabbix | WHT</title><meta name="keywords" content="监控"><meta name="author" content="并指如刀"><meta name="copyright" content="并指如刀"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="referrer" content="no-referrer"><meta name="description" content="Linux中的监控命令CPU监控 12345678# 查看系统当前负载情况w# 包括系统运行时间，登录用户，终端，登录时间等# 动态查看进程，cpu，内存等tophtopglances 磁盘监控 12345678# 监控磁盘的使⽤率df	-hT# 查看根目录磁盘使用率df -hT|awk &amp;#x27;&#x2F;\&#x2F;$&#x2F;&amp;#123;print$(NF-1)&amp;#125;&amp;#x27;# 监控磁盘IOiotopi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="部署和使用Zabbix">
+<meta property="og:url" content="http://wht6.github.io/posts/ab79.html">
+<meta property="og:site_name" content="WHT">
+<meta property="og:description" content="Linux中的监控命令CPU监控 12345678# 查看系统当前负载情况w# 包括系统运行时间，登录用户，终端，登录时间等# 动态查看进程，cpu，内存等tophtopglances 磁盘监控 12345678# 监控磁盘的使⽤率df	-hT# 查看根目录磁盘使用率df -hT|awk &amp;#x27;&#x2F;\&#x2F;$&#x2F;&amp;#123;print$(NF-1)&amp;#125;&amp;#x27;# 监控磁盘IOiotopi">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://wht6.github.io/img/featureimages/80.jpg">
+<meta property="article:published_time" content="2022-03-11T09:00:00.000Z">
+<meta property="article:modified_time" content="2022-04-09T12:09:01.154Z">
+<meta property="article:author" content="并指如刀">
+<meta property="article:tag" content="监控">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://wht6.github.io/img/featureimages/80.jpg"><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="http://wht6.github.io/posts/ab79"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":70,"languages":{"author":"作者: 并指如刀","link":"链接: ","source":"来源: WHT","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '部署和使用Zabbix',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2022-04-09 20:09:01'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><style type="text/css" lang="css">
+    #loading-container{
+        position: fixed;
+        top: 0;
+        left: 0;
+        min-height: 100vh;
+        width: 100vw;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: #FFF;
+        text-align: center;
+        /* loader页面消失采用渐隐的方式*/
+        -webkit-transition: opacity 1s ease;
+        -moz-transition: opacity 1s ease;
+        -o-transition: opacity 1s ease;
+        transition: opacity 1s ease;
+    }
+    .loading-image{
+        width: 120px;
+        height: 50px;
+        transform: translate(-50%);
+    }
+    
+    .loading-image div:nth-child(2) {
+        -webkit-animation: pacman-balls 1s linear 0s infinite;
+        animation: pacman-balls 1s linear 0s infinite
+    }
+
+    .loading-image div:nth-child(3) {
+        -webkit-animation: pacman-balls 1s linear .33s infinite;
+        animation: pacman-balls 1s linear .33s infinite
+    }
+
+    .loading-image div:nth-child(4) {
+        -webkit-animation: pacman-balls 1s linear .66s infinite;
+        animation: pacman-balls 1s linear .66s infinite
+    }
+
+    .loading-image div:nth-child(5) {
+        -webkit-animation: pacman-balls 1s linear .99s infinite;
+        animation: pacman-balls 1s linear .99s infinite
+    }
+    
+   .loading-image div:first-of-type {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_up .5s 0s infinite;
+        animation: rotate_pacman_half_up .5s 0s infinite;
+    }
+    .loading-image div:nth-child(2) {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_down .5s 0s infinite;
+        animation: rotate_pacman_half_down .5s 0s infinite;
+        margin-top: -50px;
+    }
+    @-webkit-keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @-webkit-keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+
+    @keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+    
+    @-webkit-keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+
+    @keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+    
+   
+    .loading-image div:nth-child(3),
+    .loading-image div:nth-child(4),
+    .loading-image div:nth-child(5),
+    .loading-image div:nth-child(6){
+        background-color: #49b1f5;
+        width: 15px;
+        height: 15px;
+        border-radius: 100%;
+        margin: 2px;
+        width: 10px;
+        height: 10px;
+        position: absolute;
+        transform: translateY(-6.25px);
+        top: 25px;
+        left: 100px;
+    }
+    .loading-text{
+        margin-bottom: 20vh;
+        text-align: center;
+        color: #2c3e50;
+        font-size: 2rem;
+        box-sizing: border-box;
+        padding: 0 10px;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    @media only screen and (max-width: 500px) {
+         .loading-text{
+            font-size: 1.5rem;
+         }
+    }
+    .fadeout {
+        opacity: 0;
+        filter: alpha(opacity=0);
+    }
+    /* logo出现动画 */
+    @-webkit-keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);transform:translate3d(0,-100%,0)}100%{opacity:1;-webkit-transform:none;transform:none}}
+    @keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);}}
+ </style>
+ <script>
+(function () {
+    const loaded = function(){
+       setTimeout(function(){
+            const loader = document.getElementById("loading-container");
+            loader.className="fadeout" ;//使用渐隐的方法淡出loading page
+            // document.getElementById("body-wrap").style.display="flex";
+            setTimeout(function(){
+                loader.style.display="none";
+            },1000); 
+        },1000);//强制显示loading page 1s  
+    };
+    loaded();
+})()
+ </script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="WHT" type="application/atom+xml">
+</head>
+ <div id="loading-container">
+     <p class="loading-text">玩命加载中 . . . </p> 
+     <div class="loading-image">
+         <div></div>
+         <div></div>
+         <div></div>
+         <div></div> 
+         <div></div>
+     </div>
+ </div><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/logo.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">78</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">36</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/featureimages/80.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">WHT</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">部署和使用Zabbix</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2022-03-11T09:00:00.000Z" title="发表于 2022-03-11 17:00:00">2022-03-11</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2022-04-09T12:09:01.154Z" title="更新于 2022-04-09 20:09:01">2022-04-09</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E8%BF%90%E7%BB%B4/">运维</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.1k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>7分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="部署和使用Zabbix"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h3 id="Linux中的监控命令"><a href="#Linux中的监控命令" class="headerlink" title="Linux中的监控命令"></a>Linux中的监控命令</h3><p>CPU监控</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 查看系统当前负载情况</span></span><br><span class="line">w</span><br><span class="line"><span class="meta">#</span><span class="bash"> 包括系统运行时间，登录用户，终端，登录时间等</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 动态查看进程，cpu，内存等</span></span><br><span class="line">top</span><br><span class="line">htop</span><br><span class="line">glances</span><br></pre></td></tr></table></figure>
+<p>磁盘监控</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 监控磁盘的使⽤率</span></span><br><span class="line">df	-hT</span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看根目录磁盘使用率</span></span><br><span class="line">df -hT|awk &#x27;/\/$/&#123;print$(NF-1)&#125;&#x27;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 监控磁盘IO</span></span><br><span class="line">iotop</span><br><span class="line">iostat</span><br></pre></td></tr></table></figure>
+<p>内存监控</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">free -m</span><br></pre></td></tr></table></figure>
+<p>网络监控</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 查看ip信息</span></span><br><span class="line">ifconfig</span><br><span class="line">ip a</span><br><span class="line">ip r</span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看网络信息</span></span><br><span class="line">netstat</span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看路由信息</span></span><br><span class="line">netstat -rn</span><br><span class="line"><span class="meta">#</span><span class="bash"> 流量监控</span></span><br><span class="line">iftop</span><br><span class="line"><span class="meta">#</span><span class="bash"> 中间的&lt;=	=&gt;这两个左右箭头，表示的是流量的⽅向。</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> TX：发送流量、RX：接收流量、TOTAL：总流量</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="Zabbix介绍"><a href="#Zabbix介绍" class="headerlink" title="Zabbix介绍"></a>Zabbix介绍</h3><p>zabbix是一个基于Web界面的，提供分布式系统监控以及网络监视功能的企业级的开源解决方案。</p>
+<h4 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h4><p>Zabbix主要由两部分构成Zabbix server和Zabbix agent。</p>
+<p><strong>Server</strong>：Zabbix server 是 Zabbix 软件的核心组件，agent 向其报告可用性、系统完整性信息和统计信息。server也是存储所有配置信息、统计信息和操作信息的核心存储库。</p>
+<p><strong>Agent</strong>：Zabbix agents部署在被监控目标上，用于主动监控本地资源和应用程序，并将收集的数据发送给 Zabbix server。</p>
+<p>Zabbix还包括数据库、Web界面和Proxy。</p>
+<p><strong>数据库</strong>：所有配置信息以及 Zabbix 收集到的数据都被存储在数据库中。</p>
+<p><strong>Web界面</strong>：为了从任何地方和任何平台轻松访问 Zabbix ，我们提供了基于 web 的界面。该界面是 Zabbix server 的一部分，通常（但不一定）和 Zabbix server 运行在同一台物理机器上。</p>
+<p><strong>Proxy</strong>：Zabbix proxy 可以替 Zabbix server 收集性能和可用性数据。Zabbix proxy 是 Zabbix 环境部署的可选部分；然而，它对于单个 Zabbix server 负载的分担是非常有益的。</p>
+<h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4><p>Zabbix 通过C/S 模式采集数据，通过B/S模式在web 端展示和配置。</p>
+<p>被监控端：主机通过安装agent 方式采集数据，网络设备通过SNMP 方式采集数据</p>
+<p>Server 端：通过收集SNMP 和agent 发送的数据，写入数据库（MySQL，ORACLE 等），再通过php+apache 在web 前端展示。</p>
+<p>zabbix agent安装在被监控的主机上，zabbix agent负责定期收集客户端本地各项数据，并发送至 zabbix server 端，zabbix server 收到数据后，将数据存储到数据库中，用户基于 Zabbix WEB 可以看到数据在前端展现图像。当 zabbix 监控某个具体的项目， 该项目会设置一个触发器阈值，当被监控的指标超过该触发器设定的阈值，会进行一些必要的动作，动作包括：发送信息（邮件、微信、短信）、发送命令（shell 命令、reboot、restart、install 等）。</p>
+<ul>
+<li><strong>监控架构</strong></li>
+</ul>
+<p>Server-Client：这是Zabbix较为简单的架构，监控与被监控节点之间不通过任何代理，直接由Server与Agent进行数据交互<br>Master-Node-Client：这种架构每个Node是一个Server，它们有自己的配置文件，Node下面可以接Proxy，也可以直接与Agent进行交互<br>Server-Proxy-Client： Proxy没有前端，本身也不存放数据，只是将Agent转发过来的数据暂时存放，最终还是要交给Server，这种架构一般用于跨机房或者跨网络</p>
+<ul>
+<li><strong>相关名词</strong></li>
+</ul>
+<p>zabbix-server：zabbix的控制中心，收集数据，写入数据<br>zabbix-agent：部署在被监控端的一个程序，用于收集本机信息给服务端<br>host：服务器<br>item：监控项，例如监控cpu平均负载就是一个监控项，每隔一段时间获取一个值反馈到服务端<br>trigger：触发器，一些逻辑规则的组合，他有三个值，正常，异常，未知。当监控项获取的值达到设定的阈值的时候，就会触发<br>action：当trigger符合某个值的时候，就会触发操作，比如发送邮件</p>
+<ul>
+<li><strong>运行条件</strong></li>
+</ul>
+<p>Server：Zabbix Server 需运行在LAMP（Linux+Apache+Mysql+PHP）环境下（或者LNMP），对硬件要求低</p>
+<p>Agent：目前已有的agent 基本支持市面常见的OS，包含Linux、HPUX、Solaris、Sun、 windows</p>
+<p>SNMP：支持各类常见的网络设备 SNMP(Simple Network Management Protocol,简单网络管理协议</p>
+<ul>
+<li><strong>Zabbix进程</strong></li>
+</ul>
+<p>zabbix_agentd：客户端守护进程，此进程收集客户端数据，例如cpu负载、内存、硬盘使用情况等</p>
+<p>zabbix_get：zabbix工具，单独使用的命令，通常在server或者proxy端执行获取远程客户端信息的命令。通常用户排错。例如在server端获取不到客户端的内存数据，我们可以使用zabbix_get获取客户端的内容的方式来做故障排查。</p>
+<p>zabbix_sender：zabbix工具，用于发送数据给server或者proxy，通常用于耗时比较长的检查。很多检查非常耗时间，导致zabbix超时。于是我们在脚本执行完毕之后，使用sender主动提交数据。</p>
+<p>zabbix_server：zabbix服务端守护进程。zabbix_agentd、zabbix_get、zabbix_sender、zabbix_proxy、zabbix_java_gateway的数据最终都是提交到server。<br>备注：当然不是数据都是主动提交给zabbix_server,也有的是server主动去取数据。</p>
+<p>zabbix_proxy：zabbix代理守护进程。功能类似server，唯一不同的是它只是一个中转站，它需要把收集到的数据提交/被提交到server里。为什么要用代理？代理是做什么的？卖个关子，请继续关注运维生存时间zabbix教程系列。</p>
+<p>zabbix_java_gateway：zabbix2.0之后引入的一个功能。顾名思义：Java网关，类似agentd，但是只用于Java方面。需要特别注意的是，它只能主动去获取数据，而不能被动获取数据。它的数据最终会给到server或者proxy。</p>
+<h3 id="Zabbix安装部署"><a href="#Zabbix安装部署" class="headerlink" title="Zabbix安装部署"></a>Zabbix安装部署</h3><h4 id="安装Zabbix"><a href="#安装Zabbix" class="headerlink" title="安装Zabbix"></a>安装Zabbix</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> Install Zabbix repository</span></span><br><span class="line">rpm -Uvh https://repo.zabbix.com/zabbix/5.0/rhel/7/x86_64/zabbix-release-5.0-1.el7.noarch.rpm</span><br><span class="line">yum clean all</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Install Zabbix server and agent</span></span><br><span class="line">yum install zabbix-server-mysql zabbix-agent</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Install Zabbix frontend</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> Enable Red Hat Software Collections</span></span><br><span class="line">yum install centos-release-scl</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Edit file /etc/yum.repos.d/zabbix.repo and <span class="built_in">enable</span> zabbix-frontend repository.</span></span><br><span class="line">[zabbix-frontend]</span><br><span class="line">...</span><br><span class="line">enabled=1</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Install Zabbix frontend packages.</span></span><br><span class="line">yum install zabbix-web-mysql-scl zabbix-apache-conf-scl</span><br></pre></td></tr></table></figure>
+<h4 id="初始化数据库"><a href="#初始化数据库" class="headerlink" title="初始化数据库"></a>初始化数据库</h4><p>到MySQL官网找到MySQL Yum Repository，选择Linux 7（我的系统是centos 7），复制下载链接。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 下载</span></span><br><span class="line">wget https://dev.mysql.com/get/mysql80-community-release-el7-5.noarch.rpm</span><br><span class="line"><span class="meta">#</span><span class="bash"> 安装yum仓库</span></span><br><span class="line">rpm -ivh mysql80-community-release-el7-5.noarch.rpm </span><br><span class="line"><span class="meta">#</span><span class="bash"> 修改mysql源，启用mysql57，即设置enabled=1，禁用mysql80，即设置enabled=0</span></span><br><span class="line">vim /etc/yum.repos.d/mysql-community.repo</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 安装mysql</span></span><br><span class="line">yum install -y mysql-community-server </span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 启动server</span></span><br><span class="line">systemctl start mysqld</span><br></pre></td></tr></table></figure>
+<p>修改mysql密码：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">grep password /var/log/mysqld.log</span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看默认密码，最后一个字段是默认密码</span></span><br><span class="line"></span><br><span class="line">mysql -uroot -p&#x27;z,wzhsXeO9q*&#x27;</span><br><span class="line"><span class="meta">#</span><span class="bash"> 登录</span></span><br><span class="line"></span><br><span class="line">set global validate_password_policy=LOW;</span><br><span class="line">set global validate_password_length=4; </span><br><span class="line"><span class="meta">#</span><span class="bash"> 降低密码强度</span></span><br><span class="line"></span><br><span class="line">alter user &#x27;root&#x27;@&#x27;localhost&#x27; identified by &#x27;123456&#x27;;</span><br><span class="line"><span class="meta">#</span><span class="bash"> 设置新密码</span></span><br><span class="line"></span><br><span class="line">mysql -uroot -p123456</span><br><span class="line">set password=password(&#x27;123456&#x27;);</span><br><span class="line"><span class="meta">#</span><span class="bash"> 重新设置密码</span></span><br><span class="line"></span><br><span class="line">grant all privileges on *.* to &#x27;root&#x27;@&#x27;%&#x27; identified by &#x27;123456&#x27; with grant option;</span><br><span class="line"><span class="meta">#</span><span class="bash"> MySQL允许远程登录</span></span><br></pre></td></tr></table></figure>
+<p>创建Zabbix数据库</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">create database zabbix character set utf8 collate utf8_bin;</span><br><span class="line">create user zabbix@localhost identified by &#x27;password&#x27;;# 这里密码设置为password</span><br><span class="line">grant all privileges on zabbix.* to zabbix@localhost;</span><br></pre></td></tr></table></figure>
+<p>导入zabbix初始数据(166张表)</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">zcat /usr/share/doc/zabbix-server-mysql*/create.sql.gz | mysql -uzabbix -p zabbix</span><br><span class="line"><span class="meta">#</span><span class="bash"> 这里填zabbix设置的password</span></span><br></pre></td></tr></table></figure>
+<p>配置Zabbix server的数据库配置</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vim  /etc/zabbix/zabbix_server.conf</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h4 id="Zabbix前端配置"><a href="#Zabbix前端配置" class="headerlink" title="Zabbix前端配置"></a>Zabbix前端配置</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/opt/rh/rh-php72/php-fpm.d/zabbix.conf</span><br><span class="line">php_value[date.timezone] = Asia/Shanghai	#修改时区,前边的;去掉</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 开启Zabbix server和agent，并设置开机自启</span></span><br><span class="line">systemctl restart zabbix-server zabbix-agent httpd rh-php72-php-fpm</span><br><span class="line">systemctl enable zabbix-server zabbix-agent httpd rh-php72-php-fpm</span><br></pre></td></tr></table></figure>
+<p>访问前端：<code>http://localhost/zabbix</code>.</p>
+<p>nextstep —- nextstep</p>
+<p>使用密码连接数据库，nextstep —— nextstep ——- nextstep —— finish</p>
+<p><strong>登录zabbix</strong>：默认的账号及密码： 用户名：Admin，密码：zabbix</p>
+<p>更新密码：usersetting ——- change password，设置密码，语言选中文，update</p>
+<p><img src="https://raw.githubusercontent.com/wht6/image/master/img/zabbix_202249.png" alt></p>
+<h4 id="Agent配置"><a href="#Agent配置" class="headerlink" title="Agent配置"></a>Agent配置</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">rpm -ivh https://mirror.tuna.tsinghua.edu.cn/zabbix/zabbix/5.0/rhel/7/x86_64/zabbix-agent-5.0.1-1.el7.x86_64.rpm</span><br><span class="line">rpm -ql zabbix-agent # 列出与zabbix-agent相关的包</span><br><span class="line"></span><br><span class="line">vim /etc/zabbix/zabbix_agentd.conf</span><br><span class="line">Server=192.168.91.129 # 更改serverIP</span><br><span class="line"></span><br><span class="line">systemctl start zabbix-agent</span><br><span class="line">systemctl enable zabbix-agent</span><br><span class="line"></span><br><span class="line">netstat -antp # Zabbix-Agent默认监听在 10050 端⼝</span><br></pre></td></tr></table></figure>
+<p>进入Server的Web前端，点击配置 —— 主机 ——- 创建主机</p>
+<p>设置主机名，可见名，群组，填写客户端IP（我的是192.168.91.128）</p>
+<p>点击模板，选择模板Template OS Linux by Zabbix agent，添加</p>
+<p>查看检测主机Host。（这里发现中文乱码，又改回英文）</p>
+<p><img src="https://raw.githubusercontent.com/wht6/image/master/img/agent_202249.png" alt></p>
+<p>&nbsp;</p>
+<p>参考链接：</p>
+<p><a target="_blank" rel="noopener" href="https://www.zabbix.com/documentation/5.2/zh/manual">https://www.zabbix.com/documentation/5.2/zh/manual</a></p>
+<p><a target="_blank" rel="noopener" href="http://www.manongjc.com/detail/15-otkezaadqeolbnm.html">http://www.manongjc.com/detail/15-otkezaadqeolbnm.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/rxysg/p/15698608.html">https://www.cnblogs.com/rxysg/p/15698608.html</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/zhangyupengzuishuai/p/15354330.html">https://www.cnblogs.com/zhangyupengzuishuai/p/15354330.html</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">并指如刀</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://wht6.github.io/posts/ab79.html">http://wht6.github.io/posts/ab79.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://wht6.github.io" target="_blank">WHT</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%9B%91%E6%8E%A7/">监控</a></div><div class="post_share"><div class="social-share" data-image="/img/featureimages/80.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/posts/9a3b.html"><img class="prev-cover" src="/img/featureimages/56.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">深入类和对象</div></div></a></div><div class="next-post pull-right"><a href="/posts/8322.html"><img class="next-cover" src="/img/featureimages/74.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Python常用包</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/logo.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">并指如刀</div><div class="author-info__description">分享技术,分享知识,分享感悟</div></div><div class="card-info-data is-center"><div class="card-info-data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">78</div></a></div><div class="card-info-data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">36</div></a></div><div class="card-info-data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="mailto:wanght586@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux%E4%B8%AD%E7%9A%84%E7%9B%91%E6%8E%A7%E5%91%BD%E4%BB%A4"><span class="toc-number">1.</span> <span class="toc-text">Linux中的监控命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Zabbix%E4%BB%8B%E7%BB%8D"><span class="toc-number">2.</span> <span class="toc-text">Zabbix介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9E%B6%E6%9E%84"><span class="toc-number">2.1.</span> <span class="toc-text">架构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8E%9F%E7%90%86"><span class="toc-number">2.2.</span> <span class="toc-text">原理</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Zabbix%E5%AE%89%E8%A3%85%E9%83%A8%E7%BD%B2"><span class="toc-number">3.</span> <span class="toc-text">Zabbix安装部署</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E8%A3%85Zabbix"><span class="toc-number">3.1.</span> <span class="toc-text">安装Zabbix</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-number">3.2.</span> <span class="toc-text">初始化数据库</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Zabbix%E5%89%8D%E7%AB%AF%E9%85%8D%E7%BD%AE"><span class="toc-number">3.3.</span> <span class="toc-text">Zabbix前端配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Agent%E9%85%8D%E7%BD%AE"><span class="toc-number">3.4.</span> <span class="toc-text">Agent配置</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/6d87.html" title="Ansible实践"><img src="/img/featureimages/77.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Ansible实践"/></a><div class="content"><a class="title" href="/posts/6d87.html" title="Ansible实践">Ansible实践</a><time datetime="2022-04-05T09:00:00.000Z" title="发表于 2022-04-05 17:00:00">2022-04-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/42ee.html" title="初识Ansible"><img src="/img/featureimages/76.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="初识Ansible"/></a><div class="content"><a class="title" href="/posts/42ee.html" title="初识Ansible">初识Ansible</a><time datetime="2022-04-04T09:00:00.000Z" title="发表于 2022-04-04 17:00:00">2022-04-04</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/5117.html" title="Sed命令详解"><img src="/img/featureimages/75.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Sed命令详解"/></a><div class="content"><a class="title" href="/posts/5117.html" title="Sed命令详解">Sed命令详解</a><time datetime="2022-04-02T08:00:00.000Z" title="发表于 2022-04-02 16:00:00">2022-04-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/1cf9.html" title="Shell实践模板"><img src="/img/featureimages/71.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Shell实践模板"/></a><div class="content"><a class="title" href="/posts/1cf9.html" title="Shell实践模板">Shell实践模板</a><time datetime="2022-03-29T08:00:00.000Z" title="发表于 2022-03-29 16:00:00">2022-03-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/a2bb.html" title="Shell脚本复习"><img src="/img/featureimages/67.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Shell脚本复习"/></a><div class="content"><a class="title" href="/posts/a2bb.html" title="Shell脚本复习">Shell脚本复习</a><time datetime="2022-03-23T08:00:00.000Z" title="发表于 2022-03-23 16:00:00">2022-03-23</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2022 By 并指如刀</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/ Relative)","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"left","width":100,"height":180},"mobile":{"show":false},"react":{"opacityDefault":0.7}});</script></body></html>

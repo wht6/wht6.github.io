@@ -316,8 +316,6 @@
     
     <category term="{{ tag.name }}" scheme="{{ tag.permalink }}"/>
     
-    <category term="{{ tag.name }}" scheme="{{ tag.permalink }}"/>
-    
   </entry>
   
   <entry>
@@ -421,6 +419,8 @@
     
     <category term="{{ category.name }}" scheme="{{ category.permalink }}"/>
     
+    
+    <category term="{{ tag.name }}" scheme="{{ tag.permalink }}"/>
     
     <category term="{{ tag.name }}" scheme="{{ tag.permalink }}"/>
     
