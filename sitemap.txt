@@ -70,6 +70,7 @@
 {{ post.permalink | uriencode }}
 {{ post.permalink | uriencode }}
 {{ post.permalink | uriencode }}
+{{ post.permalink | uriencode }}
 {{ config.url | uriencode }}
 {{ tag.permalink | uriencode }}
 {{ tag.permalink | uriencode }}
