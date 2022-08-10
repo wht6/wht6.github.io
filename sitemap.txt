@@ -121,6 +121,8 @@
 {{ tag.permalink | uriencode }}
 {{ tag.permalink | uriencode }}
 {{ tag.permalink | uriencode }}
+{{ tag.permalink | uriencode }}
+{{ tag.permalink | uriencode }}
 {{ cat.permalink | uriencode }}
 {{ cat.permalink | uriencode }}
 {{ cat.permalink | uriencode }}
