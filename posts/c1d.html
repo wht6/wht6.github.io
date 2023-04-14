@@ -1,0 +1,350 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>数据处理之Awk工具 | WHT</title><meta name="keywords" content="工具"><meta name="author" content="王贺天"><meta name="copyright" content="王贺天"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="referrer" content="no-referrer"><meta name="description" content="理论  格式awk   -&lt;模式&gt;   ‘BEGIN{&lt;预处理&gt;}&#x2F;&lt;匹配&gt;&#x2F;{&lt;处理&gt;}END{&lt;后处理&gt;}’   &lt;文件&gt; awk与sed只能处理文件或管道，不能处理变量或字符串。 如果想要处理变量或字符串可以：echo &lt;变量或字符串&gt; | awk&#x2F;sed … 模式-F：指定分隔符。 -F&#x2F;表示指定分隔">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据处理之Awk工具">
+<meta property="og:url" content="http://wht6.github.io/posts/c1d.html">
+<meta property="og:site_name" content="WHT">
+<meta property="og:description" content="理论  格式awk   -&lt;模式&gt;   ‘BEGIN{&lt;预处理&gt;}&#x2F;&lt;匹配&gt;&#x2F;{&lt;处理&gt;}END{&lt;后处理&gt;}’   &lt;文件&gt; awk与sed只能处理文件或管道，不能处理变量或字符串。 如果想要处理变量或字符串可以：echo &lt;变量或字符串&gt; | awk&#x2F;sed … 模式-F：指定分隔符。 -F&#x2F;表示指定分隔">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://wht6.github.io/img/featureimages/84.jpg">
+<meta property="article:published_time" content="2022-11-17T08:00:00.000Z">
+<meta property="article:modified_time" content="2023-04-14T08:34:06.451Z">
+<meta property="article:author" content="王贺天">
+<meta property="article:tag" content="工具">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://wht6.github.io/img/featureimages/84.jpg"><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="http://wht6.github.io/posts/c1d"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":100,"languages":{"author":"作者: 王贺天","link":"链接: ","source":"来源: WHT","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '数据处理之Awk工具',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2023-04-14 16:34:06'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+    const detectApple = () => {
+      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+    })(window)</script><style type="text/css" lang="css">
+    #loading-container{
+        position: fixed;
+        top: 0;
+        left: 0;
+        min-height: 100vh;
+        width: 100vw;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: #FFF;
+        text-align: center;
+        /* loader页面消失采用渐隐的方式*/
+        -webkit-transition: opacity 1s ease;
+        -moz-transition: opacity 1s ease;
+        -o-transition: opacity 1s ease;
+        transition: opacity 1s ease;
+    }
+    .loading-image{
+        width: 120px;
+        height: 50px;
+        transform: translate(-50%);
+    }
+    
+    .loading-image div:nth-child(2) {
+        -webkit-animation: pacman-balls 1s linear 0s infinite;
+        animation: pacman-balls 1s linear 0s infinite
+    }
+
+    .loading-image div:nth-child(3) {
+        -webkit-animation: pacman-balls 1s linear .33s infinite;
+        animation: pacman-balls 1s linear .33s infinite
+    }
+
+    .loading-image div:nth-child(4) {
+        -webkit-animation: pacman-balls 1s linear .66s infinite;
+        animation: pacman-balls 1s linear .66s infinite
+    }
+
+    .loading-image div:nth-child(5) {
+        -webkit-animation: pacman-balls 1s linear .99s infinite;
+        animation: pacman-balls 1s linear .99s infinite
+    }
+    
+   .loading-image div:first-of-type {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_up .5s 0s infinite;
+        animation: rotate_pacman_half_up .5s 0s infinite;
+    }
+    .loading-image div:nth-child(2) {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_down .5s 0s infinite;
+        animation: rotate_pacman_half_down .5s 0s infinite;
+        margin-top: -50px;
+    }
+    @-webkit-keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @-webkit-keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+
+    @keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+    
+    @-webkit-keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+
+    @keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+    
+   
+    .loading-image div:nth-child(3),
+    .loading-image div:nth-child(4),
+    .loading-image div:nth-child(5),
+    .loading-image div:nth-child(6){
+        background-color: #49b1f5;
+        width: 15px;
+        height: 15px;
+        border-radius: 100%;
+        margin: 2px;
+        width: 10px;
+        height: 10px;
+        position: absolute;
+        transform: translateY(-6.25px);
+        top: 25px;
+        left: 100px;
+    }
+    .loading-text{
+        margin-bottom: 20vh;
+        text-align: center;
+        color: #2c3e50;
+        font-size: 2rem;
+        box-sizing: border-box;
+        padding: 0 10px;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    @media only screen and (max-width: 500px) {
+         .loading-text{
+            font-size: 1.5rem;
+         }
+    }
+    .fadeout {
+        opacity: 0;
+        filter: alpha(opacity=0);
+    }
+    /* logo出现动画 */
+    @-webkit-keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);transform:translate3d(0,-100%,0)}100%{opacity:1;-webkit-transform:none;transform:none}}
+    @keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);}}
+ </style>
+ <script>
+(function () {
+    const loaded = function(){
+       setTimeout(function(){
+            const loader = document.getElementById("loading-container");
+            loader.className="fadeout" ;//使用渐隐的方法淡出loading page
+            // document.getElementById("body-wrap").style.display="flex";
+            setTimeout(function(){
+                loader.style.display="none";
+            },1000); 
+        },1000);//强制显示loading page 1s  
+    };
+    loaded();
+})()
+ </script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="WHT" type="application/atom+xml">
+</head>
+ <div id="loading-container">
+     <p class="loading-text">玩命加载中 . . . </p> 
+     <div class="loading-image">
+         <div></div>
+         <div></div>
+         <div></div>
+         <div></div> 
+         <div></div>
+     </div>
+ </div><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/logo.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">82</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">46</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/img/featureimages/84.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">WHT</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">数据处理之Awk工具</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon far fa-calendar-alt"></i><span class="post-meta-label">发表于</span><time datetime="2022-11-17T08:00:00.000Z" title="发表于 2022-11-17 16:00:00">2022-11-17</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E8%BF%90%E7%BB%B4/">运维</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>5分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="数据处理之Awk工具"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="理论"><a href="#理论" class="headerlink" title="   理论  "></a><table> <tr>  <td bgcolor="SteelBlue"><font color="white">理论</font></td> </tr> </table></h2><h3 id="格式"><a href="#格式" class="headerlink" title="格式"></a>格式</h3><p>awk   -&lt;模式&gt;   ‘BEGIN{&lt;预处理&gt;}/&lt;匹配&gt;/{&lt;处理&gt;}END{&lt;后处理&gt;}’   &lt;文件&gt;</p>
+<p>awk与sed只能处理文件或管道，不能处理变量或字符串。</p>
+<p>如果想要处理变量或字符串可以：echo &lt;变量或字符串&gt; | awk/sed …</p>
+<h3 id="模式"><a href="#模式" class="headerlink" title="模式"></a>模式</h3><p><strong>-F</strong>：指定分隔符。</p>
+<p>-F/表示指定分隔符为/，-F  “\t”表示指定分隔符为制表符。</p>
+<h3 id="特定符号"><a href="#特定符号" class="headerlink" title="特定符号"></a>特定符号</h3><p>NR和FNR都用于记录行号，区别如下：</p>
+<p>如果仅处理单个文件，没有区别</p>
+<p>如果同时处理多个文件，NR会依次对所有文件记录行号，而FNR每记录完一个文件后都重新从1开始计数</p>
+<h3 id="内置函数"><a href="#内置函数" class="headerlink" title="内置函数"></a>内置函数</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>sub函数</th>
+<th>sub(str1, str2, &lt;$1-n&gt;)</th>
+<th>将字段n中的字符串str1替换为字符串str2。</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>substr函数(有返回值)</td>
+<td>substr(&lt;$1-n&gt;, n1)</td>
+<td>针对第n个字段，截取从第n1个字符到分隔符之间的字符</td>
+</tr>
+<tr>
+<td>substr(&lt;$1-n&gt;, n1, n2)</td>
+<td>针对第n个字段，截取从第n1个字符到第n2个字符之间的字符</td>
+<td></td>
+</tr>
+<tr>
+<td>split函数</td>
+<td>split(&lt;$1-n&gt;, arr, “-“)</td>
+<td>以-为分隔符，对某个字段进行分割，将分割后的结果放入数组arr中</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="实践"><a href="#实践" class="headerlink" title="   实践  "></a><table> <tr>  <td bgcolor="SteelBlue"><font color="white">实践</font></td> </tr> </table></h2><h3 id="打印"><a href="#打印" class="headerlink" title="打印"></a>打印</h3><h4 id="打印列"><a href="#打印列" class="headerlink" title="打印列"></a>打印列</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 按列数打印某列</span></span><br><span class="line">awk &#x27;&#123;print $2,&quot;,&quot;,$3&#125;&#x27; a.txt # 打印第2列和第3列</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 打印所有列</span></span><br><span class="line">awk &#x27;&#123;print $0&#125;&#x27; a.txt </span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 打印倒数列</span></span><br><span class="line">awk &#x27;&#123;print $(NF-1),$NF&#125;&#x27; a.txt # 倒数第二列和倒数第一列</span><br></pre></td></tr></table></figure>
+<h4 id="打印行"><a href="#打印行" class="headerlink" title="打印行"></a>打印行</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 按行数打印某行</span></span><br><span class="line">awk &#x27;NR==3&#123;print $0&#125;&#x27; a.txt</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 按行数打印某些行</span></span><br><span class="line">awk &#x27;NR==1 || NR&gt;3&#123;print $0&#125;&#x27; a.txt # 打印第一行和第4行到最后</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 打印最后一行</span></span><br><span class="line">awk &#x27;END&#123;print $0&#125;&#x27; a.txt</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 打印匹配行</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 以什么开头，或以什么结尾</span></span><br><span class="line">awk &#x27;/(^c|o$)/&#123;print $0&#125;&#x27; a.txt # ^表示开头，$表示结尾</span><br></pre></td></tr></table></figure>
+<h4 id="更改分隔符"><a href="#更改分隔符" class="headerlink" title="更改分隔符"></a>更改分隔符</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 以:作为识别分割符</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 以|作为打印分割符</span></span><br><span class="line">awk &#x27;BEGIN&#123;FS=&quot;:&quot;;OFS=&quot;|&quot;&#125;&#123;NF=NF;print $0&#125;&#x27; a.txt</span><br><span class="line">echo &quot;aaa:bbb:ccc&quot; | awk -F &quot;:&quot; &#x27;&#123;OFS=&quot;|&quot;;NF=NF;print $0&#125;&#x27; a.txt</span><br></pre></td></tr></table></figure>
+<p>注：NF=NF;只是表明数据处理，因为不处理数据不会更改打印分隔符</p>
+<h3 id="插入"><a href="#插入" class="headerlink" title="插入"></a>插入</h3><h4 id="插入行"><a href="#插入行" class="headerlink" title="插入行"></a>插入行</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 在第一行之前和最后一行之后插入</span></span><br><span class="line">awk &#x27;BEGIN&#123;print &quot;begin&quot;&#125;&#123;print $0&#125;END&#123;print &quot;END&quot;&#125;&#x27; a.txt</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 中间行插入</span></span><br><span class="line">awk &#x27;&#123;if(NR==3)&#123;print &quot;addline\n&quot; $0&#125;else&#123;print $0&#125;&#125;&#x27; a.txt</span><br></pre></td></tr></table></figure>
+<h4 id="插入列"><a href="#插入列" class="headerlink" title="插入列"></a>插入列</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 在第一列之前和最后一列之后插入</span></span><br><span class="line">awk &#x27;&#123;print &quot;begin &quot; $0 &quot; end&quot;&#125;&#x27; a.txt</span><br></pre></td></tr></table></figure>
+<h3 id="保存"><a href="#保存" class="headerlink" title="保存"></a>保存</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &#x27;/epo/&#123;print $0 &gt; &quot;b.txt&quot;&#125;&#x27; a.txt</span><br></pre></td></tr></table></figure>
+<h3 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h3><h4 id="删除某列"><a href="#删除某列" class="headerlink" title="删除某列"></a>删除某列</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &#x27;&#123;$4=&quot;&quot;;print $0&#125;&#x27; tes | awk &#x27;&#123;OFS=&quot; &quot;;NF=NF;print $0&#125;&#x27;</span><br></pre></td></tr></table></figure>
+<h3 id="统计"><a href="#统计" class="headerlink" title="统计"></a>统计</h3><h4 id="按某列统计字段重复次数"><a href="#按某列统计字段重复次数" class="headerlink" title="按某列统计字段重复次数"></a>按某列统计字段重复次数</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &#x27;&#123;++S[$3]&#125;END&#123;for(i in S) print i, S[i]&#125;&#x27; # 统计第三列重复字段的重复的次数</span><br></pre></td></tr></table></figure>
+<h4 id="求和"><a href="#求和" class="headerlink" title="求和"></a>求和</h4><p>求主机总的磁盘剩余空间：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">df -T | awk &#x27;NR&gt;1&#123;sum+=$5&#125;END&#123;print sum/(1024*1024)&quot;G&quot;&#125;&#x27; # sum变量会默认初始化为0</span><br><span class="line">df | awk &#x27;NR&gt;1&#123;sum=sum+$4&#125;END&#123;sum=sum/(1024*1024);print sum&quot;G&quot;&#125;&#x27;</span><br></pre></td></tr></table></figure>
+<h3 id="更改"><a href="#更改" class="headerlink" title="更改"></a>更改</h3><h4 id="对某列进行替换"><a href="#对某列进行替换" class="headerlink" title="对某列进行替换"></a>对某列进行替换</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 替换</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 将第三个字段中的大写字母替换为空，即删除之</span></span><br><span class="line">awk &#x27;&#123;sub(&quot;[A-Z]+&quot;,&quot;&quot;,$3)&#125;&#123;print $3&#125;&#x27; a.txt </span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 将字段3整个进行替换，对<span class="variable">$0</span>操作</span></span><br><span class="line">awk &#x27;/epo/&#123;sub($3,&quot;666&quot;,$0)&#125; 1&#x27; a.txt </span><br><span class="line"><span class="meta">#</span><span class="bash"> 相较于直接对某个字段进行赋值的做法，这种做法可以维持文件原本的空白</span></span><br></pre></td></tr></table></figure>
+<h4 id="对某列进行截取"><a href="#对某列进行截取" class="headerlink" title="对某列进行截取"></a>对某列进行截取</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">awk &#x27;&#123;$1 = substr($1, 1, 3) &#125; 1&#x27; # 针对第1个字段，截取前3个字符</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 维持原文件的空白格式</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 1. 编辑<span class="variable">$0</span>,不适用于所有场景</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ---------------------</span></span><br><span class="line">awk &#x27;&#123;$0 = substr($1, 1, 3) substr($0, length($1) + 1)&#125; 1&#x27; a.txt</span><br><span class="line"><span class="meta">#</span><span class="bash"> 前半句是操作<span class="variable">$1</span>，后半句是截取<span class="variable">$1</span>后面的部分（前提第一个字段左对齐）</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 2.适用于所有场景，但是看不懂</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> ---------------------</span></span><br><span class="line">awk &#x27;BEGIN &#123; FPAT = &quot;([[:space:]]*[[:alnum:][:punct:][:digit:]]+)&quot;; OFS = &quot;&quot;; &#125; &#123; $6 = substr( $6, 1, 2);  print $0; &#125;&#x27; a.txt</span><br></pre></td></tr></table></figure>
+<h4 id="对某列进行分割"><a href="#对某列进行分割" class="headerlink" title="对某列进行分割"></a>对某列进行分割</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> cat test.txt</span> </span><br><span class="line">Tom     2012-12-11      car     5       3000</span><br><span class="line">John    2013-01-13      bike    4       1000</span><br><span class="line">vivi    2013-01-18      car     4       2800</span><br><span class="line">Tom     2013-01-20      car     3       2500</span><br><span class="line">John    2013-01-28      bike    6       3500</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 统计1月份每个人的总花销</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> awk <span class="string">&#x27;&#123;split($2,a,&quot;-&quot;);if(a[2]==01)&#123;b[$1]+=$5&#125;&#125;END&#123;for(i in b)print i,b[i]&#125;&#x27;</span> test.txt</span>   </span><br><span class="line">vivi 2800</span><br><span class="line">Tom 2500</span><br><span class="line">John 4500</span><br></pre></td></tr></table></figure>
+<h3 id="双文件"><a href="#双文件" class="headerlink" title="双文件"></a>双文件</h3><h4 id="文件合并"><a href="#文件合并" class="headerlink" title="文件合并"></a>文件合并</h4><p>两个文件的内容：</p>
+<p>a.txt</p>
+<p>a 15 44</p>
+<p>d 13 23</p>
+<p>c 66 25</p>
+<p>b 89 71</p>
+<p>b.txt</p>
+<p>a red</p>
+<p>b green</p>
+<p>c blue</p>
+<p>d dark</p>
+<p>根据相同字段的列合并两个文件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">awk &#x27;&#123;if(NR==FNR)&#123;a[$1]=$0;next&#125;&#125;&#123;print a[$1],$2&#125;&#x27; a.txt b.txt # next表示跳过后面的命令</span><br><span class="line"></span><br><span class="line">awk &#x27;&#123;if(NR==FNR)&#123;a[$1]=$0&#125;else&#123;print a[$1],$2&#125;&#125;&#x27; a.txt b.txt</span><br></pre></td></tr></table></figure>
+<p>根据行号合并两个文件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">awk &#x27;&#123;if(NR==FNR)&#123;a[NR]=$0&#125;else&#123;print a[FNR],$0&#125;&#125;&#x27; a.txt b.txt</span><br></pre></td></tr></table></figure></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">王贺天</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://wht6.github.io/posts/c1d.html">http://wht6.github.io/posts/c1d.html</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://wht6.github.io" target="_blank">WHT</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%B7%A5%E5%85%B7/">工具</a></div><div class="post_share"><div class="social-share" data-image="/img/featureimages/84.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/posts/79b6.html"><img class="next-cover" src="/img/featureimages/83.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">数据处理之Sed工具</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/posts/a469.html" title="MathType使用技巧"><img class="cover" src="/img/featureimages/7.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-03-18</div><div class="title">MathType使用技巧</div></div></a></div><div><a href="/posts/a3d2.html" title="frp远程访问"><img class="cover" src="/img/featureimages/14.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-22</div><div class="title">frp远程访问</div></div></a></div><div><a href="/posts/79b6.html" title="数据处理之Sed工具"><img class="cover" src="/img/featureimages/83.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2022-11-15</div><div class="title">数据处理之Sed工具</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/logo.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">王贺天</div><div class="author-info__description">分享技术,分享知识,分享感悟</div></div><div class="card-info-data is-center"><div class="card-info-data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">82</div></a></div><div class="card-info-data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">46</div></a></div><div class="card-info-data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="mailto:wanght586@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%90%86%E8%AE%BA"><span class="toc-number">1.</span> <span class="toc-text">   理论  </span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%BC%E5%BC%8F"><span class="toc-number">1.1.</span> <span class="toc-text">格式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A8%A1%E5%BC%8F"><span class="toc-number">1.2.</span> <span class="toc-text">模式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%89%B9%E5%AE%9A%E7%AC%A6%E5%8F%B7"><span class="toc-number">1.3.</span> <span class="toc-text">特定符号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E7%BD%AE%E5%87%BD%E6%95%B0"><span class="toc-number">1.4.</span> <span class="toc-text">内置函数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E8%B7%B5"><span class="toc-number">2.</span> <span class="toc-text">   实践  </span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%93%E5%8D%B0"><span class="toc-number">2.1.</span> <span class="toc-text">打印</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%89%93%E5%8D%B0%E5%88%97"><span class="toc-number">2.1.1.</span> <span class="toc-text">打印列</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%89%93%E5%8D%B0%E8%A1%8C"><span class="toc-number">2.1.2.</span> <span class="toc-text">打印行</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9B%B4%E6%94%B9%E5%88%86%E9%9A%94%E7%AC%A6"><span class="toc-number">2.1.3.</span> <span class="toc-text">更改分隔符</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8F%92%E5%85%A5"><span class="toc-number">2.2.</span> <span class="toc-text">插入</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8F%92%E5%85%A5%E8%A1%8C"><span class="toc-number">2.2.1.</span> <span class="toc-text">插入行</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8F%92%E5%85%A5%E5%88%97"><span class="toc-number">2.2.2.</span> <span class="toc-text">插入列</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%9D%E5%AD%98"><span class="toc-number">2.3.</span> <span class="toc-text">保存</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A0%E9%99%A4"><span class="toc-number">2.4.</span> <span class="toc-text">删除</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E6%9F%90%E5%88%97"><span class="toc-number">2.4.1.</span> <span class="toc-text">删除某列</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%9F%E8%AE%A1"><span class="toc-number">2.5.</span> <span class="toc-text">统计</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8C%89%E6%9F%90%E5%88%97%E7%BB%9F%E8%AE%A1%E5%AD%97%E6%AE%B5%E9%87%8D%E5%A4%8D%E6%AC%A1%E6%95%B0"><span class="toc-number">2.5.1.</span> <span class="toc-text">按某列统计字段重复次数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B1%82%E5%92%8C"><span class="toc-number">2.5.2.</span> <span class="toc-text">求和</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9B%B4%E6%94%B9"><span class="toc-number">2.6.</span> <span class="toc-text">更改</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AF%B9%E6%9F%90%E5%88%97%E8%BF%9B%E8%A1%8C%E6%9B%BF%E6%8D%A2"><span class="toc-number">2.6.1.</span> <span class="toc-text">对某列进行替换</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AF%B9%E6%9F%90%E5%88%97%E8%BF%9B%E8%A1%8C%E6%88%AA%E5%8F%96"><span class="toc-number">2.6.2.</span> <span class="toc-text">对某列进行截取</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AF%B9%E6%9F%90%E5%88%97%E8%BF%9B%E8%A1%8C%E5%88%86%E5%89%B2"><span class="toc-number">2.6.3.</span> <span class="toc-text">对某列进行分割</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8C%E6%96%87%E4%BB%B6"><span class="toc-number">2.7.</span> <span class="toc-text">双文件</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E5%90%88%E5%B9%B6"><span class="toc-number">2.7.1.</span> <span class="toc-text">文件合并</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/c1d.html" title="数据处理之Awk工具"><img src="/img/featureimages/84.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="数据处理之Awk工具"/></a><div class="content"><a class="title" href="/posts/c1d.html" title="数据处理之Awk工具">数据处理之Awk工具</a><time datetime="2022-11-17T08:00:00.000Z" title="发表于 2022-11-17 16:00:00">2022-11-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/79b6.html" title="数据处理之Sed工具"><img src="/img/featureimages/83.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="数据处理之Sed工具"/></a><div class="content"><a class="title" href="/posts/79b6.html" title="数据处理之Sed工具">数据处理之Sed工具</a><time datetime="2022-11-15T08:00:00.000Z" title="发表于 2022-11-15 16:00:00">2022-11-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/9d01.html" title="e2ec代码浅析"><img src="/img/featureimages/61.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="e2ec代码浅析"/></a><div class="content"><a class="title" href="/posts/9d01.html" title="e2ec代码浅析">e2ec代码浅析</a><time datetime="2022-08-29T08:00:00.000Z" title="发表于 2022-08-29 16:00:00">2022-08-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/638a.html" title="源码学习net/http"><img src="/img/featureimages/59.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="源码学习net/http"/></a><div class="content"><a class="title" href="/posts/638a.html" title="源码学习net/http">源码学习net/http</a><time datetime="2022-07-06T08:00:00.000Z" title="发表于 2022-07-06 16:00:00">2022-07-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/3d57.html" title="回溯解法和思路"><img src="/img/featureimages/64.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="回溯解法和思路"/></a><div class="content"><a class="title" href="/posts/3d57.html" title="回溯解法和思路">回溯解法和思路</a><time datetime="2022-07-01T08:00:00.000Z" title="发表于 2022-07-01 16:00:00">2022-07-01</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By 王贺天</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/ Relative)","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"left","width":100,"height":180},"mobile":{"show":false},"react":{"opacityDefault":0.7}});</script></body></html>
