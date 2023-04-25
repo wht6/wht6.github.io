@@ -17,15 +17,15 @@
   
     <meta name="keywords" content="工具" />
   
-  <meta name="description" content="理论  原理处理数据的基本流程 从文件中读取一行数据，将其放入模式空间（内存中的一个buffer）。 判断该行数据是否匹配相应的条件，只有匹配的时候才会执行对应的命令（p d c a i s）。 如果没有-n（抑制输出）则打印该行到屏幕上，有-n就不打印。 清空模式空间 重复1-4。  保持空间和模式空间模式空间(pattern space)和保持空间(hold space)是sed的两个">
+  <meta name="description" content="理论  原理处理数据的基本流程 从文件中读取一行数据，将其放入模式空间（内存中的一个buffer）。 判断该行数据是否匹配相应的条件，只有匹配的时候才会执行对应的命令（p d c a i s）。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="数据处理之Sed工具">
 <meta property="og:url" content="http://wht6.github.io/posts/79b6.html">
 <meta property="og:site_name" content="WHT">
-<meta property="og:description" content="理论  原理处理数据的基本流程 从文件中读取一行数据，将其放入模式空间（内存中的一个buffer）。 判断该行数据是否匹配相应的条件，只有匹配的时候才会执行对应的命令（p d c a i s）。 如果没有-n（抑制输出）则打印该行到屏幕上，有-n就不打印。 清空模式空间 重复1-4。  保持空间和模式空间模式空间(pattern space)和保持空间(hold space)是sed的两个">
+<meta property="og:description" content="理论  原理处理数据的基本流程 从文件中读取一行数据，将其放入模式空间（内存中的一个buffer）。 判断该行数据是否匹配相应的条件，只有匹配的时候才会执行对应的命令（p d c a i s）。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-11-15T08:00:00.000Z">
-<meta property="article:modified_time" content="2023-04-14T08:48:46.074Z">
+<meta property="article:modified_time" content="2023-04-25T10:27:32.555Z">
 <meta property="article:author" content="王贺天">
 <meta property="article:tag" content="工具">
 <meta name="twitter:card" content="summary">
@@ -281,7 +281,7 @@
             
             <div id="expire-alert" class="alert alert-warning hidden" role="alert">
                 <div class="icon"><i class="fa fa-warning"></i></div>
-                <div class="text"><p>本文最后编辑于 <time datetime="1681462126074"></time> 前，其中的内容可能需要更新。</p></div>
+                <div class="text"><p>本文最后编辑于 <time datetime="1682418452555"></time> 前，其中的内容可能需要更新。</p></div>
             </div>
             
             
@@ -290,7 +290,7 @@
             <div itemprop="articleBody"><hr>
 <h2 id="理论"><a href="#理论" class="headerlink" title="   理论  "></a><table> <tr>  <td bgcolor="SteelBlue"><font color="white">理论</font></td> </tr> </table></h2><h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><h4 id="处理数据的基本流程"><a href="#处理数据的基本流程" class="headerlink" title="处理数据的基本流程"></a>处理数据的基本流程</h4><ol>
 <li>从文件中读取一行数据，将其放入模式空间（内存中的一个buffer）。</li>
-<li>判断该行数据是否匹配相应的条件，只有匹配的时候才会执行对应的命令（p d c a i s）。</li>
+<li>判断该行数据是否匹配相应的条件，只有匹配的时候才会执行对应的命令（p d c a i s）。<span id="more"></span></li>
 <li>如果没有-n（抑制输出）则打印该行到屏幕上，有-n就不打印。</li>
 <li>清空模式空间</li>
 <li>重复1-4。</li>
@@ -477,11 +477,9 @@
             const twitterBase   = "https://twitter.com/intent/tweet?";
             const hostUrl       = "http://wht6.github.io/posts/79b6.html";
             const title         = "「数据处理之Sed工具」";
-            const excerpt       = `
-   理论  原理处理数据的基本流程
+            const excerpt       = `理论  原理处理数据的基本流程
 从文件中读取一行数据，将其放入模式空间（内存中的一个buffer）。
-判断该行数据是否匹配相应的条件，只有匹配的时候才会执行对应的命令（p d c a i s）。
-如果没有-n（抑制输出）则打印...`;
+判断该行数据是否匹配相应的条件，只有匹配的时候才会执行对应的命令（p d c a i s）。`;
             let _URL;
             switch (dest) {
                 case "qq"       : _URL = qqBase+"url="+hostUrl+"&title="+title+"&desc=&summary="+excerpt+"&site=cxpy";     break;
@@ -503,7 +501,7 @@
                     <a class="tag-none-link" href="/tags/%E5%B7%A5%E5%85%B7/" rel="tag">工具</a>
                 </div>
                 <div class="pull-date">
-                    <time datetime="2023-04-14T08:48:46.074Z" itemprop="dateModified">最后编辑：2023-04-14</time>
+                    <time datetime="2023-04-25T10:27:32.555Z" itemprop="dateModified">最后编辑：2023-04-25</time>
                 </div>
             </div>
         </footer>

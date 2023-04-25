@@ -17,12 +17,12 @@
   
     <meta name="keywords" content="DevOps, GitLab" />
   
-  <meta name="description" content="GitLab介绍GitGit 是一种在全球范围都广受欢迎的 分布式版本控制系统。 版本控制（Revision control）是一种在开发的过程中用于管理我们对文件、目录或工程等内容的修改历史，方便查看更改历史记录，备份以便恢复以前的版本的软件工程技术。简单说就是用于管理多人协同开发项目的技术。  版本控制工具具备的功能：  协同修改  多人并行不悖的修改服务器端的同一个文件。   数据备份 不仅">
+  <meta name="description" content="GitLab介绍GitGit 是一种在全球范围都广受欢迎的 分布式版本控制系统。 版本控制（Revision control）是一种在开发的过程中用于管理我们对文件、目录或工程等内容的修改历史，">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Git&amp;GitLab原理及部署">
 <meta property="og:url" content="http://wht6.github.io/posts/8a74.html">
 <meta property="og:site_name" content="WHT">
-<meta property="og:description" content="GitLab介绍GitGit 是一种在全球范围都广受欢迎的 分布式版本控制系统。 版本控制（Revision control）是一种在开发的过程中用于管理我们对文件、目录或工程等内容的修改历史，方便查看更改历史记录，备份以便恢复以前的版本的软件工程技术。简单说就是用于管理多人协同开发项目的技术。  版本控制工具具备的功能：  协同修改  多人并行不悖的修改服务器端的同一个文件。   数据备份 不仅">
+<meta property="og:description" content="GitLab介绍GitGit 是一种在全球范围都广受欢迎的 分布式版本控制系统。 版本控制（Revision control）是一种在开发的过程中用于管理我们对文件、目录或工程等内容的修改历史，">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/wht6/image/master/img/git1_202255.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/wht6/image/master/img/git2_202255.png">
@@ -39,7 +39,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/wht6/image/master/img/gitlabyl_202255.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/wht6/image/master/img/gitlab2_202255.png">
 <meta property="article:published_time" content="2022-05-24T06:00:00.000Z">
-<meta property="article:modified_time" content="2022-08-17T01:54:18.349Z">
+<meta property="article:modified_time" content="2023-04-25T10:31:30.501Z">
 <meta property="article:author" content="王贺天">
 <meta property="article:tag" content="GitLab">
 <meta property="article:tag" content="DevOps">
@@ -297,14 +297,14 @@
             
             <div id="expire-alert" class="alert alert-warning hidden" role="alert">
                 <div class="icon"><i class="fa fa-warning"></i></div>
-                <div class="text"><p>本文最后编辑于 <time datetime="1660701258349"></time> 前，其中的内容可能需要更新。</p></div>
+                <div class="text"><p>本文最后编辑于 <time datetime="1682418690501"></time> 前，其中的内容可能需要更新。</p></div>
             </div>
             
             
             
             <hr />
             <div itemprop="articleBody"><h3 id="GitLab介绍"><a href="#GitLab介绍" class="headerlink" title="GitLab介绍"></a>GitLab介绍</h3><h4 id="Git"><a href="#Git" class="headerlink" title="Git"></a>Git</h4><p>Git 是一种在全球范围都广受欢迎的 <strong>分布式版本控制系统</strong>。</p>
-<p>版本控制（Revision control）是一种在开发的过程中用于管理我们对文件、目录或工程等内容的修改历史，方便查看更改历史记录，备份以便恢复以前的版本的软件工程技术。<strong>简单说就是用于管理多人协同开发项目的技术。</strong></p>
+<p>版本控制（Revision control）是一种在开发的过程中用于管理我们对文件、目录或工程等内容的修改历史，<span id="more"></span>方便查看更改历史记录，备份以便恢复以前的版本的软件工程技术。<strong>简单说就是用于管理多人协同开发项目的技术。</strong></p>
 <blockquote>
 <p>版本控制工具具备的功能：</p>
 <ul>
@@ -585,7 +585,7 @@
             const hostUrl       = "http://wht6.github.io/posts/8a74.html";
             const title         = "「Git&GitLab原理及部署」";
             const excerpt       = `GitLab介绍GitGit 是一种在全球范围都广受欢迎的 分布式版本控制系统。
-版本控制（Revision control）是一种在开发的过程中用于管理我们对文件、目录或工程等内容的修改历史，方便查看更改历史记录，备份以便恢复以前的...`;
+版本控制（Revision control）是一种在开发的过程中用于管理我们对文件、目录或工程等内容的修改历史，`;
             let _URL;
             switch (dest) {
                 case "qq"       : _URL = qqBase+"url="+hostUrl+"&title="+title+"&desc=&summary="+excerpt+"&site=cxpy";     break;
@@ -607,7 +607,7 @@
                     <a class="tag-none-link" href="/tags/DevOps/" rel="tag">DevOps</a>, <a class="tag-none-link" href="/tags/GitLab/" rel="tag">GitLab</a>
                 </div>
                 <div class="pull-date">
-                    <time datetime="2022-08-17T01:54:18.349Z" itemprop="dateModified">最后编辑：2022-08-17</time>
+                    <time datetime="2023-04-25T10:31:30.501Z" itemprop="dateModified">最后编辑：2023-04-25</time>
                 </div>
             </div>
         </footer>

@@ -17,15 +17,15 @@
   
     <meta name="keywords" content="算法" />
   
-  <meta name="description" content="递归这种东西就是很难在大脑中去一点点的想清楚，这时候掌握一些套路和模板就能大大的提升解题的效率。 回溯解决的是类似于排列组合的问题，归根结底还是做选择的问题，回溯就是利用树形的结构来对所有的排列组合进行枚举，通过剪枝来提升枚举的效率。 回溯四个关键点要搞清楚，分别是可选项，选择与撤销，路径，以及剪枝 可选项：涉及到前面的选择是否影响后面的选择，如果影响需要剔除不合理的选择项 选择与撤销选择：选择之">
+  <meta name="description" content="递归这种东西就是很难在大脑中去一点点的想清楚，这时候掌握一些套路和模板就能大大的提升解题的效率。 回溯解决的是类似于排列组合的问题，归根结底还是做选择的问题，">
 <meta property="og:type" content="article">
 <meta property="og:title" content="回溯解法和思路">
 <meta property="og:url" content="http://wht6.github.io/posts/3d57.html">
 <meta property="og:site_name" content="WHT">
-<meta property="og:description" content="递归这种东西就是很难在大脑中去一点点的想清楚，这时候掌握一些套路和模板就能大大的提升解题的效率。 回溯解决的是类似于排列组合的问题，归根结底还是做选择的问题，回溯就是利用树形的结构来对所有的排列组合进行枚举，通过剪枝来提升枚举的效率。 回溯四个关键点要搞清楚，分别是可选项，选择与撤销，路径，以及剪枝 可选项：涉及到前面的选择是否影响后面的选择，如果影响需要剔除不合理的选择项 选择与撤销选择：选择之">
+<meta property="og:description" content="递归这种东西就是很难在大脑中去一点点的想清楚，这时候掌握一些套路和模板就能大大的提升解题的效率。 回溯解决的是类似于排列组合的问题，归根结底还是做选择的问题，">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-07-01T08:00:00.000Z">
-<meta property="article:modified_time" content="2023-04-25T07:00:02.267Z">
+<meta property="article:modified_time" content="2023-04-25T10:28:10.870Z">
 <meta property="article:author" content="王贺天">
 <meta property="article:tag" content="算法">
 <meta name="twitter:card" content="summary">
@@ -281,14 +281,14 @@
             
             <div id="expire-alert" class="alert alert-warning hidden" role="alert">
                 <div class="icon"><i class="fa fa-warning"></i></div>
-                <div class="text"><p>本文最后编辑于 <time datetime="1682406002267"></time> 前，其中的内容可能需要更新。</p></div>
+                <div class="text"><p>本文最后编辑于 <time datetime="1682418490870"></time> 前，其中的内容可能需要更新。</p></div>
             </div>
             
             
             
             <hr />
             <div itemprop="articleBody"><p>递归这种东西就是很难在大脑中去一点点的想清楚，这时候掌握一些套路和模板就能大大的提升解题的效率。</p>
-<p>回溯解决的是类似于排列组合的问题，归根结底还是<font color="red" size="3">做选择</font>的问题，回溯就是<font color="purple" size="3">利用树形的结构来对所有的排列组合进行枚举，通过剪枝来提升枚举的效率</font>。</p>
+<p>回溯解决的是类似于排列组合的问题，归根结底还是<font color="red" size="3">做选择</font>的问题，<span id="more"></span>回溯就是<font color="purple" size="3">利用树形的结构来对所有的排列组合进行枚举，通过剪枝来提升枚举的效率</font>。</p>
 <p>回溯四个关键点要搞清楚，分别是可选项，选择与撤销，路径，以及剪枝</p>
 <p>可选项：涉及到前面的选择是否影响后面的选择，如果影响需要剔除不合理的选择项</p>
 <p>选择与撤销选择：选择之前，加入路径，接着递归，然后递归返回之后撤销选择，从路径中移除</p>
@@ -362,7 +362,7 @@
             const hostUrl       = "http://wht6.github.io/posts/3d57.html";
             const title         = "「回溯解法和思路」";
             const excerpt       = `递归这种东西就是很难在大脑中去一点点的想清楚，这时候掌握一些套路和模板就能大大的提升解题的效率。
-回溯解决的是类似于排列组合的问题，归根结底还是做选择的问题，回溯就是利用树形的结构来对所有的排列组合进行枚举，通过剪枝来提升枚举的效率。...`;
+回溯解决的是类似于排列组合的问题，归根结底还是做选择的问题，`;
             let _URL;
             switch (dest) {
                 case "qq"       : _URL = qqBase+"url="+hostUrl+"&title="+title+"&desc=&summary="+excerpt+"&site=cxpy";     break;
@@ -384,7 +384,7 @@
                     <a class="tag-none-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a>
                 </div>
                 <div class="pull-date">
-                    <time datetime="2023-04-25T07:00:02.267Z" itemprop="dateModified">最后编辑：2023-04-25</time>
+                    <time datetime="2023-04-25T10:28:10.870Z" itemprop="dateModified">最后编辑：2023-04-25</time>
                 </div>
             </div>
         </footer>
