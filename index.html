@@ -1,149 +1,72 @@
-<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"><title>WHT - Enjoy your life</title><meta name="keywords" content="技术,运维,编程,兴趣"><meta name="author" content="王贺天"><meta name="copyright" content="王贺天"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="referrer" content="no-referrer"><meta name="description" content="分享技术,分享知识，共同进步">
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+  <!-- 元数据 -->
+  <meta charset="utf-8">
+  
+  
+  <title>WHT</title>
+  
+  <meta name="author" content="王贺天" />
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="robots" content="index,follow" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <meta name="format-detection" content="telphone=no, email=no" />
+  
+    <meta name="keywords" content="技术,运维,编程,兴趣" />
+  
+  <meta name="description" content="分享技术,分享知识，共同进步">
 <meta property="og:type" content="website">
 <meta property="og:title" content="WHT">
 <meta property="og:url" content="http://wht6.github.io/index.html">
 <meta property="og:site_name" content="WHT">
 <meta property="og:description" content="分享技术,分享知识，共同进步">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://wht6.github.io/img/logo.png">
 <meta property="article:author" content="王贺天">
 <meta property="article:tag" content="技术">
 <meta property="article:tag" content="运维">
 <meta property="article:tag" content="编程">
 <meta property="article:tag" content="兴趣">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://wht6.github.io/img/logo.png"><link rel="shortcut icon" href="/img/favicon.ico"><link rel="canonical" href="http://wht6.github.io/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
-  root: '/',
-  algolia: undefined,
-  localSearch: undefined,
-  translate: undefined,
-  noticeOutdate: undefined,
-  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
-  copy: {
-    success: '复制成功',
-    error: '复制错误',
-    noSupport: '浏览器不支持'
-  },
-  relativeDate: {
-    homepage: false,
-    post: false
-  },
-  runtime: '',
-  date_suffix: {
-    just: '刚刚',
-    min: '分钟前',
-    hour: '小时前',
-    day: '天前',
-    month: '个月前'
-  },
-  copyright: {"limitCount":100,"languages":{"author":"作者: 王贺天","link":"链接: ","source":"来源: WHT","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
-  lightbox: 'fancybox',
-  Snackbar: undefined,
-  source: {
-    justifiedGallery: {
-      js: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.js',
-      css: 'https://cdn.jsdelivr.net/npm/flickr-justified-gallery@2/dist/fjGallery.min.css'
-    }
-  },
-  isPhotoFigcaption: false,
-  islazyload: false,
-  isAnchor: false
-}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
-  title: 'WHT',
-  isPost: false,
-  isHome: true,
-  isHighlightShrink: false,
-  isToc: false,
-  postUpdate: '2023-04-24 09:15:17'
-}</script><noscript><style type="text/css">
-  #nav {
-    opacity: 1
-  }
-  .justified-gallery img {
-    opacity: 1
-  }
-
-  #recent-posts time,
-  #post-meta time {
-    display: inline !important
-  }
-</style></noscript><script>(win=>{
-    win.saveToLocal = {
-      set: function setWithExpiry(key, value, ttl) {
-        if (ttl === 0) return
-        const now = new Date()
-        const expiryDay = ttl * 86400000
-        const item = {
-          value: value,
-          expiry: now.getTime() + expiryDay,
-        }
-        localStorage.setItem(key, JSON.stringify(item))
-      },
-
-      get: function getWithExpiry(key) {
-        const itemStr = localStorage.getItem(key)
-
-        if (!itemStr) {
-          return undefined
-        }
-        const item = JSON.parse(itemStr)
-        const now = new Date()
-
-        if (now.getTime() > item.expiry) {
-          localStorage.removeItem(key)
-          return undefined
-        }
-        return item.value
-      }
-    }
+  <link rel="alternate" href="atom.xml" type="application/atom+xml">
+  <!-- 站点验证相关 -->
   
-    win.getScript = url => new Promise((resolve, reject) => {
-      const script = document.createElement('script')
-      script.src = url
-      script.async = true
-      script.onerror = reject
-      script.onload = script.onreadystatechange = function() {
-        const loadState = this.readyState
-        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
-        script.onload = script.onreadystatechange = null
-        resolve()
-      }
-      document.head.appendChild(script)
-    })
+    
+    
+    
   
-      win.activateDarkMode = function () {
-        document.documentElement.setAttribute('data-theme', 'dark')
-        if (document.querySelector('meta[name="theme-color"]') !== null) {
-          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
-        }
-      }
-      win.activateLightMode = function () {
-        document.documentElement.setAttribute('data-theme', 'light')
-        if (document.querySelector('meta[name="theme-color"]') !== null) {
-          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
-        }
-      }
-      const t = saveToLocal.get('theme')
+  <!-- 样式表文件 -->
+  <link rel="stylesheet" id="kratos-css" href="/css/kratosr.min.css" media="all"></script>
+  
+    <link rel="stylesheet" id="darkmode-css" href="/css/kr-color-dark.min.css" media="(prefers-color-scheme: dark)"></script>
+    <script src="/js/kr-dark.min.js"></script>
+  
+  
+    <link rel="stylesheet" id="highlight-css" href="/css/highlight/night-eighties.min.css" media="all"></script>
+  
+  <link rel="stylesheet" id="fontawe-css" href="/vendors/font-awesome@4.7.0/css/font-awesome.min.css" media="all"></script>
+  <link rel="stylesheet" id="nprogress-css" href="/vendors/nprogress@0.2.0/nprogress.css" media="all"></script>
+  
+  
+    <link rel="stylesheet" href="/vendors/aplayer@1.10.1/dist/APlayer.min.css"></script>
+  
+  
+    <link rel="stylesheet" href="/vendors/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"></script>
+  
+  <!-- 不得不预先加载的一些JS文件 -->
+  <script src="/vendors/jquery@3.6.0/dist/jquery.min.js"></script>
+  
+    <script src="/vendors/qrcode_js@1.0.0/qrcode.min.js"></script>
+  
+  
+  <style>
     
-          if (t === 'dark') activateDarkMode()
-          else if (t === 'light') activateLightMode()
-        
-      const asideStatus = saveToLocal.get('aside-status')
-      if (asideStatus !== undefined) {
-        if (asideStatus === 'hide') {
-          document.documentElement.classList.add('hide-aside')
-        } else {
-          document.documentElement.classList.remove('hide-aside')
-        }
-      }
     
-    const detectApple = () => {
-      if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
-        document.documentElement.classList.add('apple')
-      }
-    }
-    detectApple()
-    })(window)</script><style type="text/css" lang="css">
+  </style>
+  
+<style type="text/css" lang="css">
     #loading-container{
         position: fixed;
         top: 0;
@@ -273,160 +196,1128 @@
     };
     loaded();
 })()
- </script><meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="WHT" type="application/atom+xml">
-</head>
- <div id="loading-container">
-     <p class="loading-text">玩命加载中 . . . </p> 
-     <div class="loading-image">
-         <div></div>
-         <div></div>
-         <div></div>
-         <div></div> 
-         <div></div>
-     </div>
- </div><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/logo.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><div class="data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">83</div></a></div><div class="data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">47</div></a></div><div class="data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="page" id="body-wrap"><header class="full_page" id="page-header" style="background-image: url('/img/home.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">WHT</a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="site-info"><h1 id="site-title">WHT</h1><div id="site_social_icons"><a class="social-icon" href="mailto:wanght586@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="post_cover left"><a href="/posts/baa4.html" title="Kubernetes环境部署"><img class="post_bg" src="/img/featureimages/85.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Kubernetes环境部署"></a></div><div class="recent-post-info"><a class="article-title" href="/posts/baa4.html" title="Kubernetes环境部署">Kubernetes环境部署</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2023-04-21T08:00:00.000Z" title="发表于 2023-04-21 16:00:00">2023-04-21</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E8%BF%90%E7%BB%B4/">运维</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/kubernetes/">kubernetes</a></span></div><div class="content">
-预备知识 k8s集群的部署方式有：minikube、kubeadm、二进制。minikube只能搭建单点集群，不能用于生产环境，不推荐。kubeadm工具可以快速部署集群，适用于生产环境。二进制方式为原生搭建方式，十分繁琐，好处是自己自定义的空间更大。
-集群节点：master节点和work节点必不可少，并且为了保证高可用，通常需要3个master节点，但是这里只是学习之用，仅设置一个master节点。
-准备工作 
-去阿里云上购买一定数量的服务器，确保服务器环境符合硬件和系统要求（2核CPU、4G内存或以上，磁盘空间要求在30GB以上）
-配置服务的网络，使得服务器之间可以互通。由于配置期间需要拉取镜像，所以需要有公网IP。
+ </script><meta name="generator" content="Hexo 5.4.0"></head>
 
-12345ping # 互通ip a ifconfig -a # mac地址唯一hostnamectl status # 集群内主机名唯一dmidecode -s system-uuid # 系统产品uuid唯一
 
-软件资源准备，需要下载哪些软件资源，有的资源可能需要翻墙下载，可提前准备好
-配置文件准备，如果需要自定义kubeadm的配置，事先准备好配置文件
-给i ...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/posts/c1d.html" title="数据处理之Awk工具"><img class="post_bg" src="/img/featureimages/84.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="数据处理之Awk工具"></a></div><div class="recent-post-info"><a class="article-title" href="/posts/c1d.html" title="数据处理之Awk工具">数据处理之Awk工具</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-11-17T08:00:00.000Z" title="发表于 2022-11-17 16:00:00">2022-11-17</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E8%BF%90%E7%BB%B4/">运维</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/%E5%B7%A5%E5%85%B7/">工具</a></span></div><div class="content">
+    <body class="custom-background">
+        <div id="kratos-wrapper">
+    <div id="kratos-page">
+        <div id="kratos-header">
+            <header id="kratos-desktop-topnav" class="kratos-topnav">
+                <div class="container">
+                    <div class="nav-header">
+                        <nav id="kratos-menu-wrap">
+                            <ul id="kratos-primary-menu" class="sf-menu">
+                                
+                                    
+                                    
+                                
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </header>
+            <header id="kratos-mobile-topnav" class="kratos-topnav">
+                <div class="container">
+                    <div class="color-logo"><a href="/">WHT</a></div>
+                    <div class="nav-toggle">
+                        <a class="kratos-nav-toggle js-kratos-nav-toggle">
+                            <i></i>
+                        </a>
+                    </div>
+                </div>
+            </header>
+        </div>
+        <div class="kratos-start kratos-hero-2">
+            <!-- <div class="kratos-overlay"></div> -->
+            <div class="kratos-cover kratos-cover-2 text-center">
+                <div class="desc desc2 animate-box">
+                    <a href="/">
+                        <h2>WHT</h2> <br />
+                        <span>Enjoy your life</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div id="kratos-blog-post">
+            <div class="container">
+                <div id="main" class="row">
+                    
+
+        
+
+            <section class="col-md-8">
+
+        
+
+            <!-- Breadcrumb for tag & category page -->
+
+
+
+
+    
+    
+        <article class="kratos-hentry clearfix" itemscope itemtype="https://schema.org/Article">
+            <div class="kratos-entry-border-new clearfix">
+                
+                <div class="kratos-entry-thumb-new">
+                    <a href="/posts/baa4.html">
+                        
+                            <img class="kratos-entry-thumb-new-img" alt="">
+                        
+                    </a>
+                </div>
+                <div class="kratos-post-inner-new">
+                    <header class="kratos-entry-header-new">
+                            <a class="label-link" href="/categories/%E8%BF%90%E7%BB%B4/">运维</a>
+                        <h2 class="kratos-entry-title-new"><a href="/posts/baa4.html" itemprop="mainEntityOfPage"><span itemprop="name headline">Kubernetes环境部署</span></a>
+                    </header>
+                    <div class="kratos-entry-content-new">
+                        <p itemProp="description">
+                            
+                                
+预备知识k8s集群的部署方式有：minikube、kubeadm、二进制。minikube只能搭建单点集群，不能用于生产环境，不推荐。kubeadm工具可以快速部署集群，适用于生产环境。二进制方式为原生搭建方式，十分繁琐，好处是自己...
+                            
+                        </p>
+                    </div>
+                </div>
+                <footer class="kratos-post-meta-new">
+                    <span class="pull-left">
+                        <time datetime="2023-04-21T08:00:00.000Z" itemprop="datePublished">
+                            <a><i class="fa fa-calendar"></i> 2023-04-21</a>
+                        </time>
+                        <a>
+                            
+                                <i class="fa fa-tags"></i>
+                                <a class="tag-none-link" href="/tags/kubernetes/" rel="tag">kubernetes</a>
+                            
+                        </a>
+                        
+                            <!-- 当前仅支持valine/waline自带的统计功能 -->
+                            
+                        
+                        
+                            <!-- 当前仅支持waline自带的统计功能 -->
+                            
+                        
+                    </span>
+                    <span class="pull-right">
+                        <a class="read-more" href="/posts/baa4.html" title="阅读全文">阅读全文<i class="fa fa-chevron-circle-right"></i></a>
+                    </span>
+                </footer>
+            </div>
+        </article>
+    
+
+    
+    
+        <article class="kratos-hentry clearfix" itemscope itemtype="https://schema.org/Article">
+            <div class="kratos-entry-border-new clearfix">
+                
+                <div class="kratos-entry-thumb-new">
+                    <a href="/posts/c1d.html">
+                        
+                            <img class="kratos-entry-thumb-new-img" alt="">
+                        
+                    </a>
+                </div>
+                <div class="kratos-post-inner-new">
+                    <header class="kratos-entry-header-new">
+                            <a class="label-link" href="/categories/%E8%BF%90%E7%BB%B4/">运维</a>
+                        <h2 class="kratos-entry-title-new"><a href="/posts/c1d.html" itemprop="mainEntityOfPage"><span itemprop="name headline">数据处理之Awk工具</span></a>
+                    </header>
+                    <div class="kratos-entry-content-new">
+                        <p itemProp="description">
+                            
+                                
    理论  格式awk   -&lt;模式&gt;   ‘BEGIN{&lt;预处理&gt;}/&lt;匹配&gt;/{&lt;处理&gt;}END{&lt;后处理&gt;}’   &lt;文件&gt;
-awk与sed只能处理文件或管道，不能处理变量或字符串。
-如果想要处理变量或字符串可以：echo &lt;变量或字符串&gt; | awk/sed …
-模式-F：指定分隔符。
--F/表示指定分隔符为/，-F  “\t”表示指定分隔符为制表符。
-特定符号NR和FNR都用于记录行号，区别如下：
-如果仅处理单个文件，没有区别
-如果同时处理多个文件，NR会依次对所有文件记录行号，而FNR每记录完一个文件后都重新从1开始计数
-内置函数
+awk与sed只能处理文件...
+                            
+                        </p>
+                    </div>
+                </div>
+                <footer class="kratos-post-meta-new">
+                    <span class="pull-left">
+                        <time datetime="2022-11-17T08:00:00.000Z" itemprop="datePublished">
+                            <a><i class="fa fa-calendar"></i> 2022-11-17</a>
+                        </time>
+                        <a>
+                            
+                                <i class="fa fa-tags"></i>
+                                <a class="tag-none-link" href="/tags/%E5%B7%A5%E5%85%B7/" rel="tag">工具</a>
+                            
+                        </a>
+                        
+                            <!-- 当前仅支持valine/waline自带的统计功能 -->
+                            
+                        
+                        
+                            <!-- 当前仅支持waline自带的统计功能 -->
+                            
+                        
+                    </span>
+                    <span class="pull-right">
+                        <a class="read-more" href="/posts/c1d.html" title="阅读全文">阅读全文<i class="fa fa-chevron-circle-right"></i></a>
+                    </span>
+                </footer>
+            </div>
+        </article>
+    
 
-
-
-sub函数
-sub(str1, str2, &lt;$1-n&gt;)
-将字段n中的字符串str1替换为字符串str2。
-
-
-
-
-substr函数(有返回值)
-substr(&lt;$1-n&gt;, n1)
-针对第n个字段，截取从第n1个字符到分隔符之间的字符
-
-
-
-substr(&lt;$1-n&gt;, n1, n2)
-针对第n个字段，截取从第n1 ...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/posts/79b6.html" title="数据处理之Sed工具"><img class="post_bg" src="/img/featureimages/83.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="数据处理之Sed工具"></a></div><div class="recent-post-info"><a class="article-title" href="/posts/79b6.html" title="数据处理之Sed工具">数据处理之Sed工具</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-11-15T08:00:00.000Z" title="发表于 2022-11-15 16:00:00">2022-11-15</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E8%BF%90%E7%BB%B4/">运维</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/%E5%B7%A5%E5%85%B7/">工具</a></span></div><div class="content">
+    
+    
+        <article class="kratos-hentry clearfix" itemscope itemtype="https://schema.org/Article">
+            <div class="kratos-entry-border-new clearfix">
+                
+                <div class="kratos-entry-thumb-new">
+                    <a href="/posts/79b6.html">
+                        
+                            <img class="kratos-entry-thumb-new-img" alt="">
+                        
+                    </a>
+                </div>
+                <div class="kratos-post-inner-new">
+                    <header class="kratos-entry-header-new">
+                            <a class="label-link" href="/categories/%E8%BF%90%E7%BB%B4/">运维</a>
+                        <h2 class="kratos-entry-title-new"><a href="/posts/79b6.html" itemprop="mainEntityOfPage"><span itemprop="name headline">数据处理之Sed工具</span></a>
+                    </header>
+                    <div class="kratos-entry-content-new">
+                        <p itemProp="description">
+                            
+                                
    理论  原理处理数据的基本流程
 从文件中读取一行数据，将其放入模式空间（内存中的一个buffer）。
 判断该行数据是否匹配相应的条件，只有匹配的时候才会执行对应的命令（p d c a i s）。
-如果没有-n（抑制输出）则打印该行到屏幕上，有-n就不打印。
-清空模式空间
-重复1-4。
+如果没有-n（抑制输出）则打印...
+                            
+                        </p>
+                    </div>
+                </div>
+                <footer class="kratos-post-meta-new">
+                    <span class="pull-left">
+                        <time datetime="2022-11-15T08:00:00.000Z" itemprop="datePublished">
+                            <a><i class="fa fa-calendar"></i> 2022-11-15</a>
+                        </time>
+                        <a>
+                            
+                                <i class="fa fa-tags"></i>
+                                <a class="tag-none-link" href="/tags/%E5%B7%A5%E5%85%B7/" rel="tag">工具</a>
+                            
+                        </a>
+                        
+                            <!-- 当前仅支持valine/waline自带的统计功能 -->
+                            
+                        
+                        
+                            <!-- 当前仅支持waline自带的统计功能 -->
+                            
+                        
+                    </span>
+                    <span class="pull-right">
+                        <a class="read-more" href="/posts/79b6.html" title="阅读全文">阅读全文<i class="fa fa-chevron-circle-right"></i></a>
+                    </span>
+                </footer>
+            </div>
+        </article>
+    
 
-保持空间和模式空间模式空间(pattern space)和保持空间(hold space)是sed的两个存放数据的空间。
-其中，数据默认读取到模式空间，我们通过各种命令处理或输出的都是模式空间的内容。模式空间的内容会在处理完一行后清空，就是每读取一行，就会被清空一次。而保持空间需要特定的命令才能操作(h,H,g,G,x)，这里存放的数据会永久保存（sed读取完文件后才会清空保持空间的内容）。
-格式sed   -&lt;模式&gt;   ‘&lt;操作&gt;/&lt;匹配&gt;/&lt;操作&gt;\&lt;附加内容&gt;’   &lt;文件&gt;
-模式
+    
+    
+        <article class="kratos-hentry clearfix" itemscope itemtype="https://schema.org/Article">
+            <div class="kratos-entry-border-new clearfix">
+                
+                <div class="kratos-entry-thumb-new">
+                    <a href="/posts/9d01.html">
+                        
+                            <img class="kratos-entry-thumb-new-img" alt="">
+                        
+                    </a>
+                </div>
+                <div class="kratos-post-inner-new">
+                    <header class="kratos-entry-header-new">
+                            <a class="label-link" href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a>
+                        <h2 class="kratos-entry-title-new"><a href="/posts/9d01.html" itemprop="mainEntityOfPage"><span itemprop="name headline">e2ec代码浅析</span></a>
+                    </header>
+                    <div class="kratos-entry-content-new">
+                        <p itemProp="description">
+                            
+                                首先用于训练的脚本为tain_net.py
+12345def main():    cfg = get_cfg(args)    torch.cuda.set_device(args.device)    network = make...
+                            
+                        </p>
+                    </div>
+                </div>
+                <footer class="kratos-post-meta-new">
+                    <span class="pull-left">
+                        <time datetime="2022-08-29T08:00:00.000Z" itemprop="datePublished">
+                            <a><i class="fa fa-calendar"></i> 2022-08-29</a>
+                        </time>
+                        <a>
+                            
+                                <i class="fa fa-tags"></i>
+                                <a class="tag-none-link" href="/tags/%E5%AE%9E%E4%BE%8B%E5%88%86%E5%89%B2/" rel="tag">实例分割</a>
+                            
+                        </a>
+                        
+                            <!-- 当前仅支持valine/waline自带的统计功能 -->
+                            
+                        
+                        
+                            <!-- 当前仅支持waline自带的统计功能 -->
+                            
+                        
+                    </span>
+                    <span class="pull-right">
+                        <a class="read-more" href="/posts/9d01.html" title="阅读全文">阅读全文<i class="fa fa-chevron-circle-right"></i></a>
+                    </span>
+                </footer>
+            </div>
+        </article>
+    
 
+    
+    
+        <article class="kratos-hentry clearfix" itemscope itemtype="https://schema.org/Article">
+            <div class="kratos-entry-border-new clearfix">
+                
+                <div class="kratos-entry-thumb-new">
+                    <a href="/posts/638a.html">
+                        
+                            <img class="kratos-entry-thumb-new-img" alt="">
+                        
+                    </a>
+                </div>
+                <div class="kratos-post-inner-new">
+                    <header class="kratos-entry-header-new">
+                            <a class="label-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a>
+                        <h2 class="kratos-entry-title-new"><a href="/posts/638a.html" itemprop="mainEntityOfPage"><span itemprop="name headline">源码学习net/http</span></a>
+                    </header>
+                    <div class="kratos-entry-content-new">
+                        <p itemProp="description">
+                            
+                                123456789101112131415package mainimport (	&quot;fmt&quot;	&quot;net/http&quot;)func IndexHandler(w http.ResponseWrite...
+                            
+                        </p>
+                    </div>
+                </div>
+                <footer class="kratos-post-meta-new">
+                    <span class="pull-left">
+                        <time datetime="2022-07-06T08:00:00.000Z" itemprop="datePublished">
+                            <a><i class="fa fa-calendar"></i> 2022-07-06</a>
+                        </time>
+                        <a>
+                            
+                                <i class="fa fa-tags"></i>
+                                <a class="tag-none-link" href="/tags/Golang/" rel="tag">Golang</a>
+                            
+                        </a>
+                        
+                            <!-- 当前仅支持valine/waline自带的统计功能 -->
+                            
+                        
+                        
+                            <!-- 当前仅支持waline自带的统计功能 -->
+                            
+                        
+                    </span>
+                    <span class="pull-right">
+                        <a class="read-more" href="/posts/638a.html" title="阅读全文">阅读全文<i class="fa fa-chevron-circle-right"></i></a>
+                    </span>
+                </footer>
+            </div>
+        </article>
+    
 
+    
+    
+        <article class="kratos-hentry clearfix" itemscope itemtype="https://schema.org/Article">
+            <div class="kratos-entry-border-new clearfix">
+                
+                <div class="kratos-entry-thumb-new">
+                    <a href="/posts/3d57.html">
+                        
+                            <img class="kratos-entry-thumb-new-img" alt="">
+                        
+                    </a>
+                </div>
+                <div class="kratos-post-inner-new">
+                    <header class="kratos-entry-header-new">
+                            <a class="label-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a>
+                        <h2 class="kratos-entry-title-new"><a href="/posts/3d57.html" itemprop="mainEntityOfPage"><span itemprop="name headline">回溯解法和思路</span></a>
+                    </header>
+                    <div class="kratos-entry-content-new">
+                        <p itemProp="description">
+                            
+                                递归这种东西就是很难在大脑中去一点点的想清楚，这时候掌握一些套路和模板就能大大的提升解题的效率。
+回溯解决的是类似于排列组合的问题，归根结底还是做选择的问题，回溯就是利用树形的结构来对所有的排列组合进行枚举，通过剪枝来提升枚举的效率。...
+                            
+                        </p>
+                    </div>
+                </div>
+                <footer class="kratos-post-meta-new">
+                    <span class="pull-left">
+                        <time datetime="2022-07-01T08:00:00.000Z" itemprop="datePublished">
+                            <a><i class="fa fa-calendar"></i> 2022-07-01</a>
+                        </time>
+                        <a>
+                            
+                                <i class="fa fa-tags"></i>
+                                <a class="tag-none-link" href="/tags/%E7%AE%97%E6%B3%95/" rel="tag">算法</a>
+                            
+                        </a>
+                        
+                            <!-- 当前仅支持valine/waline自带的统计功能 -->
+                            
+                        
+                        
+                            <!-- 当前仅支持waline自带的统计功能 -->
+                            
+                        
+                    </span>
+                    <span class="pull-right">
+                        <a class="read-more" href="/posts/3d57.html" title="阅读全文">阅读全文<i class="fa fa-chevron-circle-right"></i></a>
+                    </span>
+                </footer>
+            </div>
+        </article>
+    
 
-sed -n
-抑制输出，不会将模式空间的内容输出到屏幕上
+    
+    
+        <article class="kratos-hentry clearfix" itemscope itemtype="https://schema.org/Article">
+            <div class="kratos-entry-border-new clearfix">
+                
+                <div class="kratos-entry-thumb-new">
+                    <a href="/posts/255d.html">
+                        
+                            <img class="kratos-entry-thumb-new-img" alt="">
+                        
+                    </a>
+                </div>
+                <div class="kratos-post-inner-new">
+                    <header class="kratos-entry-header-new">
+                            <a class="label-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a>
+                        <h2 class="kratos-entry-title-new"><a href="/posts/255d.html" itemprop="mainEntityOfPage"><span itemprop="name headline">Python和Go中内置的排序和查找</span></a>
+                    </header>
+                    <div class="kratos-entry-content-new">
+                        <p itemProp="description">
+                            
+                                Python排序sort()和sorted()是Python中的内置函数，常规用法是对一个列表进行排序，【排序稳定】。
+123lings = [2, 3, 8, 5]lings.sort() # 正序，从小到大lings.sort(r...
+                            
+                        </p>
+                    </div>
+                </div>
+                <footer class="kratos-post-meta-new">
+                    <span class="pull-left">
+                        <time datetime="2022-06-29T08:00:00.000Z" itemprop="datePublished">
+                            <a><i class="fa fa-calendar"></i> 2022-06-29</a>
+                        </time>
+                        <a>
+                            
+                                <i class="fa fa-tags"></i>
+                                <a class="tag-none-link" href="/tags/Go/" rel="tag">Go</a>, <a class="tag-none-link" href="/tags/Python/" rel="tag">Python</a>
+                            
+                        </a>
+                        
+                            <!-- 当前仅支持valine/waline自带的统计功能 -->
+                            
+                        
+                        
+                            <!-- 当前仅支持waline自带的统计功能 -->
+                            
+                        
+                    </span>
+                    <span class="pull-right">
+                        <a class="read-more" href="/posts/255d.html" title="阅读全文">阅读全文<i class="fa fa-chevron-circle-right"></i></a>
+                    </span>
+                </footer>
+            </div>
+        </article>
+    
 
+    
+    
+        <article class="kratos-hentry clearfix" itemscope itemtype="https://schema.org/Article">
+            <div class="kratos-entry-border-new clearfix">
+                
+                <div class="kratos-entry-thumb-new">
+                    <a href="/posts/51f6.html">
+                        
+                            <img class="kratos-entry-thumb-new-img" alt="">
+                        
+                    </a>
+                </div>
+                <div class="kratos-post-inner-new">
+                    <header class="kratos-entry-header-new">
+                            <a class="label-link" href="/categories/%E8%BF%90%E7%BB%B4/">运维</a>
+                        <h2 class="kratos-entry-title-new"><a href="/posts/51f6.html" itemprop="mainEntityOfPage"><span itemprop="name headline">MySQL隔离级别实现原理</span></a>
+                    </header>
+                    <div class="kratos-entry-content-new">
+                        <p itemProp="description">
+                            
+                                MVCC在 MySQL 中，实际上每条记录在更新的时候都会同时记录一条回滚操作。记录上的最新值，通过回滚操作，都可以得到前一个状态的值。假设一个值从 1 被按顺序改成了 2、3、4，在回滚日志里面就会有类似下面的记录。
+当前值是 4，...
+                            
+                        </p>
+                    </div>
+                </div>
+                <footer class="kratos-post-meta-new">
+                    <span class="pull-left">
+                        <time datetime="2022-06-26T08:00:00.000Z" itemprop="datePublished">
+                            <a><i class="fa fa-calendar"></i> 2022-06-26</a>
+                        </time>
+                        <a>
+                            
+                                <i class="fa fa-tags"></i>
+                                <a class="tag-none-link" href="/tags/MySQL/" rel="tag">MySQL</a>
+                            
+                        </a>
+                        
+                            <!-- 当前仅支持valine/waline自带的统计功能 -->
+                            
+                        
+                        
+                            <!-- 当前仅支持waline自带的统计功能 -->
+                            
+                        
+                    </span>
+                    <span class="pull-right">
+                        <a class="read-more" href="/posts/51f6.html" title="阅读全文">阅读全文<i class="fa fa-chevron-circle-right"></i></a>
+                    </span>
+                </footer>
+            </div>
+        </article>
+    
 
-
-
-sed -r
-支持扩展正则表达式
-
-
-sed -i
-编辑文件内容 ...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/posts/9d01.html" title="e2ec代码浅析"><img class="post_bg" src="/img/featureimages/61.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="e2ec代码浅析"></a></div><div class="recent-post-info"><a class="article-title" href="/posts/9d01.html" title="e2ec代码浅析">e2ec代码浅析</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-08-29T08:00:00.000Z" title="发表于 2022-08-29 16:00:00">2022-08-29</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/%E5%AE%9E%E4%BE%8B%E5%88%86%E5%89%B2/">实例分割</a></span></div><div class="content">首先用于训练的脚本为tain_net.py
-12345def main():    cfg = get_cfg(args)    torch.cuda.set_device(args.device)    network = make_network.get_network(cfg)    train(network, cfg)
-可以看到主函数main获取了基本配置，指定了训练设备，获取网络结构并进行训练。
-先看train
-123456789101112131415161718192021222324252627def train(network, cfg):    trainer = make_trainer(network, cfg)    optimizer = make_optimizer(network, cfg)    scheduler = make_lr_scheduler(optimizer, cfg)    recorder = make_recorder(cfg.commen.record_dir)    evaluator = make_evaluator(cf ...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/posts/638a.html" title="源码学习net/http"><img class="post_bg" src="/img/featureimages/59.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="源码学习net/http"></a></div><div class="recent-post-info"><a class="article-title" href="/posts/638a.html" title="源码学习net/http">源码学习net/http</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-07-06T08:00:00.000Z" title="发表于 2022-07-06 16:00:00">2022-07-06</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/Golang/">Golang</a></span></div><div class="content">123456789101112131415package mainimport (	&quot;fmt&quot;	&quot;net/http&quot;)func IndexHandler(w http.ResponseWriter, r *http.Request) &#123;	fmt.Fprintln(w, &quot;hello world!&quot;)&#125;func main() &#123;	http.HandleFunc(&quot;/&quot;, IndexHandler)	http.ListenAndServe(&quot;127.0.0.1:8000&quot;, nil)&#125;
-上面是httpserver最简单的一个实现，下面通过查看net/http中的源码来学习其实现原理。
-这里HandleFunc的作用就是配置路由，为url指定对应的处理器函数。这里”/“的处理器函数就是IndexHandler，功能是打印一行文字。
-123func HandleFunc(pattern string, handler func(ResponseWriter ...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/posts/3d57.html" title="回溯解法和思路"><img class="post_bg" src="/img/featureimages/64.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="回溯解法和思路"></a></div><div class="recent-post-info"><a class="article-title" href="/posts/3d57.html" title="回溯解法和思路">回溯解法和思路</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-07-01T08:00:00.000Z" title="发表于 2022-07-01 16:00:00">2022-07-01</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/%E7%AE%97%E6%B3%95/">算法</a></span></div><div class="content">递归这种东西就是很难在大脑中去一点点的想清楚，这时候掌握一些套路和模板就能大大的提升解题的效率。
-回溯解决的是类似于排列组合的问题，归根结底还是做选择的问题，回溯就是利用树形的结构来对所有的排列组合进行枚举，通过剪枝来提升枚举的效率。
-回溯四个关键点要搞清楚，分别是可选项，选择与撤销，路径，以及剪枝
-可选项 ：涉及到前面的选择是否影响后面的选择，如果影响需要剔除不合理的选择项
-选择与撤销选择 ：选择之前，加入路径，接着递归，然后递归返回之后撤销选择，从路径中移除
-路径 ：一定要判断清除是深拷贝还是浅拷贝。通过路径来确定边界条件
-剪枝 ：想清楚哪些情况是冗余的，怎么continue跳过这些情况
-</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/posts/255d.html" title="Python和Go中内置的排序和查找"><img class="post_bg" src="/img/featureimages/49.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Python和Go中内置的排序和查找"></a></div><div class="recent-post-info"><a class="article-title" href="/posts/255d.html" title="Python和Go中内置的排序和查找">Python和Go中内置的排序和查找</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-06-29T08:00:00.000Z" title="发表于 2022-06-29 16:00:00">2022-06-29</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/Go/">Go</a><span class="article-meta-link">•</span><a class="article-meta__tags" href="/tags/Python/">Python</a></span></div><div class="content">Python排序sort()和sorted()是Python中的内置函数，常规用法是对一个列表进行排序，【排序稳定】。
-123lings = [2, 3, 8, 5]lings.sort() # 正序，从小到大lings.sort(reverse=True)# 反序，从大到小
-sort的key参数可以指定排序的key值，通过lambda函数的返回值确定排序的key。
-12name_mark_age = [(&#x27;zhangsan&#x27;,&#x27;A&#x27;,15),(&#x27;LISI&#x27;,&#x27;B&#x27;,14),(&#x27;WANGWU&#x27;,&#x27;A&#x27;,16)]name_mark_age.sort(key = lambda x: x[2])     #根据年龄排序
-1234567891011121314151617class Student:    def __init__(self, name, grade, age):        self.name = name        self.grade = grad ...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/posts/51f6.html" title="MySQL隔离级别实现原理"><img class="post_bg" src="/img/featureimages/55.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MySQL隔离级别实现原理"></a></div><div class="recent-post-info"><a class="article-title" href="/posts/51f6.html" title="MySQL隔离级别实现原理">MySQL隔离级别实现原理</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-06-26T08:00:00.000Z" title="发表于 2022-06-26 16:00:00">2022-06-26</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E8%BF%90%E7%BB%B4/">运维</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/MySQL/">MySQL</a></span></div><div class="content">MVCC在 MySQL 中，实际上每条记录在更新的时候都会同时记录一条回滚操作。记录上的最新值，通过回滚操作，都可以得到前一个状态的值。假设一个值从 1 被按顺序改成了 2、3、4，在回滚日志里面就会有类似下面的记录。
-当前值是 4，但是在查询这条记录的时候，不同时刻启动的事务会有不同的 read-view。如图中看到的，在视图 A、B、C 里面，这一个记录的值分别是 1、2、4，同一条记录在系统中可以存在多个版本，就是数据库的多版本并发控制（MVCC）。
-回滚日志undo log对于 read-view A，要得到 1，就必须将当前值依次执行图中所有的回滚操作得到。同时你会发现，即使现在有另外一个事务正在将 4 改成 5，这个事务跟 read-view A、B、C 对应的事务是不会冲突的。
-你一定会问，回滚日志总不能一直保留吧，什么时候删除呢？答案是，在不需要的时候才删除。也就是说，系统会判断，当没有事务再需要用到这些回滚日志时，回滚日志会被删除。什么时候才不需要了呢？就是当系统里没有比这个回滚日志更早的 read-view 的时候。
-长事务
-基于上面的说明，我们来讨论一下为什么建议 ...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/posts/e60f.html" title="MySQL运行中的问题解决"><img class="post_bg" src="/img/featureimages/41.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MySQL运行中的问题解决"></a></div><div class="recent-post-info"><a class="article-title" href="/posts/e60f.html" title="MySQL运行中的问题解决">MySQL运行中的问题解决</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-06-24T06:00:00.000Z" title="发表于 2022-06-24 14:00:00">2022-06-24</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E8%BF%90%E7%BB%B4/">运维</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/MySQL/">MySQL</a></span></div><div class="content">数据库在实际运行中，表是动态变化的，可能出现的问题如下：
+    
+    
+        <article class="kratos-hentry clearfix" itemscope itemtype="https://schema.org/Article">
+            <div class="kratos-entry-border-new clearfix">
+                
+                <div class="kratos-entry-thumb-new">
+                    <a href="/posts/e60f.html">
+                        
+                            <img class="kratos-entry-thumb-new-img" alt="">
+                        
+                    </a>
+                </div>
+                <div class="kratos-post-inner-new">
+                    <header class="kratos-entry-header-new">
+                            <a class="label-link" href="/categories/%E8%BF%90%E7%BB%B4/">运维</a>
+                        <h2 class="kratos-entry-title-new"><a href="/posts/e60f.html" itemprop="mainEntityOfPage"><span itemprop="name headline">MySQL运行中的问题解决</span></a>
+                    </header>
+                    <div class="kratos-entry-content-new">
+                        <p itemProp="description">
+                            
+                                数据库在实际运行中，表是动态变化的，可能出现的问题如下：
 日志更新问题：
 数据库在更新时，会产生binlog、redo log、undo log。日志的产生是会对性能造成一定的影响的。
-binlog：server层产生的逻辑日志（逻辑日志记录的数据的变化，而不是物理数据页的变化）。（数据库有任何的变化的时候（增删改），就会记录在binlog）
-undo log：InnoDB产生的逻辑日志，保证隔离性、原子性。
-redo log：InnoDB产生的物理日志，保证持久化。
-锁问题：
-客户端执行SQL时，会产生各种行锁、表锁、元数据锁。
-一个客户端产生的锁，会干扰其他客户端SQL的执行。
-两个客户端之间可能产生死锁。
-事务问题：
-事务可能会造成查询到的数据与磁盘上的不一致，客户端可能因为脏读、幻读等而看不到已经更新的数据，并且事务可能会产生隐式锁。
-MySQL的日志体系server层产生的binlog用来进行数据复制。InnoDB产生的redo log、undo log，用来实现事务ACID。
-这三个日志都不是用来给管理员查看的，而是运行所必要的日志。
-binlog叫归档日志，记录在专门的文 ...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/posts/d740.html" title="MySQL查询优化"><img class="post_bg" src="/img/featureimages/35.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MySQL查询优化"></a></div><div class="recent-post-info"><a class="article-title" href="/posts/d740.html" title="MySQL查询优化">MySQL查询优化</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-05-29T06:00:00.000Z" title="发表于 2022-05-29 14:00:00">2022-05-29</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E8%BF%90%E7%BB%B4/">运维</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/MySQL/">MySQL</a></span></div><div class="content">索引覆盖索引覆盖：查询语句从执行到返回结果均使用同一个索引。索引覆盖可以有效的减少回表。
+binlog：server层产生的逻辑日志（逻辑...
+                            
+                        </p>
+                    </div>
+                </div>
+                <footer class="kratos-post-meta-new">
+                    <span class="pull-left">
+                        <time datetime="2022-06-24T06:00:00.000Z" itemprop="datePublished">
+                            <a><i class="fa fa-calendar"></i> 2022-06-24</a>
+                        </time>
+                        <a>
+                            
+                                <i class="fa fa-tags"></i>
+                                <a class="tag-none-link" href="/tags/MySQL/" rel="tag">MySQL</a>
+                            
+                        </a>
+                        
+                            <!-- 当前仅支持valine/waline自带的统计功能 -->
+                            
+                        
+                        
+                            <!-- 当前仅支持waline自带的统计功能 -->
+                            
+                        
+                    </span>
+                    <span class="pull-right">
+                        <a class="read-more" href="/posts/e60f.html" title="阅读全文">阅读全文<i class="fa fa-chevron-circle-right"></i></a>
+                    </span>
+                </footer>
+            </div>
+        </article>
+    
+
+    
+    
+        <article class="kratos-hentry clearfix" itemscope itemtype="https://schema.org/Article">
+            <div class="kratos-entry-border-new clearfix">
+                
+                <div class="kratos-entry-thumb-new">
+                    <a href="/posts/d740.html">
+                        
+                            <img class="kratos-entry-thumb-new-img" alt="">
+                        
+                    </a>
+                </div>
+                <div class="kratos-post-inner-new">
+                    <header class="kratos-entry-header-new">
+                            <a class="label-link" href="/categories/%E8%BF%90%E7%BB%B4/">运维</a>
+                        <h2 class="kratos-entry-title-new"><a href="/posts/d740.html" itemprop="mainEntityOfPage"><span itemprop="name headline">MySQL查询优化</span></a>
+                    </header>
+                    <div class="kratos-entry-content-new">
+                        <p itemProp="description">
+                            
+                                索引覆盖索引覆盖：查询语句从执行到返回结果均使用同一个索引。索引覆盖可以有效的减少回表。
 下面通过具体的例子解释什么是索引覆盖。
-123456789101112131415-- 查看inventory的建表语句show create table inventory;-- 显示如下CREATE TABLE `inventory` (  `inventory_id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,  `film_id` smallint(5) unsigned NOT NULL,  `store_id` tinyint(3) unsigned NOT NULL,  `last_update` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,  PRIMARY KEY (`inventory_id`),  KEY `idx_fk_film_id` (`film_id`),  KEY `idx_store_id_film_id` (`s ...</div></div></div><div class="recent-post-item"><div class="post_cover left"><a href="/posts/8a74.html" title="Git&amp;GitLab原理及部署"><img class="post_bg" src="/img/featureimages/39.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Git&amp;GitLab原理及部署"></a></div><div class="recent-post-info"><a class="article-title" href="/posts/8a74.html" title="Git&amp;GitLab原理及部署">Git&amp;GitLab原理及部署</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-05-24T06:00:00.000Z" title="发表于 2022-05-24 14:00:00">2022-05-24</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/%E8%BF%90%E7%BB%B4/">运维</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/GitLab/">GitLab</a><span class="article-meta-link">•</span><a class="article-meta__tags" href="/tags/DevOps/">DevOps</a></span></div><div class="content">GitLab介绍GitGit 是一种在全球范围都广受欢迎的 分布式版本控制系统。
-版本控制（Revision control）是一种在开发的过程中用于管理我们对文件、目录或工程等内容的修改历史，方便查看更改历史记录，备份以便恢复以前的版本的软件工程技术。简单说就是用于管理多人协同开发项目的技术。
+123456789101112131415-- 查看inventory的建表语句show create ...
+                            
+                        </p>
+                    </div>
+                </div>
+                <footer class="kratos-post-meta-new">
+                    <span class="pull-left">
+                        <time datetime="2022-05-29T06:00:00.000Z" itemprop="datePublished">
+                            <a><i class="fa fa-calendar"></i> 2022-05-29</a>
+                        </time>
+                        <a>
+                            
+                                <i class="fa fa-tags"></i>
+                                <a class="tag-none-link" href="/tags/MySQL/" rel="tag">MySQL</a>
+                            
+                        </a>
+                        
+                            <!-- 当前仅支持valine/waline自带的统计功能 -->
+                            
+                        
+                        
+                            <!-- 当前仅支持waline自带的统计功能 -->
+                            
+                        
+                    </span>
+                    <span class="pull-right">
+                        <a class="read-more" href="/posts/d740.html" title="阅读全文">阅读全文<i class="fa fa-chevron-circle-right"></i></a>
+                    </span>
+                </footer>
+            </div>
+        </article>
+    
 
-版本控制工具具备的功能：
+    
+    
+        <article class="kratos-hentry clearfix" itemscope itemtype="https://schema.org/Article">
+            <div class="kratos-entry-border-new clearfix">
+                
+                <div class="kratos-entry-thumb-new">
+                    <a href="/posts/8a74.html">
+                        
+                            <img class="kratos-entry-thumb-new-img" alt="">
+                        
+                    </a>
+                </div>
+                <div class="kratos-post-inner-new">
+                    <header class="kratos-entry-header-new">
+                            <a class="label-link" href="/categories/%E8%BF%90%E7%BB%B4/">运维</a>
+                        <h2 class="kratos-entry-title-new"><a href="/posts/8a74.html" itemprop="mainEntityOfPage"><span itemprop="name headline">Git&GitLab原理及部署</span></a>
+                    </header>
+                    <div class="kratos-entry-content-new">
+                        <p itemProp="description">
+                            
+                                GitLab介绍GitGit 是一种在全球范围都广受欢迎的 分布式版本控制系统。
+版本控制（Revision control）是一种在开发的过程中用于管理我们对文件、目录或工程等内容的修改历史，方便查看更改历史记录，备份以便恢复以前的...
+                            
+                        </p>
+                    </div>
+                </div>
+                <footer class="kratos-post-meta-new">
+                    <span class="pull-left">
+                        <time datetime="2022-05-24T06:00:00.000Z" itemprop="datePublished">
+                            <a><i class="fa fa-calendar"></i> 2022-05-24</a>
+                        </time>
+                        <a>
+                            
+                                <i class="fa fa-tags"></i>
+                                <a class="tag-none-link" href="/tags/DevOps/" rel="tag">DevOps</a>, <a class="tag-none-link" href="/tags/GitLab/" rel="tag">GitLab</a>
+                            
+                        </a>
+                        
+                            <!-- 当前仅支持valine/waline自带的统计功能 -->
+                            
+                        
+                        
+                            <!-- 当前仅支持waline自带的统计功能 -->
+                            
+                        
+                    </span>
+                    <span class="pull-right">
+                        <a class="read-more" href="/posts/8a74.html" title="阅读全文">阅读全文<i class="fa fa-chevron-circle-right"></i></a>
+                    </span>
+                </footer>
+            </div>
+        </article>
+    
 
-协同修改 
-多人并行不悖的修改服务器端的同一个文件。
+    
+    
+        <article class="kratos-hentry clearfix" itemscope itemtype="https://schema.org/Article">
+            <div class="kratos-entry-border-new clearfix">
+                
+                <div class="kratos-entry-thumb-new">
+                    <a href="/posts/92f1.html">
+                        
+                            <img class="kratos-entry-thumb-new-img" alt="">
+                        
+                    </a>
+                </div>
+                <div class="kratos-post-inner-new">
+                    <header class="kratos-entry-header-new">
+                            <a class="label-link" href="/categories/Linux/">Linux</a>
+                        <h2 class="kratos-entry-title-new"><a href="/posts/92f1.html" itemprop="mainEntityOfPage"><span itemprop="name headline">Linux进程间通信IPC</span></a>
+                    </header>
+                    <div class="kratos-entry-content-new">
+                        <p itemProp="description">
+                            
+                                
+每个进程都拥有自己的用户地址空间，任何一个进程的全局变量在另一个进程中完全不可见，但是内核空间中每个进程都是共享的，所以进程之间要交换数据必须通过内核空间进行。进程间通信(IPC, InterProcess Communicatio...
+                            
+                        </p>
+                    </div>
+                </div>
+                <footer class="kratos-post-meta-new">
+                    <span class="pull-left">
+                        <time datetime="2022-05-21T08:00:00.000Z" itemprop="datePublished">
+                            <a><i class="fa fa-calendar"></i> 2022-05-21</a>
+                        </time>
+                        <a>
+                            
+                                <i class="fa fa-tags"></i>
+                                <a class="tag-none-link" href="/tags/%E8%BF%9B%E7%A8%8B/" rel="tag">进程</a>
+                            
+                        </a>
+                        
+                            <!-- 当前仅支持valine/waline自带的统计功能 -->
+                            
+                        
+                        
+                            <!-- 当前仅支持waline自带的统计功能 -->
+                            
+                        
+                    </span>
+                    <span class="pull-right">
+                        <a class="read-more" href="/posts/92f1.html" title="阅读全文">阅读全文<i class="fa fa-chevron-circle-right"></i></a>
+                    </span>
+                </footer>
+            </div>
+        </article>
+    
 
 
-数据备份
-不仅保存目录和文件的当前状态，还能够保存每一个提交过的历史状态。
 
-
-版本管理
-在保存每一个版本的文件信息的时候要做到不保存重复数据，以节约存储空间，提高运行效率。这方面 SVN 采用的是增量式管理的方式，而 Git 采取了文件系统快照的方式。
-
-
-权限控制 
-对团队中参与开发的人员进行权限控制。
-对团队外开发者贡献的代码进行审核 【Git 独有】。
-
-
-历史记录 
-查看修改人、修改时间、修改内容、日志信息。
-将本地文件恢复到某一个历史状态。
-
-
-分支管理 
-允许开发团队在工作过程中多条生产线同时推进任务，进一步提高效率。 
+    <div class='text-center pagination'>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    </div>
 
 
 
+    <div class="hidden">
+        <!-- 加载文章阅读对应的统计功能，评论自带的那种 -->
+        
+    </div>
 
-版本控制工具可分为两类，一类是以SVN为代表的集中式版本控制工具 ...</div></div></div><div class="recent-post-item"><div class="post_cover right"><a href="/posts/92f1.html" title="Linux进程间通信IPC"><img class="post_bg" src="/img/featureimages/57.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Linux进程间通信IPC"></a></div><div class="recent-post-info"><a class="article-title" href="/posts/92f1.html" title="Linux进程间通信IPC">Linux进程间通信IPC</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2022-05-21T08:00:00.000Z" title="发表于 2022-05-21 16:00:00">2022-05-21</time></span><span class="article-meta"><span class="article-meta-separator">|</span><i class="fas fa-inbox"></i><a class="article-meta__categories" href="/categories/Linux/">Linux</a></span><span class="article-meta tags"><span class="article-meta-separator">|</span><i class="fas fa-tag"></i><a class="article-meta__tags" href="/tags/%E8%BF%9B%E7%A8%8B/">进程</a></span></div><div class="content">
-每个进程都拥有自己的用户地址空间，任何一个进程的全局变量在另一个进程中完全不可见，但是内核空间中每个进程都是共享的，所以进程之间要交换数据必须通过内核空间进行。进程间通信(IPC, InterProcess Communication)。
- 
-进程间通信机制共有七种，分别是匿名管道、命名管道、消息队列、共享内存、信号量、信号以及Scocket。各有不同的优缺点。
-   管道     匿名管道  管道的本质是一块内核缓冲区，由两个文件描述符引用，一个表示读端，一个表示写端，只能以先进先出的方式存取数据。管道是半双工，规定数据从管道的写端流入管道，从读端流出，当两个进程都终结的时候，管道也自动消失，管道的读端和写端默认都是阻塞的。
-管道的数据一旦被读走，便不在管道中存在，不可反复读取，数据只能在一个方向上流动，若要实现双向流动，必须使用两个管道。
 
-在Linux中，匿名管道一个常见的表现形式就是「|」这个竖线了，如常见的操作
-1ps -ef | grep redis
-对于匿名管道，它的通信范围是存在亲缘关系 的进程。因为管道没有实体，也就是没有管道文件，只能通过 fork 来复制父进程  ...</div></div></div><nav id="pagination"><div class="pagination"><span class="page-number current">1</span><a class="page-number" href="/page/2/#content-inner">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/#content-inner">7</a><a class="extend next" rel="next" href="/page/2/#content-inner"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/logo.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">王贺天</div><div class="author-info__description">分享技术,分享知识，共同进步</div></div><div class="card-info-data is-center"><div class="card-info-data-item"><a href="/archives/"><div class="headline">文章</div><div class="length-num">83</div></a></div><div class="card-info-data-item"><a href="/tags/"><div class="headline">标签</div><div class="length-num">47</div></a></div><div class="card-info-data-item"><a href="/categories/"><div class="headline">分类</div><div class="length-num">7</div></a></div></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/xxxxxx"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="mailto:wanght586@gmail.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/posts/baa4.html" title="Kubernetes环境部署"><img src="/img/featureimages/85.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Kubernetes环境部署"/></a><div class="content"><a class="title" href="/posts/baa4.html" title="Kubernetes环境部署">Kubernetes环境部署</a><time datetime="2023-04-21T08:00:00.000Z" title="发表于 2023-04-21 16:00:00">2023-04-21</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/c1d.html" title="数据处理之Awk工具"><img src="/img/featureimages/84.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="数据处理之Awk工具"/></a><div class="content"><a class="title" href="/posts/c1d.html" title="数据处理之Awk工具">数据处理之Awk工具</a><time datetime="2022-11-17T08:00:00.000Z" title="发表于 2022-11-17 16:00:00">2022-11-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/79b6.html" title="数据处理之Sed工具"><img src="/img/featureimages/83.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="数据处理之Sed工具"/></a><div class="content"><a class="title" href="/posts/79b6.html" title="数据处理之Sed工具">数据处理之Sed工具</a><time datetime="2022-11-15T08:00:00.000Z" title="发表于 2022-11-15 16:00:00">2022-11-15</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/9d01.html" title="e2ec代码浅析"><img src="/img/featureimages/61.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="e2ec代码浅析"/></a><div class="content"><a class="title" href="/posts/9d01.html" title="e2ec代码浅析">e2ec代码浅析</a><time datetime="2022-08-29T08:00:00.000Z" title="发表于 2022-08-29 16:00:00">2022-08-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/posts/638a.html" title="源码学习net/http"><img src="/img/featureimages/59.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="源码学习net/http"/></a><div class="content"><a class="title" href="/posts/638a.html" title="源码学习net/http">源码学习net/http</a><time datetime="2022-07-06T08:00:00.000Z" title="发表于 2022-07-06 16:00:00">2022-07-06</time></div></div></div></div><div class="card-widget card-tags"><div class="item-headline"><i class="fas fa-tags"></i><span>标签</span></div><div class="card-tag-cloud"><a href="/tags/Docker/" style="font-size: 1.33em; color: rgb(150, 19, 13)">Docker</a><a href="/tags/%E5%AE%B9%E5%99%A8/" style="font-size: 1.27em; color: rgb(45, 102, 26)">容器</a><a href="/tags/Go%E8%AF%AD%E8%A8%80/" style="font-size: 1.45em; color: rgb(174, 143, 10)">Go语言</a><a href="/tags/InnoDB/" style="font-size: 1.15em; color: rgb(158, 152, 62)">InnoDB</a><a href="/tags/MySQL/" style="font-size: 1.39em; color: rgb(73, 14, 42)">MySQL</a><a href="/tags/Kubernetes/" style="font-size: 1.27em; color: rgb(188, 74, 56)">Kubernetes</a><a href="/tags/%E9%9B%86%E7%BE%A4/" style="font-size: 1.15em; color: rgb(36, 178, 24)">集群</a><a href="/tags/kubernetes/" style="font-size: 1.15em; color: rgb(34, 19, 121)">kubernetes</a><a href="/tags/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" style="font-size: 1.15em; color: rgb(49, 192, 25)">网络安全</a><a href="/tags/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1/" style="font-size: 1.15em; color: rgb(27, 134, 90)">负载均衡</a><a href="/tags/%E9%AB%98%E5%8F%AF%E7%94%A8/" style="font-size: 1.15em; color: rgb(25, 115, 90)">高可用</a><a href="/tags/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/" style="font-size: 1.15em; color: rgb(171, 130, 170)">文件系统</a><a href="/tags/%E6%97%A5%E5%BF%97/" style="font-size: 1.15em; color: rgb(185, 62, 58)">日志</a><a href="/tags/%E6%9D%83%E9%99%90%E7%AE%A1%E7%90%86/" style="font-size: 1.15em; color: rgb(15, 37, 111)">权限管理</a><a href="/tags/%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86/" style="font-size: 1.15em; color: rgb(189, 119, 45)">用户管理</a><a href="/tags/%E7%A3%81%E7%9B%98%E7%AE%A1%E7%90%86/" style="font-size: 1.15em; color: rgb(22, 13, 124)">磁盘管理</a><a href="/tags/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE/" style="font-size: 1.15em; color: rgb(176, 27, 173)">系统配置</a><a href="/tags/%E7%BD%91%E7%BB%9C%E9%85%8D%E7%BD%AE/" style="font-size: 1.15em; color: rgb(47, 155, 50)">网络配置</a><a href="/tags/%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/" style="font-size: 1.15em; color: rgb(132, 103, 200)">网站搭建</a><a href="/tags/%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1/" style="font-size: 1.15em; color: rgb(45, 129, 20)">计划任务</a><a href="/tags/%E5%8C%85%E7%AE%A1%E7%90%86/" style="font-size: 1.15em; color: rgb(33, 96, 109)">包管理</a><a href="/tags/%E8%BF%9B%E7%A8%8B/" style="font-size: 1.21em; color: rgb(116, 146, 144)">进程</a><a href="/tags/%E5%B7%A5%E5%85%B7/" style="font-size: 1.33em; color: rgb(36, 175, 172)">工具</a><a href="/tags/Go/" style="font-size: 1.15em; color: rgb(84, 102, 26)">Go</a><a href="/tags/Python/" style="font-size: 1.33em; color: rgb(156, 82, 195)">Python</a><a href="/tags/SNMP/" style="font-size: 1.15em; color: rgb(16, 61, 197)">SNMP</a><a href="/tags/Shell/" style="font-size: 1.27em; color: rgb(96, 63, 178)">Shell</a><a href="/tags/Zabbix/" style="font-size: 1.21em; color: rgb(69, 109, 144)">Zabbix</a><a href="/tags/%E5%AE%9E%E4%BE%8B%E5%88%86%E5%89%B2/" style="font-size: 1.33em; color: rgb(92, 28, 77)">实例分割</a><a href="/tags/%E9%98%B2%E7%81%AB%E5%A2%99/" style="font-size: 1.15em; color: rgb(15, 99, 3)">防火墙</a><a href="/tags/iptables/" style="font-size: 1.15em; color: rgb(110, 107, 32)">iptables</a><a href="/tags/pytorch/" style="font-size: 1.15em; color: rgb(88, 144, 29)">pytorch</a><a href="/tags/Python%E8%AF%AD%E8%A8%80/" style="font-size: 1.27em; color: rgb(44, 35, 86)">Python语言</a><a href="/tags/Ansible/" style="font-size: 1.21em; color: rgb(127, 163, 12)">Ansible</a><a href="/tags/%E7%AE%97%E6%B3%95/" style="font-size: 1.15em; color: rgb(15, 82, 20)">算法</a><a href="/tags/DNS/" style="font-size: 1.15em; color: rgb(123, 3, 173)">DNS</a><a href="/tags/%E4%BB%A3%E7%90%86/" style="font-size: 1.15em; color: rgb(73, 192, 8)">代理</a><a href="/tags/%E8%B7%AF%E7%94%B1%E5%99%A8/" style="font-size: 1.15em; color: rgb(136, 189, 100)">路由器</a><a href="/tags/Golang/" style="font-size: 1.15em; color: rgb(200, 14, 67)">Golang</a><a href="/tags/Linux/" style="font-size: 1.15em; color: rgb(125, 129, 155)">Linux</a></div></div><div class="card-widget card-webinfo"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">83</div></div><div class="webinfo-item"><div class="item-name">本站总字数 :</div><div class="item-count">266.6k</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"></div></div><div class="webinfo-item"><div class="item-name">本站总访问量 :</div><div class="item-count" id="busuanzi_value_site_pv"></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2023-04-24T01:15:15.849Z"></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2023 By 王贺天</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.umd.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/ Relative)","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"left","width":100,"height":180},"mobile":{"show":false},"react":{"opacityDefault":0.7}});</script></body></html>
+
+        
+
+            </section>
+
+        
+
+                
+            
+
+<section id="kratos-widget-area" class="col-md-4 hidden-xs hidden-sm">
+    <!-- 文章和页面根据splitter来分割，没有的话就从头开始设置为sticky -->
+    
+        <div class="sticky-area">
+    
+    
+                <aside id="krw-about" class="widget widget-kratos-about clearfix">
+    <div class="photo-background"></div>
+    <div class="photo-wrapper clearfix">
+        <div class="photo-wrapper-tip text-center">
+            <img class="about-photo" src="/images/avatar.webp" loading="lazy" decoding="auto" />
+        </div>
+    </div>
+    <div class="textwidget">
+        <p class="text-center">分享技术,分享知识，共同进步</p>
+    </div>
+    <div class="site-meta">
+        <a class="meta-item" href="/archives/">
+            <span class="title">
+                文章
+            </span>
+            <span class="count">
+                83
+            </span>
+        </a>
+        <a class="meta-item" href="/categories/">
+            <span class="title">
+                分类
+            </span>
+            <span class="count">
+                7
+            </span>
+        </a>
+        <a class="meta-item" href="/tags/">
+            <span class="title">
+                标签
+            </span>
+            <span class="count">
+                47
+            </span>
+        </a>
+    </div>
+</aside>
+            
+                
+  <aside id="krw-categories" class="widget widget-kratos-categories clearfix">
+    <h4 class="widget-title"><i class="fa fa-folder"></i>分类目录</h4>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a><span class="category-list-count">12</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E4%BA%91%E5%8E%9F%E7%94%9F/">云原生</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/">嵌入式</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a><span class="category-list-count">24</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%BF%90%E7%BB%B4/">运维</a><span class="category-list-count">21</span></li></ul>
+  </aside>
+
+
+            
+                
+  <aside id="krw-tags" class="widget widget-kratos-tags clearfix">
+    <h4 class="widget-title"><i class="fa fa-tags"></i>标签聚合</h4>
+      <div class="tag-clouds">
+        <a href="/tags/Ansible/" style="font-size: 0.64em;">Ansible</a> <a href="/tags/DNS/" style="font-size: 0.6em;">DNS</a> <a href="/tags/DevOps/" style="font-size: 0.6em;">DevOps</a> <a href="/tags/Docker/" style="font-size: 0.72em;">Docker</a> <a href="/tags/GitLab/" style="font-size: 0.6em;">GitLab</a> <a href="/tags/Go/" style="font-size: 0.6em;">Go</a> <a href="/tags/Golang/" style="font-size: 0.6em;">Golang</a> <a href="/tags/Go%E8%AF%AD%E8%A8%80/" style="font-size: 0.8em;">Go语言</a> <a href="/tags/InnoDB/" style="font-size: 0.6em;">InnoDB</a> <a href="/tags/Kubernetes/" style="font-size: 0.68em;">Kubernetes</a> <a href="/tags/Linux/" style="font-size: 0.6em;">Linux</a> <a href="/tags/MySQL/" style="font-size: 0.76em;">MySQL</a> <a href="/tags/Nginx/" style="font-size: 0.6em;">Nginx</a> <a href="/tags/Python/" style="font-size: 0.72em;">Python</a> <a href="/tags/Python%E8%AF%AD%E8%A8%80/" style="font-size: 0.68em;">Python语言</a> <a href="/tags/SNMP/" style="font-size: 0.6em;">SNMP</a> <a href="/tags/Shell/" style="font-size: 0.68em;">Shell</a> <a href="/tags/Zabbix/" style="font-size: 0.64em;">Zabbix</a>
+      </div>
+  </aside>
+
+            
+                
+  <aside id="krw-posts" class="widget widget-kratos-posts">
+  <h4 class="widget-title"><i class="fa fa-file"></i>最新文章</h4>
+  <div class="tab-content">
+      <ul class="list-group">
+        
+        
+          
+          
+            <a class="list-group-item" href="/posts/baa4.html"><i class="fa  fa-book"></i> Kubernetes环境部署</a>
+            
+          
+        
+          
+          
+            <a class="list-group-item" href="/posts/c1d.html"><i class="fa  fa-book"></i> 数据处理之Awk工具</a>
+            
+          
+        
+          
+          
+            <a class="list-group-item" href="/posts/79b6.html"><i class="fa  fa-book"></i> 数据处理之Sed工具</a>
+            
+          
+        
+          
+          
+            <a class="list-group-item" href="/posts/9d01.html"><i class="fa  fa-book"></i> e2ec代码浅析</a>
+            
+          
+        
+          
+          
+            <a class="list-group-item" href="/posts/638a.html"><i class="fa  fa-book"></i> 源码学习net/http</a>
+            
+          
+        
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+      </ul>
+  </div>
+  </aside>
+
+            
+    </div>
+</section>
+        
+        </div>
+    </div>
+</div>
+<footer>
+    <div id="footer"  class="ap-lrc"  >
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3 footer-list text-center">
+                    <ul class="kratos-social-icons">
+                        <!-- Keep for compatibility -->
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <!-- New links -->
+                        
+                    </ul>
+                    <ul class="kratos-copyright">
+                        <div>
+                            <li>&copy; 2023 WHT 版权所有.</li>
+                            <li>本站已运行<span id="span_dt">Loading...</span></li>
+                        </div>
+                        <div>
+                            <li>Theme <a href="https://github.com/Candinya/Kratos-Rebirth" target="_blank">Kratos:Rebirth</a></li>
+                            <li>Site built with&nbsp;<i class="fa fa-heart throb" style="color:#d43f57"></i>&nbsp;by 王贺天.</li>
+                        </div>
+                        <div>
+                            <li>Powered by <a href="https://hexo.io" target="_blank" rel="nofollow">Hexo</a></li>
+                            <li>Hosted on <a href="https://github.io" target="_blank">Github Pages</a></li>
+                        </div>
+                        <div>
+                            
+                            
+                        </div>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="kr-tool text-center">
+            <div class="tool">
+                
+                    <div class="box search-box">
+                        <a href="/search/">
+                            <span class="fa fa-search"></span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="box theme-box" id="darkmode-switch">
+                        <span class="fa fa-adjust"></span>
+                    </div>
+                
+                
+                
+            </div>
+            <div class="box gotop-box">
+                <span class="fa fa-chevron-up"></span>
+            </div>
+        </div>
+    </div>
+</footer>
+</div>
+</div>
+
+        <script defer src="/vendors/bootstrap@3.3.4/dist/js/bootstrap.min.js"></script>
+<script defer src="/vendors/nprogress@0.2.0/nprogress.js"></script>
+<script>
+    if (!window.kr) {
+        window.kr = {};
+    }
+    window.kr.notMobile = (!(navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)));
+    window.kr.siteRoot = "/";
+</script>
+
+
+    <script async src="/js/candy.min.js"></script>
+
+
+
+    <script defer src="/vendors/aplayer@1.10.1/dist/APlayer.min.js"></script>
+    
+    <script defer src="/vendors/meting@2.0.1/dist/Meting.min.js"></script>
+    <meting-js
+        server="netease"
+        type="playlist"
+        id="3204190542"
+        order="random"
+        fixed="true"
+    >
+    </meting-js>
+
+
+
+    <script defer src="/vendors/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+
+<script defer src="/js/kratosr.min.js"></script>
+<script defer src="/js/pjax.min.js"></script>
+
+
+
+<!-- Extra support for third-party plguins  -->
+
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/ Relative)","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"left","width":100,"height":180},"mobile":{"show":false},"react":{"opacityDefault":0.7}});</script></body>
+</html>
