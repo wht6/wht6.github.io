@@ -362,7 +362,7 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed -e &#x27;s/http:\/\///&#x27; -e &#x27;s/\/.*//&#x27; b.txt | sort | uniq -c | sort -nr</span><br></pre></td></tr></table></figure>
 <p>拆解：</p>
 <blockquote>
-<p><code>-e &#39;s/http:\/\///&#39;</code>：-e多次编辑无需管道符，将<a target="_blank" rel="noopener" href="http://替换为空。">http://替换为空。</a></p>
+<p><code>-e &#39;s/http:\/\///&#39;</code>：-e多次编辑无需管道符，将<a href="http://替换为空。">http://替换为空。</a></p>
 <p><code>-e &#39;s/\/.*//&#39;</code>：-e多次编辑无需管道符，将/及后面任意多个字符替换为空。</p>
 </blockquote>
 <p>3）使用awk命令</p>

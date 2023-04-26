@@ -413,7 +413,7 @@
 <li>Aliyun Linux和Centos都属于RedHat一家的。兼容Red Hat。其中包括（Red Hat Enterprise Linux， Fedora，CentOS，Scientific Linux， Oracle Linux）</li>
 <li>OSS每小时结算一次调用 OSS API 的请求费用。目前只支持按量付费：每万次请求的单价 * 每小时实际请求次数/10000。</li>
 <li>阿里云负载均衡服务SLB支持用户可以同时设置实例维度上的“后端服务器”、监听维度上的“虚拟服务器组”和“转发规则”，那么当用户流量经过负载均衡某端口时，我们首先判断其是否能够匹配上某条“转发规则”，如果匹配，则将流量转发到该规则的后端服务器组上；若不匹配并且在该监听上设置了虚拟服务器组，那么将流量转发到该虚拟服务器组上；若用户没有在该监听上设置虚拟服务器组，即将流量转发到实例级别添加的各后端服务器中。</li>
-<li>如果您使用OSS自带域名，如<a target="_blank" rel="noopener" href="http://bucketname.oss.aliyuncs.com/objcet">http://bucketname.oss.aliyuncs.com/objcet</a>访问静态文件时（文件类型包括：txt、html、htm、图片格式、视频格式、音频格式等），均限制在浏览器中以“另存为”下载的方式打开文件，而不能直接浏览该文件。因此您需要将自定义的域名访问绑定在属于自己的Bucket上面，即CNAME。域名绑定成功后，为了使用域名正常访问 OSS，还需要添加 CNAME 记录指向存储空间对应的外网域名。</li>
+<li>如果您使用OSS自带域名，如<a href="http://bucketname.oss.aliyuncs.com/objcet">http://bucketname.oss.aliyuncs.com/objcet</a>访问静态文件时（文件类型包括：txt、html、htm、图片格式、视频格式、音频格式等），均限制在浏览器中以“另存为”下载的方式打开文件，而不能直接浏览该文件。因此您需要将自定义的域名访问绑定在属于自己的Bucket上面，即CNAME。域名绑定成功后，为了使用域名正常访问 OSS，还需要添加 CNAME 记录指向存储空间对应的外网域名。</li>
 <li>在使用阿里云负载均衡SLB时后端服务器可以设置主备服务器组,当主机工作正常时，流量将直接走主机；当主机宕机时，流量将走到备机。主备服务器组是在监听维度上维护的，并且只支持四层监听。</li>
 <li>健康检查四层是通过<strong>端口检查是否超时</strong>，七层则是检查<strong>服务器端返回的状态码</strong>。</li>
 <li>专用网络VPC下面的ECS，不管是否绑定了EIP，在设置安全组的时候，只可以设置内网规则，外网规则是不可以选的。因为对于其来说，内网规则等同于外网规则。</li>

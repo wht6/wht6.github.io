@@ -318,7 +318,7 @@
 <p>1）frpc注册frps，两者建立TCP连接，frpc将端口映射信息发送给frps，frps根据端口映射信息建立连接池，监听固定端口的连接。</p>
 <p>2）位于因特网的ssh客户端向frps发送连接请求，frps向frpc发送请求信息，frpc收到后请求ssh服务端建立连接，若连接失败，则frpc通过frps向ssh客户端发送连接失败的信息，否则ssh服务端通过frpc和frps发送验证请求到ssh客户端。</p>
 <p>3）ssh客户端通过frps和frpc发送用户名和密码到ssh服务端，ssh服务段验证成功后返回连接成功的消息，并等待数据的发送，否则验证失败断开连接。</p>
-<h2 id="frp配置"><a href="#frp配置" class="headerlink" title="frp配置"></a>frp配置</h2><p><a target="_blank" rel="noopener" href="https://github.com/fatedier/frp/releases">frp下载地址</a></p>
+<h2 id="frp配置"><a href="#frp配置" class="headerlink" title="frp配置"></a>frp配置</h2><p><a href="https://github.com/fatedier/frp/releases">frp下载地址</a></p>
 <p>下载之后解压：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar -zxvf frp_0.34.3_linux_amd64.tar.gz</span><br></pre></td></tr></table></figure>
 <h3 id="配置frps"><a href="#配置frps" class="headerlink" title="配置frps"></a>配置frps</h3><p>修改配置文件frps.ini</p>

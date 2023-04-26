@@ -465,10 +465,10 @@
 <p>3.状态匹配</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">-m state --state 连接状态</span><br><span class="line">常见的连接状态：</span><br><span class="line">NEW ：与任何连接无关的，还没开始连接</span><br><span class="line">ESTABLISHED ：响应请求或者已建立连接的，连接态</span><br><span class="line">RELATED ：与已有连接有相关性的（如FTP 主被动模式的数据连接），衍生态，一般与ESTABLISHED 配合使用</span><br><span class="line">INVALID ：不能被识别属于哪个连接或没有任何状态</span><br><span class="line">iptables -A FORWARD -m state --state NEW -p tcp ! --syn -j DROP    #禁止转发与正常 TCP 连接无关的非--syn 请求数据包（如伪造的网络攻击数据包）</span><br></pre></td></tr></table></figure>
 <p>参考链接：</p>
-<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/beanewself/article/details/78317626">https://blog.csdn.net/beanewself/article/details/78317626</a></p>
-<p><a target="_blank" rel="noopener" href="http://bencane.com/2012/09/17/iptables-linux-firewall-rules-for-a-basic-web-server/">http://bencane.com/2012/09/17/iptables-linux-firewall-rules-for-a-basic-web-server/</a></p>
-<p><a target="_blank" rel="noopener" href="http://www.manongjc.com/detail/25-oqjjkuteocznbct.html">http://www.manongjc.com/detail/25-oqjjkuteocznbct.html</a></p>
-<p><a target="_blank" rel="noopener" href="http://www.manongjc.com/detail/50-wsghzvsjpmmvvrm.html">http://www.manongjc.com/detail/50-wsghzvsjpmmvvrm.html</a></p>
+<p><a href="https://blog.csdn.net/beanewself/article/details/78317626">https://blog.csdn.net/beanewself/article/details/78317626</a></p>
+<p><a href="http://bencane.com/2012/09/17/iptables-linux-firewall-rules-for-a-basic-web-server/">http://bencane.com/2012/09/17/iptables-linux-firewall-rules-for-a-basic-web-server/</a></p>
+<p><a href="http://www.manongjc.com/detail/25-oqjjkuteocznbct.html">http://www.manongjc.com/detail/25-oqjjkuteocznbct.html</a></p>
+<p><a href="http://www.manongjc.com/detail/50-wsghzvsjpmmvvrm.html">http://www.manongjc.com/detail/50-wsghzvsjpmmvvrm.html</a></p>
 </div>
         </div>
         

@@ -374,7 +374,7 @@
 <p>&nbsp;</p>
 <p>变量<code>value6</code>的值是空接口类型的。该值包装了一个<code>byte</code>类型的值<code>127</code>。我在后面使用类型<code>switch</code>语句来判断<code>value6</code>的实际类型，并打印相应的内容。</p>
 <p>&nbsp;<br>这里有两个普通的<code>case</code>子句，还有一个<code>default case</code>子句。前者的<code>case</code>表达式分别是<code>case uint8, uint16</code>和<code>case byte</code>。你还记得吗？<code>byte</code>类型是<code>uint8</code>类型的别名类型。<br>&nbsp;<br>因此，它们两个本质上是同一个类型，只是类型名称不同罢了。在这种情况下，这个类型<code>switch</code>语句是无法通过编译的，因为子表达式<code>byte</code>和<code>uint8</code>重复了。<br>&nbsp;<br>普通<code>case</code>子句的编写顺序很重要，最上边的<code>case</code>子句中的子表达式总是会被最先求值，在判等的时候顺序也是这样。因此，如果某些子表达式的结果值有重复并且它们与<code>switch</code>表达式的结果值相等，那么位置靠上的<code>case</code>子句总会被选中。<br>&nbsp;<br>&nbsp;</p>
-<p>原文链接：<a target="_blank" rel="noopener" href="https://time.geekbang.org/column/intro/112">https://time.geekbang.org/column/intro/112</a></p>
+<p>原文链接：<a href="https://time.geekbang.org/column/intro/112">https://time.geekbang.org/column/intro/112</a></p>
 </div>
         </div>
         

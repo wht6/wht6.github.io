@@ -341,7 +341,7 @@
 <h5 id="信号与定时器"><a href="#信号与定时器" class="headerlink" title="信号与定时器"></a>信号与定时器</h5><p>现在，知道了 Nginx 为什么会选择这样的进程模型与事件模型了。对于一个基本的 Web 服务器来说，事件通常有三种类型，网络事件、信号、定时器。从上面的讲解中知道，网络事件通过异步非阻塞可以很好的解决掉。如何处理信号与定时器？</p>
 <p>首先，信号的处理。对 Nginx 来说，有一些特定的信号，代表着特定的意义。信号会中断掉程序当前的运行，在改变状态后，继续执行。如果是系统调用，则可能会导致系统调用的失败，需要重入。对于 Nginx 来说，如果nginx正在等待事件（epoll_wait 时），如果程序收到信号，在信号处理函数处理完后，epoll_wait 会返回错误，然后程序可再次进入 epoll_wait 调用。</p>
 <p>另外，再来看看定时器。由于 epoll_wait 等函数在调用的时候是可以设置一个超时时间的，所以 Nginx 借助这个超时时间来实现定时器。nginx里面的定时器事件是放在一颗维护定时器的红黑树里面，每次在进入 epoll_wait前，先从该红黑树里面拿到所有定时器事件的最小时间，在计算出 epoll_wait 的超时时间后进入 epoll_wait。所以，当没有事件产生，也没有中断信号时，epoll_wait 会超时，也就是说，定时器事件到了。这时，nginx会检查所有的超时事件，将他们的状态设置为超时，然后再去处理网络事件。由此可以看出，当我们写 Nginx 代码时，在处理网络事件的回调函数时，通常做的第一个事情就是判断超时，然后再去处理网络事件。</p>
-<h3 id="Nginx安装"><a href="#Nginx安装" class="headerlink" title="Nginx安装"></a>Nginx安装</h3><h4 id="编译安装Nginx"><a href="#编译安装Nginx" class="headerlink" title="编译安装Nginx"></a>编译安装Nginx</h4><h5 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h5><p>这里我们使用nginx的mainline版本的1.8.0来进行编译安装，nginx各版本的官网下载地址：<a target="_blank" rel="noopener" href="http://nginx.org/en/download.html">http://nginx.org/en/download.html</a></p>
+<h3 id="Nginx安装"><a href="#Nginx安装" class="headerlink" title="Nginx安装"></a>Nginx安装</h3><h4 id="编译安装Nginx"><a href="#编译安装Nginx" class="headerlink" title="编译安装Nginx"></a>编译安装Nginx</h4><h5 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h5><p>这里我们使用nginx的mainline版本的1.8.0来进行编译安装，nginx各版本的官网下载地址：<a href="http://nginx.org/en/download.html">http://nginx.org/en/download.html</a></p>
 <p>首先我们下载并解压nginx源码</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget http://nginx.org/download/nginx-1.18.0.tar.gz   </span><br><span class="line">tar -xvf nginx-1.18.0.tar.gz</span><br></pre></td></tr></table></figure>
 <p>在编译安装之前我们还需要先安装几个别的软件：</p>
@@ -354,7 +354,7 @@
 <p>上面提到的库我们都可以使用yum来进行安装：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">yum install gcc gcc-c++ pcre pcre-devel zlib zlib-devel openssl openssl-devel</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> pcre-devel是使用PCRE做二次开发时所需要的开发库，包括头文件等，这也是编译Nginx所必须使用的。</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 同理，zlib是直接使用的库，zlib-devel是二次开发所需要的库。</span></span><br></pre></td></tr></table></figure>
 <p>Nginx是高度自由化的Web服务器，它的功能是由许多模块来支持的。而这些模块可根据我们的使用需求来定制，如果某些模块不需要使用则完全不必理会它。同样，如果使用了某个模块，而这个模块使用了一些类似zlib或OpenSSL等的第三方库，那么就必须先安装这些软件。</p>
-<h5 id="编译安装"><a href="#编译安装" class="headerlink" title="编译安装"></a>编译安装</h5><p>我们进入nginx的目录，输入下面的指令可以查看各类的编译参数，或者在<a target="_blank" rel="noopener" href="http://nginx.org/en/docs/configure.html">官网</a>也可以看到：</p>
+<h5 id="编译安装"><a href="#编译安装" class="headerlink" title="编译安装"></a>编译安装</h5><p>我们进入nginx的目录，输入下面的指令可以查看各类的编译参数，或者在<a href="http://nginx.org/en/docs/configure.html">官网</a>也可以看到：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./configure --help</span><br></pre></td></tr></table></figure>
 <p>我们这里使用的参数是：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./configure --sbin-path=/usr/local/nginx/nginx --conf-path=/usr/local/nginx/nginx.conf --pid-path=/usr/local/nginx/nginx.pid --with-http_ssl_module</span><br></pre></td></tr></table></figure>
@@ -423,11 +423,11 @@
 <p>上面配置了三个server块，分别对应三组域名，三组域名都是指向本机的IP地址，同样都是监听的80端口，其中我们在第三个server块中指定了<code>default_server</code>参数，此时我们访问本机IP，返回的页面就是我们指定了<code>default_server</code>参数的这个页面。如果我们不指定<code>default_server</code>参数，按照匹配规则来匹配server，并返回对应的页面。</p>
 <p>&nbsp;</p>
 <p>参考资料：</p>
-<p><a target="_blank" rel="noopener" href="https://www.cainiaojc.com/nginx/nginx-introduction.html">https://www.cainiaojc.com/nginx/nginx-introduction.html</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.leafage.top/posts/detail/20C25YW6T">https://www.leafage.top/posts/detail/20C25YW6T</a></p>
-<p><a target="_blank" rel="noopener" href="http://www.manongjc.com/detail/12-spsvbhbesklpqqv.html">http://www.manongjc.com/detail/12-spsvbhbesklpqqv.html</a></p>
-<p><a target="_blank" rel="noopener" href="https://tinychen.com/20200317-nginx-01-base-conf-static-web/">https://tinychen.com/20200317-nginx-01-base-conf-static-web/</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.w3cschool.cn/nginx/ycn81k97.html">https://www.w3cschool.cn/nginx/ycn81k97.html</a></p>
+<p><a href="https://www.cainiaojc.com/nginx/nginx-introduction.html">https://www.cainiaojc.com/nginx/nginx-introduction.html</a></p>
+<p><a href="https://www.leafage.top/posts/detail/20C25YW6T">https://www.leafage.top/posts/detail/20C25YW6T</a></p>
+<p><a href="http://www.manongjc.com/detail/12-spsvbhbesklpqqv.html">http://www.manongjc.com/detail/12-spsvbhbesklpqqv.html</a></p>
+<p><a href="https://tinychen.com/20200317-nginx-01-base-conf-static-web/">https://tinychen.com/20200317-nginx-01-base-conf-static-web/</a></p>
+<p><a href="https://www.w3cschool.cn/nginx/ycn81k97.html">https://www.w3cschool.cn/nginx/ycn81k97.html</a></p>
 </div>
         </div>
         

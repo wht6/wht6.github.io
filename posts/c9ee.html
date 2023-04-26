@@ -347,10 +347,10 @@
 <p>然后login将搜索/etc/passwd以及/etc/shadow来验证密码以及设置账户的其他信息，比如家目录的位置，Shell程序的位置。</p>
 <p>login程序成功后，会向对应的终端在输出最近一次登录的信息(在/var/log/lastlog文件中有记录)，并检查用户是否有新邮件(在/var/spool/mail/的对应用户名目录里下)，然后开始设置各种环境变量。对应bash来说，系统首先寻找/etc/profile脚本并执行它；然后，如果用户的主目录中存在.bash_profile文件，就执行它，在这些文件中又可能调用了其他配置文件，所有的配置文件执行后，各种环境变量也设好了，这时会出现大家熟悉的命令提示符，到此整个启动过程就结束了。</p>
 <p>参考链接：</p>
-<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/zyk01/p/11376445.html">https://www.cnblogs.com/zyk01/p/11376445.html</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/peiqingyi/p/14931972.html">https://www.cnblogs.com/peiqingyi/p/14931972.html</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.runoob.com/linux/linux-system-boot.html">https://www.runoob.com/linux/linux-system-boot.html</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/mylive/p/11280239.html">https://www.cnblogs.com/mylive/p/11280239.html</a></p>
+<p><a href="https://www.cnblogs.com/zyk01/p/11376445.html">https://www.cnblogs.com/zyk01/p/11376445.html</a></p>
+<p><a href="https://www.cnblogs.com/peiqingyi/p/14931972.html">https://www.cnblogs.com/peiqingyi/p/14931972.html</a></p>
+<p><a href="https://www.runoob.com/linux/linux-system-boot.html">https://www.runoob.com/linux/linux-system-boot.html</a></p>
+<p><a href="https://www.cnblogs.com/mylive/p/11280239.html">https://www.cnblogs.com/mylive/p/11280239.html</a></p>
 </div>
         </div>
         

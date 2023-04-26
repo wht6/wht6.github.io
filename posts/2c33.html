@@ -320,8 +320,8 @@
 <p><img src="https://raw.githubusercontent.com/wht6/image/master/img/pic2.gif" alt></p>
 <h2 id="平移等变性"><a href="#平移等变性" class="headerlink" title="平移等变性"></a>平移等变性</h2><p>卷积神经网络参数共享的特殊形式使得神经网络层具有平移等变性(equivariance)。对于图像而言，卷积产生一个 2 维映射来表明某些特征在输入中出现的位置。如果我们移动输入中的对象，它的表示也会在输出中移动同样的量。对于放缩和旋转等其他变换，卷积却不是天然等变的。<br>关于池化，无论采用何种池化函数，当输入作出少量平移时，池化能帮助输入的表示近似不变(invariant)。对于平移的不变性是指当我们对输入进行少量平移时，经过池化函数后的大多数输出并不会发生改变。这意味着池化对特征位置不敏感，只有当我们不关心特征具体出现的位置时，池化才是合理的。<br>CNN 中的卷积操作具有平移等变性，但池化操作具有局部平移不变性。两者矛盾地统一于 CNN 中。</p>
 <p>参考：</p>
-<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/89109931">https://zhuanlan.zhihu.com/p/89109931</a></p>
-<p><a target="_blank" rel="noopener" href="http://blog.sciencenet.cn/blog-3428464-1255252.html">http://blog.sciencenet.cn/blog-3428464-1255252.html</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/89109931">https://zhuanlan.zhihu.com/p/89109931</a></p>
+<p><a href="http://blog.sciencenet.cn/blog-3428464-1255252.html">http://blog.sciencenet.cn/blog-3428464-1255252.html</a></p>
 </div>
         </div>
         
