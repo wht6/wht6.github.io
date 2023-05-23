@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   
   
-  <title>标签: kubernetes | WHT</title>
+  <title>标签: Kubernetes | WHT</title>
   
   <meta name="author" content="王贺天" />
   <meta http-equiv="Cache-Control" content="no-transform" />
@@ -19,8 +19,8 @@
   
   <meta name="description" content="学习技术，而不止于技术">
 <meta property="og:type" content="website">
-<meta property="og:title" content="标签: kubernetes">
-<meta property="og:url" content="https://ivseek.ink/tags/kubernetes/index.html">
+<meta property="og:title" content="标签: Kubernetes">
+<meta property="og:url" content="https://ivseek.ink/tags/Kubernetes/index.html">
 <meta property="og:site_name" content="WHT">
 <meta property="og:description" content="学习技术，而不止于技术">
 <meta property="og:locale" content="zh_CN">
@@ -282,8 +282,8 @@
                     标签
                 </a>
                 <i class="fa fa-angle-right"></i>
-                <a href="/tags/kubernetes">
-                    kubernetes
+                <a href="/tags/Kubernetes">
+                    Kubernetes
                 </a>
             
             
@@ -299,7 +299,7 @@
             <div class="kratos-entry-border-new clearfix">
                 
                 <div class="kratos-entry-thumb-new">
-                    <a href="/posts/baa4.html">
+                    <a href="/posts/3009.html">
                         
                             <img class="kratos-entry-thumb-new-img" alt="">
                         
@@ -307,27 +307,27 @@
                 </div>
                 <div class="kratos-post-inner-new">
                     <header class="kratos-entry-header-new">
-                            <a class="label-link" href="/categories/%E8%BF%90%E7%BB%B4/">运维</a>
-                        <h2 class="kratos-entry-title-new"><a href="/posts/baa4.html" itemprop="mainEntityOfPage"><span itemprop="name headline">Kubernetes环境部署</span></a>
+                            <a class="label-link" href="/categories/%E4%BA%91%E5%8E%9F%E7%94%9F/">云原生</a>
+                        <h2 class="kratos-entry-title-new"><a href="/posts/3009.html" itemprop="mainEntityOfPage"><span itemprop="name headline">Pod和Container的配置</span></a>
                     </header>
                     <div class="kratos-entry-content-new">
                         <p itemProp="description">
                             
-                                
-预备知识k8s集群的部署方式有：minikube、kubeadm、二进制。minikube只能搭建单点集群，不能用于生产环境，不推荐。kubeadm工具可以快速部署集群，适用于生产环境。
+                                Pod的相关字段与调度、网络、存储、安全，以及namespace相关的属性基本上都是Pod级别，即针对Pod配置的，而不是针对容器配置的。这些属性的共同特征是，它们描述的是Pod这个整体，而不是里面运行的“应用程序”。
+下面是Pod ...
                             
                         </p>
                     </div>
                 </div>
                 <footer class="kratos-post-meta-new">
                     <span class="pull-left">
-                        <time datetime="2023-04-21T08:00:00.000Z" itemprop="datePublished">
-                            <a><i class="fa fa-calendar"></i> 2023-04-21</a>
+                        <time datetime="2022-03-02T08:00:00.000Z" itemprop="datePublished">
+                            <a><i class="fa fa-calendar"></i> 2022-03-02</a>
                         </time>
                         <a>
                             
                                 <i class="fa fa-tags"></i>
-                                <a class="tag-none-link" href="/tags/kubernetes/" rel="tag">kubernetes</a>
+                                <a class="tag-none-link" href="/tags/Kubernetes/" rel="tag">Kubernetes</a>
                             
                         </a>
                         
@@ -340,7 +340,115 @@
                         
                     </span>
                     <span class="pull-right">
-                        <a class="read-more" href="/posts/baa4.html" title="阅读全文">阅读全文<i class="fa fa-chevron-circle-right"></i></a>
+                        <a class="read-more" href="/posts/3009.html" title="阅读全文">阅读全文<i class="fa fa-chevron-circle-right"></i></a>
+                    </span>
+                </footer>
+            </div>
+        </article>
+    
+
+    
+    
+        <article class="kratos-hentry clearfix" itemscope itemtype="https://schema.org/Article">
+            <div class="kratos-entry-border-new clearfix">
+                
+                <div class="kratos-entry-thumb-new">
+                    <a href="/posts/12ee.html">
+                        
+                            <img class="kratos-entry-thumb-new-img" alt="">
+                        
+                    </a>
+                </div>
+                <div class="kratos-post-inner-new">
+                    <header class="kratos-entry-header-new">
+                            <a class="label-link" href="/categories/%E4%BA%91%E5%8E%9F%E7%94%9F/">云原生</a>
+                        <h2 class="kratos-entry-title-new"><a href="/posts/12ee.html" itemprop="mainEntityOfPage"><span itemprop="name headline">Pod的作用和原理</span></a>
+                    </header>
+                    <div class="kratos-entry-content-new">
+                        <p itemProp="description">
+                            
+                                容器的本质是进程，而Kubernetes 就是操作系统，对应的Pod就相当于进程组。
+之所以引入Pod的概念是因为某些应用之间有着密切的协作关系，使得它们必须部署在同一台机器上。而如果事先没有“组”的概念，像这样的运维关系就会非常难以...
+                            
+                        </p>
+                    </div>
+                </div>
+                <footer class="kratos-post-meta-new">
+                    <span class="pull-left">
+                        <time datetime="2022-03-01T08:00:00.000Z" itemprop="datePublished">
+                            <a><i class="fa fa-calendar"></i> 2022-03-01</a>
+                        </time>
+                        <a>
+                            
+                                <i class="fa fa-tags"></i>
+                                <a class="tag-none-link" href="/tags/Kubernetes/" rel="tag">Kubernetes</a>
+                            
+                        </a>
+                        
+                            <!-- 当前仅支持valine/waline自带的统计功能 -->
+                            
+                        
+                        
+                            <!-- 当前仅支持waline自带的统计功能 -->
+                            
+                        
+                    </span>
+                    <span class="pull-right">
+                        <a class="read-more" href="/posts/12ee.html" title="阅读全文">阅读全文<i class="fa fa-chevron-circle-right"></i></a>
+                    </span>
+                </footer>
+            </div>
+        </article>
+    
+
+    
+    
+        <article class="kratos-hentry clearfix" itemscope itemtype="https://schema.org/Article">
+            <div class="kratos-entry-border-new clearfix">
+                
+                <div class="kratos-entry-thumb-new">
+                    <a href="/posts/3588.html">
+                        
+                            <img class="kratos-entry-thumb-new-img" alt="">
+                        
+                    </a>
+                </div>
+                <div class="kratos-post-inner-new">
+                    <header class="kratos-entry-header-new">
+                            <a class="label-link" href="/categories/%E4%BA%91%E5%8E%9F%E7%94%9F/">云原生</a>
+                        <h2 class="kratos-entry-title-new"><a href="/posts/3588.html" itemprop="mainEntityOfPage"><span itemprop="name headline">Kubeadm搭建与yaml配置</span></a>
+                    </header>
+                    <div class="kratos-entry-content-new">
+                        <p itemProp="description">
+                            
+                                kubeadm部署kubeadm是用于部署Kubernetes项目的工具。
+kubeadm init使用 kubeadm 的第一步，是在机器上手动安装 kubeadm、kubelet 和 kubectl 这三个二进制文件。执行下面命令...
+                            
+                        </p>
+                    </div>
+                </div>
+                <footer class="kratos-post-meta-new">
+                    <span class="pull-left">
+                        <time datetime="2022-02-27T08:00:00.000Z" itemprop="datePublished">
+                            <a><i class="fa fa-calendar"></i> 2022-02-27</a>
+                        </time>
+                        <a>
+                            
+                                <i class="fa fa-tags"></i>
+                                <a class="tag-none-link" href="/tags/Kubernetes/" rel="tag">Kubernetes</a>, <a class="tag-none-link" href="/tags/%E9%9B%86%E7%BE%A4/" rel="tag">集群</a>
+                            
+                        </a>
+                        
+                            <!-- 当前仅支持valine/waline自带的统计功能 -->
+                            
+                        
+                        
+                            <!-- 当前仅支持waline自带的统计功能 -->
+                            
+                        
+                    </span>
+                    <span class="pull-right">
+                        <a class="read-more" href="/posts/3588.html" title="阅读全文">阅读全文<i class="fa fa-chevron-circle-right"></i></a>
                     </span>
                 </footer>
             </div>
@@ -389,7 +497,7 @@
                 文章
             </span>
             <span class="count">
-                85
+                86
             </span>
         </a>
         <a class="meta-item" href="/categories/">
@@ -414,7 +522,7 @@
                 
   <aside id="krw-categories" class="widget widget-kratos-categories clearfix">
     <h4 class="widget-title"><i class="fa fa-folder"></i>分类目录</h4>
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a><span class="category-list-count">13</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E4%BA%91%E5%8E%9F%E7%94%9F/">云原生</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/">嵌入式</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a><span class="category-list-count">24</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%BF%90%E7%BB%B4/">运维</a><span class="category-list-count">22</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a><span class="category-list-count">14</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E4%BA%91%E5%8E%9F%E7%94%9F/">云原生</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/">嵌入式</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a><span class="category-list-count">24</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%BF%90%E7%BB%B4/">运维</a><span class="category-list-count">22</span></li></ul>
   </aside>
 
 
@@ -434,6 +542,12 @@
   <div class="tab-content">
       <ul class="list-group">
         
+        
+          
+          
+            <a class="list-group-item" href="/posts/4e200283.html"><i class="fa  fa-book"></i> Linux日志</a>
+            
+          
         
           
           
@@ -460,96 +574,6 @@
           
         
           
-          
-            <a class="list-group-item" href="/posts/79b6.html"><i class="fa  fa-book"></i> 数据处理之Sed工具</a>
-            
-          
-        
-          
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
             
           
             
@@ -596,151 +620,6 @@
           
             
           
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
-            
-          
-            
-      </ul>
-  </div>
-  </aside>
-
-            
-    </div>
-</section>
-        
-        </div>
-    </div>
-</div>
-<footer>
-    <div id="footer"  >
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6 col-md-offset-3 footer-list text-center">
-                    <ul class="kratos-social-icons">
-                        <!-- Keep for compatibility -->
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        <!-- New links -->
-                        
-                    </ul>
-                    <ul class="kratos-copyright">
-                        <div>
-                            <li>&copy; 2023 WHT 版权所有.</li>
-                            <li>本站已运行<span id="span_dt">Loading...</span></li>
-                        </div>
-                        <div>
-                            <li>Theme <a href="https://github.com/Candinya/Kratos-Rebirth" target="_blank">Kratos:Rebirth</a></li>
-                            <li>Site built with&nbsp;<i class="fa fa-heart throb" style="color:#d43f57"></i>&nbsp;by 王贺天.</li>
-                        </div>
-                        <div>
-                            <li>Powered by <a href="https://hexo.io" target="_blank" rel="nofollow">Hexo</a></li>
-                            <li>Hosted on <a href="https://github.io" target="_blank">Github Pages</a></li>
-                        </div>
-                        <div>
-                            
-                            
-                        </div>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="kr-tool text-center">
-            <div class="tool">
-                
-                    <div class="box search-box">
-                        <a href="/search/">
-                            <span class="fa fa-search"></span>
-                        </a>
-                    </div>
-                
-                
-                
-                
-            </div>
-            <div class="box gotop-box">
-                <span class="fa fa-chevron-up"></span>
-            </div>
-        </div>
-    </div>
-</footer>
-</div>
-</div>
-
-        <script defer src="/vendors/bootstrap@3.3.4/dist/js/bootstrap.min.js"></script>
-<script defer src="/vendors/nprogress@0.2.0/nprogress.js"></script>
-<script>
-    if (!window.kr) {
-        window.kr = {};
-    }
-    window.kr.notMobile = (!(navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)));
-    window.kr.siteRoot = "/";
-</script>
-
-
-    <script async src="/js/candy.min.js"></script>
-
-
-
-
-    <script defer src="/vendors/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
-
-<script defer src="/js/kratosr.min.js"></script>
-<script defer src="/js/pjax.min.js"></script>
-
-
-
-<!-- Extra support for third-party plguins  -->
-
-
-    <script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
-<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/ Relative)","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"left","width":100,"height":180},"mobile":{"show":false},"react":{"opacityDefault":0.7}});</script></body>
-</html>       
             
           
             
