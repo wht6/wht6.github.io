@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+  <!-- 元数据 -->
+  <meta charset="utf-8">
+  
+  
+  <title>Redis知识总结 | WHT</title>
+  
+  <meta name="author" content="王贺天" />
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="robots" content="index,follow" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <meta name="format-detection" content="telphone=no, email=no" />
+  
+    <meta name="keywords" content="Redis" />
+  
+  <meta name="description" content="介绍Redis 是一个由 C 语言编写的高性能 key-value 存储系统。 优点：  支持数据持久化，可将内存数据保存在磁盘，重启时再次加载使用 支持 list，set，zset，hash 等复杂类型的存储 支持事务，操作具有原子性 支持主从复制，读写分离 支持数据备份- master-slave 模式的数据备份  缺点：‘  数据库容量受到物理内存的限制，不能用作海量数据的高性能读写 不具备">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis知识总结">
+<meta property="og:url" content="https://ivseek.ink/posts/a0ef5884.html">
+<meta property="og:site_name" content="WHT">
+<meta property="og:description" content="介绍Redis 是一个由 C 语言编写的高性能 key-value 存储系统。 优点：  支持数据持久化，可将内存数据保存在磁盘，重启时再次加载使用 支持 list，set，zset，hash 等复杂类型的存储 支持事务，操作具有原子性 支持主从复制，读写分离 支持数据备份- master-slave 模式的数据备份  缺点：‘  数据库容量受到物理内存的限制，不能用作海量数据的高性能读写 不具备">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2020/png/2517043/1599814750947-71ddb599-5f32-40bf-ad09-861b8cd4b173.png?x-oss-process=image%2Fresize%2Cw_1012%2Climit_0">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2020/png/2517043/1599814861853-24fcf82c-93c7-46d8-9029-f3d6802fb079.png?x-oss-process=image%2Fresize%2Cw_1012%2Climit_0">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2020/png/2517043/1599814960582-0587ece4-90ca-4b73-9016-02121fd4640a.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2020/png/2517043/1599814985259-19bbd138-d5e2-47fe-a2c3-8bc54a4e88b7.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2023/webp/22457069/1689295741791-fd00d79c-9761-4651-ae9d-089938c28a04.webp">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2023/webp/22457069/1689295752332-498b8205-1293-4749-9583-68af28c7803a.webp">
+<meta property="article:published_time" content="2023-07-13T08:00:00.000Z">
+<meta property="article:modified_time" content="2023-07-15T00:48:41.826Z">
+<meta property="article:author" content="王贺天">
+<meta property="article:tag" content="Redis">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.nlark.com/yuque/0/2020/png/2517043/1599814750947-71ddb599-5f32-40bf-ad09-861b8cd4b173.png?x-oss-process=image%2Fresize%2Cw_1012%2Climit_0">
+  <link rel="alternate" href="atom.xml" type="application/atom+xml">
+  <!-- 站点验证相关 -->
+  
+    
+    
+    
+  
+  <!-- 样式表文件 -->
+  <link rel="stylesheet" id="kratos-css" href="/css/kratosr.min.css" media="all"></script>
+  
+  
+    <link rel="stylesheet" id="highlight-css" href="/css/highlight/night-eighties.min.css" media="all"></script>
+  
+  <link rel="stylesheet" id="fontawe-css" href="/vendors/font-awesome@4.7.0/css/font-awesome.min.css" media="all"></script>
+  <link rel="stylesheet" id="nprogress-css" href="/vendors/nprogress@0.2.0/nprogress.css" media="all"></script>
+  
+  
+  
+    <link rel="stylesheet" href="/vendors/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css"></script>
+  
+  <!-- 不得不预先加载的一些JS文件 -->
+  <script src="/vendors/jquery@3.6.0/dist/jquery.min.js"></script>
+  
+    <script src="/vendors/qrcode_js@1.0.0/qrcode.min.js"></script>
+  
+  
+  <style>
+    
+    
+  </style>
+  
+<style type="text/css" lang="css">
+    #loading-container{
+        position: fixed;
+        top: 0;
+        left: 0;
+        min-height: 100vh;
+        width: 100vw;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: #FFF;
+        text-align: center;
+        /* loader页面消失采用渐隐的方式*/
+        -webkit-transition: opacity 1s ease;
+        -moz-transition: opacity 1s ease;
+        -o-transition: opacity 1s ease;
+        transition: opacity 1s ease;
+    }
+    .loading-image{
+        width: 120px;
+        height: 50px;
+        transform: translate(-50%);
+    }
+    
+    .loading-image div:nth-child(2) {
+        -webkit-animation: pacman-balls 1s linear 0s infinite;
+        animation: pacman-balls 1s linear 0s infinite
+    }
+
+    .loading-image div:nth-child(3) {
+        -webkit-animation: pacman-balls 1s linear .33s infinite;
+        animation: pacman-balls 1s linear .33s infinite
+    }
+
+    .loading-image div:nth-child(4) {
+        -webkit-animation: pacman-balls 1s linear .66s infinite;
+        animation: pacman-balls 1s linear .66s infinite
+    }
+
+    .loading-image div:nth-child(5) {
+        -webkit-animation: pacman-balls 1s linear .99s infinite;
+        animation: pacman-balls 1s linear .99s infinite
+    }
+    
+   .loading-image div:first-of-type {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_up .5s 0s infinite;
+        animation: rotate_pacman_half_up .5s 0s infinite;
+    }
+    .loading-image div:nth-child(2) {
+        width: 0;
+        height: 0;
+        border: 25px solid #49b1f5;
+        border-right-color: transparent;
+        border-radius: 25px;
+        -webkit-animation: rotate_pacman_half_down .5s 0s infinite;
+        animation: rotate_pacman_half_down .5s 0s infinite;
+        margin-top: -50px;
+    }
+    @-webkit-keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @keyframes rotate_pacman_half_up {0% {transform: rotate(270deg)}50% {transform: rotate(1turn)}to {transform: rotate(270deg)}}
+
+    @-webkit-keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+
+    @keyframes rotate_pacman_half_down {0% {transform: rotate(90deg)}50% {transform: rotate(0deg)}to {transform: rotate(90deg)}}
+    
+    @-webkit-keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+
+    @keyframes pacman-balls {75% {opacity: .7}to {transform: translate(-100px, -6.25px)}}
+    
+   
+    .loading-image div:nth-child(3),
+    .loading-image div:nth-child(4),
+    .loading-image div:nth-child(5),
+    .loading-image div:nth-child(6){
+        background-color: #49b1f5;
+        width: 15px;
+        height: 15px;
+        border-radius: 100%;
+        margin: 2px;
+        width: 10px;
+        height: 10px;
+        position: absolute;
+        transform: translateY(-6.25px);
+        top: 25px;
+        left: 100px;
+    }
+    .loading-text{
+        margin-bottom: 20vh;
+        text-align: center;
+        color: #2c3e50;
+        font-size: 2rem;
+        box-sizing: border-box;
+        padding: 0 10px;
+        text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    @media only screen and (max-width: 500px) {
+         .loading-text{
+            font-size: 1.5rem;
+         }
+    }
+    .fadeout {
+        opacity: 0;
+        filter: alpha(opacity=0);
+    }
+    /* logo出现动画 */
+    @-webkit-keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);transform:translate3d(0,-100%,0)}100%{opacity:1;-webkit-transform:none;transform:none}}
+    @keyframes fadeInDown{0%{opacity:0;-webkit-transform:translate3d(0,-100%,0);}}
+ </style>
+ <script>
+(function () {
+    const loaded = function(){
+       setTimeout(function(){
+            const loader = document.getElementById("loading-container");
+            loader.className="fadeout" ;//使用渐隐的方法淡出loading page
+            // document.getElementById("body-wrap").style.display="flex";
+            setTimeout(function(){
+                loader.style.display="none";
+            },1000); 
+        },1000);//强制显示loading page 1s  
+    };
+    loaded();
+})()
+ </script><meta name="generator" content="Hexo 5.4.0"></head>
+
+
+    <body class="custom-background">
+        <div id="kratos-wrapper">
+    <div id="kratos-page">
+        <div id="kratos-header">
+            <header id="kratos-desktop-topnav" class="kratos-topnav">
+                <div class="container">
+                    <div class="nav-header">
+                        <nav id="kratos-menu-wrap">
+                            <ul id="kratos-primary-menu" class="sf-menu">
+                                
+                                    
+                                        <li>
+                                            
+                                                <a href="/">
+                                            
+                                                
+                                                    <i class="fa fa-home"></i>
+                                                
+                                                首页
+                                            </a>
+                                            
+                                        </li>
+                                    
+                                        <li>
+                                            
+                                                <a href="/archives/">
+                                            
+                                                
+                                                    <i class="fa fa-file"></i>
+                                                
+                                                档案馆
+                                            </a>
+                                            
+                                        </li>
+                                    
+                                
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </header>
+            <header id="kratos-mobile-topnav" class="kratos-topnav">
+                <div class="container">
+                    <div class="color-logo"><a href="/">WHT</a></div>
+                    <div class="nav-toggle">
+                        <a class="kratos-nav-toggle js-kratos-nav-toggle">
+                            <i></i>
+                        </a>
+                    </div>
+                </div>
+            </header>
+        </div>
+        <div class="kratos-start kratos-hero-2">
+            <!-- <div class="kratos-overlay"></div> -->
+            <div class="kratos-cover kratos-cover-2 text-center">
+                <div class="desc desc2 animate-box">
+                    <a href="/">
+                        <h2>WHT</h2> <br />
+                        <span>Be Water My Friend</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div id="kratos-blog-post">
+            <div class="container">
+                <div id="main" class="row">
+                    
+
+        
+
+            <section class="col-md-8">
+
+        
+
+            <article itemscope itemtype="https://schema.org/Article">
+    
+    <link itemprop="mainEntityOfPage" href="https://ivseek.ink/posts/a0ef5884.html">
+    <div class="kratos-hentry kratos-post-inner clearfix">
+        <header class="kratos-entry-header">
+            
+                <h1 class="kratos-entry-title text-center" itemprop="name headline">Redis知识总结</h1>
+            
+            
+            <ul class="kratos-post-meta text-center">
+                <li><time datetime="2023-07-13T08:00:00.000Z" itemprop="datePublished"><i class="fa fa-calendar"></i> 2023-07-13</time></li>
+                <li itemprop="author" itemscope itemtype="https://schema.org/Person">
+                    <i class="fa fa-user"></i> 作者 <span itemprop="name">王贺天</span>
+                </li>
+                
+                    <li>
+                        <i class="fa fa-edit"></i> 
+                        
+                        
+                            ~9.00K
+                        
+                        字
+                    </li>
+                
+                
+            </ul>
+        </header>
+        <div class="kratos-post-content">
+            
+            <div id="expire-alert" class="alert alert-warning hidden" role="alert">
+                <div class="icon"><i class="fa fa-warning"></i></div>
+                <div class="text"><p>本文最后编辑于 <time datetime="1689382121826"></time> 前，其中的内容可能需要更新。</p></div>
+            </div>
+            
+            
+            
+                <div class="kratos-post-inner-toc toc-div-class" >
+                    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">介绍</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">2.</span> <span class="toc-text">数据类型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8C%81%E4%B9%85%E5%8C%96%E6%9C%BA%E5%88%B6"><span class="toc-number">3.</span> <span class="toc-text">持久化机制</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#RDB%E6%9C%BA%E5%88%B6"><span class="toc-number">3.1.</span> <span class="toc-text">RDB机制</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#AOF%E6%9C%BA%E5%88%B6"><span class="toc-number">3.2.</span> <span class="toc-text">AOF机制</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%B7%B7%E5%90%88%E6%8C%81%E4%B9%85%E5%8C%96"><span class="toc-number">3.3.</span> <span class="toc-text">混合持久化</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5"><span class="toc-number">4.</span> <span class="toc-text">数据淘汰策略</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%8B%E5%8A%A1"><span class="toc-number">5.</span> <span class="toc-text">事务</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%9B%86%E7%BE%A4%E6%96%B9%E6%A1%88"><span class="toc-number">6.</span> <span class="toc-text">集群方案</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%93%A8%E5%85%B5%E6%A8%A1%E5%BC%8F"><span class="toc-number">6.1.</span> <span class="toc-text">哨兵模式</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Cluster%E6%A8%A1%E5%9E%8B"><span class="toc-number">6.2.</span> <span class="toc-text">Cluster模型</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%BB%E4%BB%8E%E6%9E%B6%E6%9E%84"><span class="toc-number">6.3.</span> <span class="toc-text">主从架构</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-number">7.</span> <span class="toc-text">常用命令</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#redis-cli"><span class="toc-number">7.1.</span> <span class="toc-text">redis-cli</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#get%E5%92%8Cset"><span class="toc-number">7.2.</span> <span class="toc-text">get和set</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%94%AE%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4"><span class="toc-number">7.3.</span> <span class="toc-text">键相关命令</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%93%88%E5%B8%8C-hash-%E5%91%BD%E4%BB%A4"><span class="toc-number">7.4.</span> <span class="toc-text">哈希(hash)命令</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%88%97%E8%A1%A8-list-%E5%91%BD%E4%BB%A4"><span class="toc-number">7.5.</span> <span class="toc-text">列表(list)命令</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%9B%86%E5%90%88-set-%E5%91%BD%E4%BB%A4"><span class="toc-number">7.6.</span> <span class="toc-text">集合(set)命令</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%9C%89%E5%BA%8F%E9%9B%86%E5%90%88-Sorted-Set-%E5%91%BD%E4%BB%A4"><span class="toc-number">7.7.</span> <span class="toc-text">有序集合(Sorted Set)命令</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E5%91%BD%E4%BB%A4"><span class="toc-number">7.8.</span> <span class="toc-text">数据库命令</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E5%91%BD%E4%BB%A4"><span class="toc-number">7.9.</span> <span class="toc-text">其他命令</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-number">8.</span> <span class="toc-text">注意事项</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#redis%E9%85%8D%E7%BD%AE"><span class="toc-number">9.</span> <span class="toc-text">redis配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AE%A1%E9%81%93"><span class="toc-number">10.</span> <span class="toc-text">管道</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Lua%E8%84%9A%E6%9C%AC"><span class="toc-number">11.</span> <span class="toc-text">Lua脚本</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%87%E6%9C%9Fkey%E5%88%A0%E9%99%A4%E7%AD%96%E7%95%A5"><span class="toc-number">12.</span> <span class="toc-text">过期key删除策略</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#slowlog"><span class="toc-number">13.</span> <span class="toc-text">slowlog</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#redis%E6%9C%8D%E5%8A%A1"><span class="toc-number">14.</span> <span class="toc-text">redis服务</span></a></li></ol>
+                </div>
+            
+            <hr />
+            <div itemprop="articleBody"><h4 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h4><p>Redis 是一个由 C 语言编写的高性能 key-value 存储系统。</p>
+<p>优点：</p>
+<ul>
+<li>支持数据持久化，可将内存数据保存在磁盘，重启时再次加载使用</li>
+<li>支持 list，set，zset，hash 等复杂类型的存储</li>
+<li>支持事务，操作具有原子性</li>
+<li>支持主从复制，读写分离</li>
+<li>支持数据备份- master-slave 模式的数据备份</li>
+</ul>
+<p>缺点：‘</p>
+<ul>
+<li>数据库容量受到物理内存的限制，不能用作海量数据的高性能读写</li>
+<li>不具备容错和自动恢复，主从宕机会导致前端部分请求失败</li>
+<li>集群容量存在上限，难以扩容</li>
+</ul>
+<p>redis采用的是单线程模式，优势在于不需要各种锁的性能消耗，避免了上下文切换和竞争条件，其次是多服务器集群可以代替多线程。</p>
+<p>redis使用场景：</p>
+<ol>
+<li>分布式锁</li>
+<li>简单消息队列，公有云使用专业的mq</li>
+<li>限流，结合lua脚本控制</li>
+<li>热点缓存数据场景</li>
+<li>分页、模糊搜索</li>
+<li>排行榜</li>
+</ol>
+<h4 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h4><p><img src="https://cdn.nlark.com/yuque/0/2020/png/2517043/1599814750947-71ddb599-5f32-40bf-ad09-861b8cd4b173.png?x-oss-process=image%2Fresize%2Cw_1012%2Climit_0" alt="img"></p>
+<h4 id="持久化机制"><a href="#持久化机制" class="headerlink" title="持久化机制"></a>持久化机制</h4><h5 id="RDB机制"><a href="#RDB机制" class="headerlink" title="RDB机制"></a>RDB机制</h5><p>默认方式。按照一定的时间将内存的数据以快照的形式保存到硬盘中。可自定义快照周期。</p>
+<p>优点：</p>
+<ul>
+<li>只有一个文件 dump.rdb</li>
+<li>容灾性好，一个文件可以保存到安全的磁盘</li>
+<li>性能好，进程完成写操作，主进程继续处理命令</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>数据安全性低。如果持久化之间 redis 发生故障，会数据丢失。</li>
+</ul>
+<p>RDB持久化触发方式：</p>
+<ol>
+<li>手动触发。使用<strong>SAVE或BGSAVE命令。SAVE是同步命令</strong>，<strong>执行过程中会阻塞其他请求。BGSAVE</strong>是异步命令，主进程会forks一个子进程，进行异步持久化，持久化过程中主进程仍然可以处理其他请求。</li>
+<li>自动触发。在配置文件中设置触发条件。</li>
+</ol>
+<h5 id="AOF机制"><a href="#AOF机制" class="headerlink" title="AOF机制"></a>AOF机制</h5><p>Redis执行的每次写命令记录到单独的日志文件中，当重启Redis会重新将持久化的日志中文件恢复数据。</p>
+<p>优点：</p>
+<ul>
+<li>数据安全</li>
+<li>宕机能数据一致性，采用append 模式写文件</li>
+<li>优化命令，rewrite 模式可以自动优化命令</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>AOF 文件比 RDB 文件大，且恢复速度慢</li>
+<li>数据集大的时候，比 RDB启动效率低</li>
+</ul>
+<p>AOF持久化配置（配置文件设置）：</p>
+<ol>
+<li>启用AOF持久化</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 开启aof持久化</span></span><br><span class="line">appendonly yes</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> aof文件名</span></span><br><span class="line">appendfilename &quot;appendonly.aof&quot;# 开启aof持久化</span><br><span class="line">appendonly yes</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> aof文件名</span></span><br><span class="line">appendfilename &quot;appendonly.aof&quot;</span><br></pre></td></tr></table></figure>
+<ol>
+<li>AOF文件同步策略</li>
+</ol>
+<p>在配置文件中设置appendfsync选项。可选值包括：</p>
+<ul>
+<li>always：每次写操作都同步到磁盘，保证最高的数据安全性，但性能较差。</li>
+<li>everysec：每秒同步一次磁盘，提供较好的数据安全性和性能平衡。</li>
+<li>no：由操作系统决定何时同步磁盘，性能最好，但数据安全性较差。</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 持久化策略，always表示每次写入都进行持久化</span></span><br><span class="line">appendfsync always# 持久化策略，always表示每次写入都进行持久化</span><br><span class="line">appendfsync always</span><br></pre></td></tr></table></figure>
+<ol>
+<li>AOF重写策略</li>
+</ol>
+<p>随着写操作的不断进行，AOF文件会不断增长。为了减小AOF文件的大小，Redis提供了AOF重写功能。AOF重写会创建一个新的AOF文件，只包含当前内存中数据的最小命令集。在重写过程中，Redis会继续将新的写操作追加到原始AOF文件中。当重写完成后，新的AOF文件将替换原始AOF文件。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 指定在执行BGSAVE或BGREWRITEAOF命令时是否禁用AOF文件同步。默认为yes，表示禁用同步。</span></span><br><span class="line">no-appendfsync-on-rewrite yes</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 定AOF文件大小增长到原始大小的百分比时进行重写。</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 默认为100，表示AOF文件大小增长到原始大小的两倍时进行重写。</span></span><br><span class="line">auto-aof-rewrite-percentage 100</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 指定进行AOF重写的最小AOF文件大小。默认为64mb。</span></span><br><span class="line">auto-aof-rewrite-min-size 64# 指定在执行BGSAVE或BGREWRITEAOF命令时是否禁用AOF文件同步。默认为yes，表示禁用同步。</span><br><span class="line">no-appendfsync-on-rewrite yes</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 定AOF文件大小增长到原始大小的百分比时进行重写。</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 默认为100，表示AOF文件大小增长到原始大小的两倍时进行重写。</span></span><br><span class="line">auto-aof-rewrite-percentage 100</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 指定进行AOF重写的最小AOF文件大小。默认为64mb。</span></span><br><span class="line">auto-aof-rewrite-min-size 64</span><br></pre></td></tr></table></figure>
+<h5 id="混合持久化"><a href="#混合持久化" class="headerlink" title="混合持久化"></a>混合持久化</h5><p>Redis首先使用RDB持久化将内存中的数据快照存储到磁盘上，然后再使用AOF持久化将所有新的写操作追加到AOF文件中。</p>
+<p>这样做的好处是：</p>
+<ol>
+<li>在系统崩溃时，可以通过RDB文件进行快速的恢复，而AOF文件可以用于恢复最近的修改。</li>
+<li>RDB持久化可以减少AOF文件的大小，从而减少磁盘空间的使用。</li>
+<li>在RDB持久化中，Redis可以使用子进程来将快照写入磁盘，这样可以避免主进程的阻塞。</li>
+</ol>
+<p>混合持久化的缺点：较大的存储空间，需要同时维护RDB文件和AOF文件，可能占用较多的磁盘空间。</p>
+<h4 id="数据淘汰策略"><a href="#数据淘汰策略" class="headerlink" title="数据淘汰策略"></a>数据淘汰策略</h4><p>redis用于缓存的内存不足时，就会施行数据淘汰策略。</p>
+<p>数据淘汰策略的目的是在内存不足时处理新写入且需要申请额外空间的数据。</p>
+<p>全局移除策略：</p>
+<ul>
+<li>noeviction：当内存不足时，新写入操作会报错。</li>
+<li>allkeys-lru：当内存不足时，移除最近最少使用的key</li>
+<li>allkeys-random：当内存不足时，随机移除某个key</li>
+</ul>
+<p>局部（设置了过期时间的键空间）移除策略：</p>
+<ul>
+<li>volatile-lru：移除设置了过期时间的键空间中，最近最少使用的key（推荐使用）</li>
+<li>volatile-ttl：移除设置了过期时间的键空间中，有更早过期时间的key优</li>
+<li>volatile-random：设置了过期时间的键空间中，随机移除某个key</li>
+</ul>
+<h4 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h4><p>Redis 事务：一次执行多个命令，事务中所有命令都会被序列化执行，具有排他性。</p>
+<p>事务开始：MULTI</p>
+<p>命令输入</p>
+<p>执行事务：EXEC</p>
+<p>redis事务特点：</p>
+<ul>
+<li>不支持回滚，Redis 在事务失败时不进行回滚，而是继续执行余下的命令</li>
+<li>一条命令出现错误，那么事务中所有的命令都不会执行</li>
+<li>事务不保证原子性</li>
+</ul>
+<h4 id="集群方案"><a href="#集群方案" class="headerlink" title="集群方案"></a>集群方案</h4><h5 id="哨兵模式"><a href="#哨兵模式" class="headerlink" title="哨兵模式"></a>哨兵模式</h5><p>哨兵（sentinel）是redis集群中一个组件，负责监控和保障redis服务正常运行。</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2020/png/2517043/1599814861853-24fcf82c-93c7-46d8-9029-f3d6802fb079.png?x-oss-process=image%2Fresize%2Cw_1012%2Climit_0" alt="img"></p>
+<p>哨兵+redis主从架构。监控master和slave并进行故障转移。</p>
+<h5 id="Cluster模型"><a href="#Cluster模型" class="headerlink" title="Cluster模型"></a>Cluster模型</h5><p>请求发送到任意节点，接收到请求的节点会将查询请求发送到正确的节点上执行。</p>
+<p>通过哈希的方式，将数据分片，每个节点均分存储一定哈希槽(哈希值区间)的数据，默认分配了16384 个槽位。</p>
+<p>每份数据分片会存储在多个互为主从的多节点上，数据写入先写主节点，再同步到从节点。</p>
+<p>节点间的内部通信机制：节点间采用Gossip协议进行通信。</p>
+<p>优点：</p>
+<ul>
+<li>无中心架构，支持动态扩容，对业务透明</li>
+<li>具备Sentinel的监控和自动Failover(故障转移)能力</li>
+<li>客户端不需要连接集群所有节点，连接集群中任何一个可用节点即可</li>
+<li>高性能，客户端直连redis服务，免去了proxy代理的损耗</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>运维也很复杂，数据迁移需要人工干预</li>
+<li>只能使用0号数据库</li>
+<li>不支持批量操作(pipeline管道操作)</li>
+<li>分布式逻辑和存储模块耦合</li>
+</ul>
+<h5 id="主从架构"><a href="#主从架构" class="headerlink" title="主从架构"></a>主从架构</h5><p>一主（master）多从（slave），主负责写，并且将数据复制到其它的 slave 节点，从节点负责读。所有的<strong>读请求全部走从节点</strong>。这样也可以很轻松实现水平扩容，<strong>支撑读高并发</strong>。</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2020/png/2517043/1599814960582-0587ece4-90ca-4b73-9016-02121fd4640a.png" alt="img"></p>
+<p>主从复制原理：</p>
+<p>当启动一个 slave node 的时候，它会发送一个 <code>PSYNC</code> 命令给 master node。</p>
+<p>如果这是 slave node 初次连接到 master node，那么会触发一次 全量复制（<code>full resynchronization</code>）。此时 master 会启动一个后台线程，开始生成一份 <code>RDB</code> 快照文件，同时还会将从客户端 client 新收到的所有写命令缓存在内存中。<code>RDB</code> 文件生成完毕后， master 会将这个 <code>RDB</code> 发送给 slave，slave 会先<strong>写入本地磁盘，然后再从本地磁盘加载到内存</strong>中，接着 master 会将内存中缓存的写命令发送到 slave，slave 也会同步这些数据。</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2020/png/2517043/1599814985259-19bbd138-d5e2-47fe-a2c3-8bc54a4e88b7.png" alt="img"></p>
+<p>slave node 如果跟 master node 有网络故障，断开了连接，会自动重连，连接之后 master node 仅会复制给 slave 部分缺少的数据。</p>
+<h4 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h4><h5 id="redis-cli"><a href="#redis-cli" class="headerlink" title="redis-cli"></a>redis-cli</h5><p>客户端连接redis服务器，并执行命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">redis-cli -h &lt;hostname&gt; -p &lt;port&gt; &lt;command&gt;</span><br><span class="line"><span class="meta">#</span><span class="bash"> 例如</span></span><br><span class="line">redis-cli -h 127.0.0.1 -p 6379 GET mykeyredis-cli -h &lt;hostname&gt; -p &lt;port&gt; &lt;command&gt;</span><br><span class="line"><span class="meta">#</span><span class="bash"> 例如</span></span><br><span class="line">redis-cli -h 127.0.0.1 -p 6379 GET mykey</span><br></pre></td></tr></table></figure>
+<p>查看redis服务器的各种统计和状态信息</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">redis-cli INFO</span><br><span class="line"><span class="meta">#</span><span class="bash"> 特定信息</span></span><br><span class="line">redis-cli INFO server  # 获取有关服务器的一般信息</span><br><span class="line">redis-cli INFO memory  # 获取有关服务器内存使用情况的信息</span><br><span class="line">redis-cli INFO persistence  # 获取有关持久化（持久化和快照）的信息</span><br><span class="line">redis-cli INFO replication   #获取有关主从复制的信息。redis-cli INFO</span><br><span class="line"><span class="meta">#</span><span class="bash"> 特定信息</span></span><br><span class="line">redis-cli INFO server  # 获取有关服务器的一般信息</span><br><span class="line">redis-cli INFO memory  # 获取有关服务器内存使用情况的信息</span><br><span class="line">redis-cli INFO persistence  # 获取有关持久化（持久化和快照）的信息</span><br><span class="line">redis-cli INFO replication   #获取有关主从复制的信息。</span><br></pre></td></tr></table></figure>
+<h5 id="get和set"><a href="#get和set" class="headerlink" title="get和set"></a>get和set</h5><p>get用于获取某个键值对的值。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 有一个键名为mykey，对应的值为Hello, Redis!</span></span><br><span class="line">GET mykey # 使用GET命令获取该键的值,返回Hello, Redis!作为结果# 有一个键名为mykey，对应的值为Hello, Redis!</span><br><span class="line">GET mykey # 使用GET命令获取该键的值,返回Hello, Redis!作为结果</span><br></pre></td></tr></table></figure>
+<p>set用于设定某个键对应的值。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SET mykey &quot;Hello, Redis!&quot;SET mykey &quot;Hello, Redis!&quot;</span><br></pre></td></tr></table></figure>
+<p>设置键的过期时间。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SET mykey &quot;Hello, Redis!&quot;</span><br><span class="line">EXPIRE mykey 60  # 设置过期时间为60sSET mykey &quot;Hello, Redis!&quot;</span><br><span class="line">EXPIRE mykey 60  # 设置过期时间为60s</span><br></pre></td></tr></table></figure>
+<h5 id="键相关命令"><a href="#键相关命令" class="headerlink" title="键相关命令"></a>键相关命令</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">DEL key # 删除指定的键</span><br><span class="line">EXISTS key # 检查键是否存在</span><br><span class="line">PERSIST key # 移除键的过期时间</span><br><span class="line">TYPE key # 获取键的数据类型</span><br><span class="line">DEL key # 删除指定的键</span><br><span class="line">EXISTS key # 检查键是否存在</span><br><span class="line">PERSIST key # 移除键的过期时间</span><br><span class="line">TYPE key # 获取键的数据类型</span><br></pre></td></tr></table></figure>
+<h5 id="哈希-hash-命令"><a href="#哈希-hash-命令" class="headerlink" title="哈希(hash)命令"></a>哈希(hash)命令</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">HSET key field value  # 设置哈希表中字段的值</span><br><span class="line">HGET key field	 # 获取哈希表中字段的值</span><br><span class="line">HDEL key field1 field2 ...  # 删除哈希表中的一个或多个字段</span><br><span class="line">HEXISTS key field  # 检查哈希表中是否存在指定字段</span><br><span class="line">HKEYS key	  # 获取哈希表中的所有字段</span><br><span class="line"></span><br><span class="line">HGETALL key  # 返回key指定的哈希集中所有的字段和值，复杂度O(n)HSET key field value  # 设置哈希表中字段的值</span><br><span class="line">HGET key field	 # 获取哈希表中字段的值</span><br><span class="line">HDEL key field1 field2 ...  # 删除哈希表中的一个或多个字段</span><br><span class="line">HEXISTS key field  # 检查哈希表中是否存在指定字段</span><br><span class="line">HKEYS key	  # 获取哈希表中的所有字段</span><br><span class="line"></span><br><span class="line">HGETALL key  # 返回key指定的哈希集中所有的字段和值，复杂度O(n)</span><br></pre></td></tr></table></figure>
+<h5 id="列表-list-命令"><a href="#列表-list-命令" class="headerlink" title="列表(list)命令"></a>列表(list)命令</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">LPUSH key value1 value2 ...  # 将一个或多个值插入列表的头部</span><br><span class="line">RPUSH key value1 value2 ...	 # 将一个或多个值插入列表的尾部</span><br><span class="line">LINDEX key index	# 返回列表中指定索引处的元素</span><br><span class="line">LLEN key	# 返回列表的长度LPUSH key value1 value2 ...  # 将一个或多个值插入列表的头部</span><br><span class="line">RPUSH key value1 value2 ...	 # 将一个或多个值插入列表的尾部</span><br><span class="line">LINDEX key index	# 返回列表中指定索引处的元素</span><br><span class="line">LLEN key	# 返回列表的长度</span><br></pre></td></tr></table></figure>
+<h5 id="集合-set-命令"><a href="#集合-set-命令" class="headerlink" title="集合(set)命令"></a>集合(set)命令</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">SADD key member1 member2 ...	# 向集合添加一个或多个成员</span><br><span class="line">SMEMBERS key	# 返回集合中的所有成员</span><br><span class="line">SISMEMBER key member	# 检查成员是否存在于集合中</span><br><span class="line">SREM key member1 member2 ...	# 从集合中移除一个或多个成员</span><br><span class="line">SCARD key	# 返回集合中的成员数量SADD key member1 member2 ...	# 向集合添加一个或多个成员</span><br><span class="line">SMEMBERS key	# 返回集合中的所有成员</span><br><span class="line">SISMEMBER key member	# 检查成员是否存在于集合中</span><br><span class="line">SREM key member1 member2 ...	# 从集合中移除一个或多个成员</span><br><span class="line">SCARD key	# 返回集合中的成员数量</span><br></pre></td></tr></table></figure>
+<h5 id="有序集合-Sorted-Set-命令"><a href="#有序集合-Sorted-Set-命令" class="headerlink" title="有序集合(Sorted Set)命令"></a>有序集合(Sorted Set)命令</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">ZADD key score1 member1 score2 member2 ...	# 向有序集合添加一个或多个成员及其分数</span><br><span class="line">ZRANGE key start stop [WITHSCORES]	# 返回有序集合中指定索引范围的成员</span><br><span class="line">ZRANK key member	# 返回有序集合中成员的排名（从小到大）</span><br><span class="line">ZREVRANK key member	# 返回有序集合中成员的排名（从大到小）</span><br><span class="line">ZREM key member1 member2 ...	# 从有序集合中移除一个或多个成员</span><br><span class="line">ZSCORE key member	# 返回有序集合中成员的分数</span><br><span class="line">ZCARD key	# 返回有序集合的成员数量ZADD key score1 member1 score2 member2 ...	# 向有序集合添加一个或多个成员及其分数</span><br><span class="line">ZRANGE key start stop [WITHSCORES]	# 返回有序集合中指定索引范围的成员</span><br><span class="line">ZRANK key member	# 返回有序集合中成员的排名（从小到大）</span><br><span class="line">ZREVRANK key member	# 返回有序集合中成员的排名（从大到小）</span><br><span class="line">ZREM key member1 member2 ...	# 从有序集合中移除一个或多个成员</span><br><span class="line">ZSCORE key member	# 返回有序集合中成员的分数</span><br><span class="line">ZCARD key	# 返回有序集合的成员数量</span><br></pre></td></tr></table></figure>
+<h5 id="数据库命令"><a href="#数据库命令" class="headerlink" title="数据库命令"></a>数据库命令</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">select N  # 切换数据库</span><br><span class="line">move key N   # 将某个Key 移动到编号为N的数据库</span><br><span class="line">flushdb  # 清空单个数据库中的数据</span><br><span class="line">flushall  # 清空所有数据库中的数据select N  # 切换数据库</span><br><span class="line">move key N   # 将某个Key 移动到编号为N的数据库</span><br><span class="line">flushdb  # 清空单个数据库中的数据</span><br><span class="line">flushall  # 清空所有数据库中的数据</span><br></pre></td></tr></table></figure>
+<h5 id="其他命令"><a href="#其他命令" class="headerlink" title="其他命令"></a>其他命令</h5><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">monitor # 实时监控，监控正在执行的命令monitor # 实时监控，监控正在执行的命令</span><br></pre></td></tr></table></figure>
+<h4 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h4><p>keys命令的作用是列出库中的键。而生产环境中数据量过大，使用keys命令会引起redis阻塞。因此生产环境中不用keys命令。</p>
+<p>smembers的作用是返回集合key中的所有成员，与keys命令的复杂度都是O(n)，因此生产环境中也不用smembers命令。</p>
+<p>scan命令的作用是增量迭代当前数据库中的所有数据库键，scan的复杂度虽然也是O(n)，但是它采用的是增量的方式，数据量较大的场景下，不会像keys和smembers一样一直阻塞着线程。</p>
+<h4 id="redis配置"><a href="#redis配置" class="headerlink" title="redis配置"></a>redis配置</h4><p>Redis 的配置文件位于 Redis 安装目录下，文件名为<strong>redis.conf</strong>，可以通过 <strong>CONFIG</strong> 命令查看或设置配置项。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 获取配置项</span></span><br><span class="line">CONFIG GET loglevel # loglevel为配置名</span><br><span class="line">CONFIG GET * # 获取所有配置项</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 编辑配置（可直接修改redis.conf）</span></span><br><span class="line">CONFIG SET CONFIG_SETTING_NAME NEW_CONFIG_VALUE</span><br><span class="line"><span class="meta">#</span><span class="bash"> 获取配置项</span></span><br><span class="line">CONFIG GET loglevel # loglevel为配置名</span><br><span class="line">CONFIG GET * # 获取所有配置项</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 编辑配置（可直接修改redis.conf）</span></span><br><span class="line">CONFIG SET CONFIG_SETTING_NAME NEW_CONFIG_VALUE</span><br></pre></td></tr></table></figure>
+<h4 id="管道"><a href="#管道" class="headerlink" title="管道"></a>管道</h4><p>每次请求，都涉及到读(read)和写(write)的系统调用，多次请求会不断地在用户态和内核态切换，使用redis管道，可以将多个write和多个read合并为一个write和一个read，介绍上下文切换的消耗。</p>
+<p>管道可以一次性发送多条命令并在执行完后一次性将结果返回。当一组命令中每条命令都不依赖于之前命令的执行结果时就可以将这组命令一起通过管道发出。</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2023/webp/22457069/1689295741791-fd00d79c-9761-4651-ae9d-089938c28a04.webp" alt="img"></p>
+<p><img src="https://cdn.nlark.com/yuque/0/2023/webp/22457069/1689295752332-498b8205-1293-4749-9583-68af28c7803a.webp" alt="img"></p>
+<p>管道（Pipelineing）不仅是一种减少往返时间的延迟成本的方法，还大大提高了你在给定的Redis服务器中每秒可执行的总操作量。</p>
+<h4 id="Lua脚本"><a href="#Lua脚本" class="headerlink" title="Lua脚本"></a>Lua脚本</h4><p>Redis提供丰富的指令集合，据官网上统计有200多个命令。这些命令显然已经满足了我们的常规的业务场景需求。但是在某些特殊的场景下，业务需要<strong>原子性</strong>操作，redis原有的命令是无法完成，所以需要额外开发实现原子操作。因为这样的问题，Redis为开发者提供了lua脚本的支持，用户可以向服务器发送lua脚本来执行<strong>自定义动作</strong>，以此获取脚本的响应数据。Redis本身又是<strong>单线程执行</strong>lua脚本，保证了lua脚本在处理逻辑过程中<strong>不会被任意其它请求打断</strong>。</p>
+<p>从 Redis 2.6.0 版本开始起；可通过内置的 Lua <strong>解释器</strong>，可以使用 EVAL 命令对 Lua 脚本进行执行。</p>
+<h4 id="过期key删除策略"><a href="#过期key删除策略" class="headerlink" title="过期key删除策略"></a>过期key删除策略</h4><p>定时删除（expired events）：</p>
+<p>为每个设置了过期时间的键创建一个定时器,当定时器到点后主动删除键。节省内存，但是需要为每个键创建定时器，CPU 消耗较大。</p>
+<p>惰性删除（lazy freeing）：</p>
+<p>默认的删除策略。只在取数据时,如果发现数据已经过期,则删除。CPU占用小，但是若大量的key在超出超时时间后，很久一段时间内，都没有被获取过，那么可能发生内存泄露（无用的垃圾占用了大量的内存）</p>
+<p>定期删除（active expire check）：</p>
+<p>周期性轮询redis库中的时效性数据，采用随机抽取的策略，利用过期数据占比的方式控制删除频度</p>
+<h4 id="slowlog"><a href="#slowlog" class="headerlink" title="slowlog"></a>slowlog</h4><p>slowlog是redis用于记录记录慢查询（执行时间过长的数据库查询操作）执行时间的日志系统。由于slowlog只保存在内存中，因此slowlog的效率很高，完全不用担心会影响到redis的性能。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SLOWLOG GET  # 查看slowlog</span><br><span class="line">SLOWLOG LEN  # 查看slowlog总条数SLOWLOG GET  # 查看slowlog</span><br><span class="line">SLOWLOG LEN  # 查看slowlog总条数</span><br></pre></td></tr></table></figure>
+<h4 id="redis服务"><a href="#redis服务" class="headerlink" title="redis服务"></a>redis服务</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 启动redis</span></span><br><span class="line">systemctl start redis6379  </span><br><span class="line"><span class="meta">#</span><span class="bash"> 如果机器上启用多个 redis，将 redis6379 改成 redis+对应的端口</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 重启redis</span></span><br><span class="line">systemctl restart redis6379</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 停止redis</span></span><br><span class="line">systemctl stop redis6379</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Redis 配置文件位置</span></span><br><span class="line">/data/redis/redis_6379/conf</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Redis 日志文件</span></span><br><span class="line">/data/redis/redis_6379/log</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Redis 数据目录</span></span><br><span class="line"><span class="meta">/data/redis/redis_6379/data#</span><span class="bash"> 启动redis</span></span><br><span class="line">systemctl start redis6379  </span><br><span class="line"><span class="meta">#</span><span class="bash"> 如果机器上启用多个 redis，将 redis6379 改成 redis+对应的端口</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 重启redis</span></span><br><span class="line">systemctl restart redis6379</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 停止redis</span></span><br><span class="line">systemctl stop redis6379</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Redis 配置文件位置</span></span><br><span class="line">/data/redis/redis_6379/conf</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Redis 日志文件</span></span><br><span class="line">/data/redis/redis_6379/log</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Redis 数据目录</span></span><br><span class="line">/data/redis/redis_6379/data</span><br></pre></td></tr></table></figure></div>
+        </div>
+        
+            <div class="kratos-copyright text-center clearfix">
+                <h5 itemprop="copyrightNotice">本作品采用 <a rel="license nofollow" target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/">知识共享署名-相同方式共享 4.0 国际许可协议</a> 进行许可</h5>
+            </div>
+        
+        <footer class="kratos-entry-footer clearfix">
+            
+                <div class="post-like-donate text-center clearfix" id="post-like-donate">
+                
+                
+                    <a class="share" href="javascript:;"><i class="fa fa-share-alt"></i> 分享</a>
+                    <div class="share-wrap" style="display: none;">
+    <div class="share-group">
+        <a href="javascript:;" class="share-plain qq" onclick="share('qq');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-qq"></i>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain qzone" onclick="share('qzone');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-star"></i>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain weixin pop style-plain" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-weixin"></i>
+            </div>
+            <div class="share-int">
+                <div class="qrcode" id="wechat-qr"></div>
+                <p>打开微信“扫一扫”，打开网页后点击屏幕右上角分享按钮</p>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain weibo" onclick="share('weibo');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-weibo"></i>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain facebook style-plain" onclick="share('facebook');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-facebook"></i>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain twitter style-plain" onclick="share('twitter');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-twitter"></i>
+            </div>
+        </a>
+    </div>
+    <script type="text/javascript">
+        $(()=>{
+            new QRCode("wechat-qr", {
+                text: "https://ivseek.ink/posts/a0ef5884.html",
+                width: 150,
+                height: 150,
+                correctLevel : QRCode.CorrectLevel.H
+            });
+        });
+        function share(dest) {
+            const qqBase        = "https://connect.qq.com/widget/shareqq/index.html?";
+            const weiboBase     = "https://service.weibo.com/share/share.php?";
+            const qzoneBase     = "https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?";
+            const facebookBase  = "https://www.facebook.com/sharer/sharer.php?";
+            const twitterBase   = "https://twitter.com/intent/tweet?";
+            const hostUrl       = "https://ivseek.ink/posts/a0ef5884.html";
+            const title         = "「Redis知识总结」";
+            const excerpt       = `介绍Redis 是一个由 C 语言编写的高性能 key-value 存储系统。
+优点：
+
+支持数据持久化，可将内存数据保存在磁盘，重启时再次加载使用
+支持 list，set，zset，hash 等复杂类型的存储
+支持事务，操作具有原子...`;
+            let _URL;
+            switch (dest) {
+                case "qq"       : _URL = qqBase+"url="+hostUrl+"&title="+title+"&desc=&summary="+excerpt+"&site=cxpy";     break;
+                case "weibo"    : _URL = weiboBase+"url="+hostUrl+"&title="+title+excerpt;                                 break;
+                case "qzone"    : _URL = qzoneBase+"url="+hostUrl+"&title="+title+"&desc=&summary="+excerpt+"&site=cxpy";  break;
+                case "facebook" : _URL = facebookBase+"u="+hostUrl;                                                        break;
+                case "twitter"  : _URL = twitterBase+"text="+title+excerpt+"&url="+hostUrl;                                break;
+            }
+            window.open(_URL);
+        };
+    </script>
+</div>
+                
+                </div>
+            
+            <div class="footer-tag clearfix">
+                <div class="pull-left">
+                <i class="fa fa-tags"></i>
+                    <a class="tag-none-link" href="/tags/Redis/" rel="tag">Redis</a>
+                </div>
+                <div class="pull-date">
+                    <time datetime="2023-07-15T00:48:41.826Z" itemprop="dateModified">最后编辑：2023-07-15</time>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+        <nav class="navigation post-navigation clearfix" role="navigation">
+            
+            <div class="nav-previous clearfix">
+                <a title=" Linux日志" href="/posts/4e200283.html">&lt; 上一篇</a>
+            </div>
+            
+            
+            <div class="nav-next clearfix">
+                <a title=" Nginx知识总结" href="/posts/db0ceba4.html">下一篇 &gt;</a>
+            </div>
+            
+        </nav>
+    
+    
+</article>
+
+        
+
+            </section>
+
+        
+
+                
+            
+
+<section id="kratos-widget-area" class="col-md-4 hidden-xs hidden-sm">
+    <!-- 文章和页面根据splitter来分割，没有的话就从头开始设置为sticky -->
+    
+    
+                <aside id="krw-about" class="widget widget-kratos-about clearfix">
+    <div class="photo-background"></div>
+    <div class="photo-wrapper clearfix">
+        <div class="photo-wrapper-tip text-center">
+            <img class="about-photo" src="/images/avatar.webp" loading="lazy" decoding="auto" />
+        </div>
+    </div>
+    <div class="textwidget">
+        <p class="text-center">学习技术，而不止于技术</p>
+    </div>
+    <div class="site-meta">
+        <a class="meta-item" href="/archives/">
+            <span class="title">
+                文章
+            </span>
+            <span class="count">
+                89
+            </span>
+        </a>
+        <a class="meta-item" href="/categories/">
+            <span class="title">
+                分类
+            </span>
+            <span class="count">
+                7
+            </span>
+        </a>
+        <a class="meta-item" href="/tags/">
+            <span class="title">
+                标签
+            </span>
+            <span class="count">
+                48
+            </span>
+        </a>
+    </div>
+</aside>
+            
+                    <div class="sticky-area">
+                
+                    <aside id="krw-toc" class="widget widget-kratos-toc clearfix toc-div-class" >
+    <div class="photo-background"></div>
+    <h4 class="widget-title no-after">
+        <i class="fa fa-compass"></i>
+        文章目录
+        <span class="toc-progress-bar" role="progressbar" aria-label="阅读进度："></span>
+    </h4>
+    <div class="textwidget">
+        <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%8B%E7%BB%8D"><span class="toc-text">介绍</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-text">数据类型</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8C%81%E4%B9%85%E5%8C%96%E6%9C%BA%E5%88%B6"><span class="toc-text">持久化机制</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#RDB%E6%9C%BA%E5%88%B6"><span class="toc-text">RDB机制</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#AOF%E6%9C%BA%E5%88%B6"><span class="toc-text">AOF机制</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%B7%B7%E5%90%88%E6%8C%81%E4%B9%85%E5%8C%96"><span class="toc-text">混合持久化</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5"><span class="toc-text">数据淘汰策略</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%8B%E5%8A%A1"><span class="toc-text">事务</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%9B%86%E7%BE%A4%E6%96%B9%E6%A1%88"><span class="toc-text">集群方案</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%93%A8%E5%85%B5%E6%A8%A1%E5%BC%8F"><span class="toc-text">哨兵模式</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Cluster%E6%A8%A1%E5%9E%8B"><span class="toc-text">Cluster模型</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%BB%E4%BB%8E%E6%9E%B6%E6%9E%84"><span class="toc-text">主从架构</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-text">常用命令</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#redis-cli"><span class="toc-text">redis-cli</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#get%E5%92%8Cset"><span class="toc-text">get和set</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%94%AE%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4"><span class="toc-text">键相关命令</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%93%88%E5%B8%8C-hash-%E5%91%BD%E4%BB%A4"><span class="toc-text">哈希(hash)命令</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%88%97%E8%A1%A8-list-%E5%91%BD%E4%BB%A4"><span class="toc-text">列表(list)命令</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%9B%86%E5%90%88-set-%E5%91%BD%E4%BB%A4"><span class="toc-text">集合(set)命令</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%9C%89%E5%BA%8F%E9%9B%86%E5%90%88-Sorted-Set-%E5%91%BD%E4%BB%A4"><span class="toc-text">有序集合(Sorted Set)命令</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E5%91%BD%E4%BB%A4"><span class="toc-text">数据库命令</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E5%91%BD%E4%BB%A4"><span class="toc-text">其他命令</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-text">注意事项</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#redis%E9%85%8D%E7%BD%AE"><span class="toc-text">redis配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AE%A1%E9%81%93"><span class="toc-text">管道</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Lua%E8%84%9A%E6%9C%AC"><span class="toc-text">Lua脚本</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%87%E6%9C%9Fkey%E5%88%A0%E9%99%A4%E7%AD%96%E7%95%A5"><span class="toc-text">过期key删除策略</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#slowlog"><span class="toc-text">slowlog</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#redis%E6%9C%8D%E5%8A%A1"><span class="toc-text">redis服务</span></a></li></ol>
+    </div>
+</aside>
+                
+                
+  <aside id="krw-categories" class="widget widget-kratos-categories clearfix">
+    <h4 class="widget-title"><i class="fa fa-folder"></i>分类目录</h4>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Linux/">Linux</a><span class="category-list-count">14</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E4%BA%91%E5%8E%9F%E7%94%9F/">云原生</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B5%8C%E5%85%A5%E5%BC%8F/">嵌入式</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BC%96%E7%A8%8B/">编程</a><span class="category-list-count">24</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E8%BF%90%E7%BB%B4/">运维</a><span class="category-list-count">25</span></li></ul>
+  </aside>
+
+
+            
+                
+  <aside id="krw-tags" class="widget widget-kratos-tags clearfix">
+    <h4 class="widget-title"><i class="fa fa-tags"></i>标签聚合</h4>
+      <div class="tag-clouds">
+        <a href="/tags/Ansible/" style="font-size: 0.64em;">Ansible</a> <a href="/tags/DNS/" style="font-size: 0.6em;">DNS</a> <a href="/tags/DevOps/" style="font-size: 0.6em;">DevOps</a> <a href="/tags/Docker/" style="font-size: 0.72em;">Docker</a> <a href="/tags/GitLab/" style="font-size: 0.6em;">GitLab</a> <a href="/tags/Go/" style="font-size: 0.6em;">Go</a> <a href="/tags/Golang/" style="font-size: 0.6em;">Golang</a> <a href="/tags/Go%E8%AF%AD%E8%A8%80/" style="font-size: 0.8em;">Go语言</a> <a href="/tags/InnoDB/" style="font-size: 0.6em;">InnoDB</a> <a href="/tags/Kubernetes/" style="font-size: 0.68em;">Kubernetes</a> <a href="/tags/Linux/" style="font-size: 0.64em;">Linux</a> <a href="/tags/MySQL/" style="font-size: 0.76em;">MySQL</a> <a href="/tags/Nginx/" style="font-size: 0.64em;">Nginx</a> <a href="/tags/Python/" style="font-size: 0.72em;">Python</a> <a href="/tags/Python%E8%AF%AD%E8%A8%80/" style="font-size: 0.68em;">Python语言</a> <a href="/tags/Redis/" style="font-size: 0.6em;">Redis</a> <a href="/tags/SNMP/" style="font-size: 0.6em;">SNMP</a> <a href="/tags/Shell/" style="font-size: 0.68em;">Shell</a>
+      </div>
+  </aside>
+
+            
+                
+  <aside id="krw-posts" class="widget widget-kratos-posts">
+  <h4 class="widget-title"><i class="fa fa-file"></i>最新文章</h4>
+  <div class="tab-content">
+      <ul class="list-group">
+        
+        
+          
+          
+            <a class="list-group-item" href="/posts/df19d329.html"><i class="fa  fa-book"></i> MySQL知识总结</a>
+            
+          
+        
+          
+          
+            <a class="list-group-item" href="/posts/db0ceba4.html"><i class="fa  fa-book"></i> Nginx知识总结</a>
+            
+          
+        
+          
+          
+            <a class="list-group-item" href="/posts/a0ef5884.html"><i class="fa  fa-book"></i> Redis知识总结</a>
+            
+          
+        
+          
+          
+            <a class="list-group-item" href="/posts/4e200283.html"><i class="fa  fa-book"></i> Linux日志</a>
+            
+          
+        
+          
+          
+            <a class="list-group-item" href="/posts/baa4.html"><i class="fa  fa-book"></i> Kubernetes环境部署</a>
+            
+          
+        
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+      </ul>
+  </div>
+  </aside>
+
+            
+    </div>
+</section>
+        
+        </div>
+    </div>
+</div>
+<footer>
+    <div id="footer"  >
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3 footer-list text-center">
+                    <ul class="kratos-social-icons">
+                        <!-- Keep for compatibility -->
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        <!-- New links -->
+                        
+                    </ul>
+                    <ul class="kratos-copyright">
+                        <div>
+                            <li>&copy; 2023 WHT 版权所有.</li>
+                            <li>本站已运行<span id="span_dt">Loading...</span></li>
+                        </div>
+                        <div>
+                            <li>Theme <a href="https://github.com/Candinya/Kratos-Rebirth" target="_blank">Kratos:Rebirth</a></li>
+                            <li>Site built with&nbsp;<i class="fa fa-heart throb" style="color:#d43f57"></i>&nbsp;by 王贺天.</li>
+                        </div>
+                        <div>
+                            <li>Powered by <a href="https://hexo.io" target="_blank" rel="nofollow">Hexo</a></li>
+                            <li>Hosted on <a href="https://github.io" target="_blank">Github Pages</a></li>
+                        </div>
+                        <div>
+                            
+                            
+                        </div>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="kr-tool text-center">
+            <div class="tool">
+                
+                    <div class="box search-box">
+                        <a href="/search/">
+                            <span class="fa fa-search"></span>
+                        </a>
+                    </div>
+                
+                
+                
+                
+            </div>
+            <div class="box gotop-box">
+                <span class="fa fa-chevron-up"></span>
+            </div>
+        </div>
+    </div>
+</footer>
+</div>
+</div>
+
+        <script defer src="/vendors/bootstrap@3.3.4/dist/js/bootstrap.min.js"></script>
+<script defer src="/vendors/nprogress@0.2.0/nprogress.js"></script>
+<script>
+    if (!window.kr) {
+        window.kr = {};
+    }
+    window.kr.notMobile = (!(navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i)));
+    window.kr.siteRoot = "/";
+</script>
+
+
+    <script async src="/js/candy.min.js"></script>
+
+
+
+
+    <script defer src="/vendors/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+
+<script defer src="/js/kratosr.min.js"></script>
+<script defer src="/js/pjax.min.js"></script>
+
+
+
+<!-- Extra support for third-party plguins  -->
+
+
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/ Relative)","tagMode":false,"log":false,"model":{"jsonPath":"/live2dw/assets/koharu.model.json"},"display":{"position":"left","width":100,"height":180},"mobile":{"show":false},"react":{"opacityDefault":0.7}});</script></body>
+</html>
