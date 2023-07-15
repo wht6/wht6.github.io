@@ -24,18 +24,18 @@
 <meta property="og:site_name" content="WHT">
 <meta property="og:description" content="介绍Redis 是一个由 C 语言编写的高性能 key-value 存储系统。 优点：  支持数据持久化，可将内存数据保存在磁盘，重启时再次加载使用 支持 list，set，zset，hash 等复杂类型的存储 支持事务，操作具有原子性 支持主从复制，读写分离 支持数据备份- master-slave 模式的数据备份  缺点：‘  数据库容量受到物理内存的限制，不能用作海量数据的高性能读写 不具备">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2020/png/2517043/1599814750947-71ddb599-5f32-40bf-ad09-861b8cd4b173.png?x-oss-process=image%2Fresize%2Cw_1012%2Climit_0">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2020/png/2517043/1599814861853-24fcf82c-93c7-46d8-9029-f3d6802fb079.png?x-oss-process=image%2Fresize%2Cw_1012%2Climit_0">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2020/png/2517043/1599814960582-0587ece4-90ca-4b73-9016-02121fd4640a.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2020/png/2517043/1599814985259-19bbd138-d5e2-47fe-a2c3-8bc54a4e88b7.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2023/webp/22457069/1689295741791-fd00d79c-9761-4651-ae9d-089938c28a04.webp">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2023/webp/22457069/1689295752332-498b8205-1293-4749-9583-68af28c7803a.webp">
+<meta property="og:image" content="https://raw.githubusercontent.com/wht6/image/master/img/redis2023_713_1.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/wht6/image/master/img/redis2023_713_2.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/wht6/image/master/img/redis2023_713_3.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/wht6/image/master/img/redis2023_713_4.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/wht6/image/master/img/redis2023_713_5.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/wht6/image/master/img/redis2023_713_6.png">
 <meta property="article:published_time" content="2023-07-13T08:00:00.000Z">
-<meta property="article:modified_time" content="2023-07-15T00:48:41.826Z">
+<meta property="article:modified_time" content="2023-07-15T01:21:47.080Z">
 <meta property="article:author" content="王贺天">
 <meta property="article:tag" content="Redis">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://cdn.nlark.com/yuque/0/2020/png/2517043/1599814750947-71ddb599-5f32-40bf-ad09-861b8cd4b173.png?x-oss-process=image%2Fresize%2Cw_1012%2Climit_0">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/wht6/image/master/img/redis2023_713_1.png">
   <link rel="alternate" href="atom.xml" type="application/atom+xml">
   <!-- 站点验证相关 -->
   
@@ -306,7 +306,7 @@
             
             <div id="expire-alert" class="alert alert-warning hidden" role="alert">
                 <div class="icon"><i class="fa fa-warning"></i></div>
-                <div class="text"><p>本文最后编辑于 <time datetime="1689382121826"></time> 前，其中的内容可能需要更新。</p></div>
+                <div class="text"><p>本文最后编辑于 <time datetime="1689384107080"></time> 前，其中的内容可能需要更新。</p></div>
             </div>
             
             
@@ -341,7 +341,7 @@
 <li>分页、模糊搜索</li>
 <li>排行榜</li>
 </ol>
-<h4 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h4><p><img src="https://cdn.nlark.com/yuque/0/2020/png/2517043/1599814750947-71ddb599-5f32-40bf-ad09-861b8cd4b173.png?x-oss-process=image%2Fresize%2Cw_1012%2Climit_0" alt="img"></p>
+<h4 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h4><p><img src="https://raw.githubusercontent.com/wht6/image/master/img/redis2023_713_1.png" alt></p>
 <h4 id="持久化机制"><a href="#持久化机制" class="headerlink" title="持久化机制"></a>持久化机制</h4><h5 id="RDB机制"><a href="#RDB机制" class="headerlink" title="RDB机制"></a>RDB机制</h5><p>默认方式。按照一定的时间将内存的数据以快照的形式保存到硬盘中。可自定义快照周期。</p>
 <p>优点：</p>
 <ul>
@@ -423,7 +423,7 @@
 <li>事务不保证原子性</li>
 </ul>
 <h4 id="集群方案"><a href="#集群方案" class="headerlink" title="集群方案"></a>集群方案</h4><h5 id="哨兵模式"><a href="#哨兵模式" class="headerlink" title="哨兵模式"></a>哨兵模式</h5><p>哨兵（sentinel）是redis集群中一个组件，负责监控和保障redis服务正常运行。</p>
-<p><img src="https://cdn.nlark.com/yuque/0/2020/png/2517043/1599814861853-24fcf82c-93c7-46d8-9029-f3d6802fb079.png?x-oss-process=image%2Fresize%2Cw_1012%2Climit_0" alt="img"></p>
+<p><img src="https://raw.githubusercontent.com/wht6/image/master/img/redis2023_713_2.png" alt></p>
 <p>哨兵+redis主从架构。监控master和slave并进行故障转移。</p>
 <h5 id="Cluster模型"><a href="#Cluster模型" class="headerlink" title="Cluster模型"></a>Cluster模型</h5><p>请求发送到任意节点，接收到请求的节点会将查询请求发送到正确的节点上执行。</p>
 <p>通过哈希的方式，将数据分片，每个节点均分存储一定哈希槽(哈希值区间)的数据，默认分配了16384 个槽位。</p>
@@ -444,11 +444,11 @@
 <li>分布式逻辑和存储模块耦合</li>
 </ul>
 <h5 id="主从架构"><a href="#主从架构" class="headerlink" title="主从架构"></a>主从架构</h5><p>一主（master）多从（slave），主负责写，并且将数据复制到其它的 slave 节点，从节点负责读。所有的<strong>读请求全部走从节点</strong>。这样也可以很轻松实现水平扩容，<strong>支撑读高并发</strong>。</p>
-<p><img src="https://cdn.nlark.com/yuque/0/2020/png/2517043/1599814960582-0587ece4-90ca-4b73-9016-02121fd4640a.png" alt="img"></p>
+<p><img src="https://raw.githubusercontent.com/wht6/image/master/img/redis2023_713_3.png" alt></p>
 <p>主从复制原理：</p>
 <p>当启动一个 slave node 的时候，它会发送一个 <code>PSYNC</code> 命令给 master node。</p>
 <p>如果这是 slave node 初次连接到 master node，那么会触发一次 全量复制（<code>full resynchronization</code>）。此时 master 会启动一个后台线程，开始生成一份 <code>RDB</code> 快照文件，同时还会将从客户端 client 新收到的所有写命令缓存在内存中。<code>RDB</code> 文件生成完毕后， master 会将这个 <code>RDB</code> 发送给 slave，slave 会先<strong>写入本地磁盘，然后再从本地磁盘加载到内存</strong>中，接着 master 会将内存中缓存的写命令发送到 slave，slave 也会同步这些数据。</p>
-<p><img src="https://cdn.nlark.com/yuque/0/2020/png/2517043/1599814985259-19bbd138-d5e2-47fe-a2c3-8bc54a4e88b7.png" alt="img"></p>
+<p><img src="https://raw.githubusercontent.com/wht6/image/master/img/redis2023_713_4.png" alt></p>
 <p>slave node 如果跟 master node 有网络故障，断开了连接，会自动重连，连接之后 master node 仅会复制给 slave 部分缺少的数据。</p>
 <h4 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h4><h5 id="redis-cli"><a href="#redis-cli" class="headerlink" title="redis-cli"></a>redis-cli</h5><p>客户端连接redis服务器，并执行命令</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">redis-cli -h &lt;hostname&gt; -p &lt;port&gt; &lt;command&gt;</span><br><span class="line"><span class="meta">#</span><span class="bash"> 例如</span></span><br><span class="line">redis-cli -h 127.0.0.1 -p 6379 GET mykeyredis-cli -h &lt;hostname&gt; -p &lt;port&gt; &lt;command&gt;</span><br><span class="line"><span class="meta">#</span><span class="bash"> 例如</span></span><br><span class="line">redis-cli -h 127.0.0.1 -p 6379 GET mykey</span><br></pre></td></tr></table></figure>
@@ -474,8 +474,8 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 获取配置项</span></span><br><span class="line">CONFIG GET loglevel # loglevel为配置名</span><br><span class="line">CONFIG GET * # 获取所有配置项</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 编辑配置（可直接修改redis.conf）</span></span><br><span class="line">CONFIG SET CONFIG_SETTING_NAME NEW_CONFIG_VALUE</span><br><span class="line"><span class="meta">#</span><span class="bash"> 获取配置项</span></span><br><span class="line">CONFIG GET loglevel # loglevel为配置名</span><br><span class="line">CONFIG GET * # 获取所有配置项</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 编辑配置（可直接修改redis.conf）</span></span><br><span class="line">CONFIG SET CONFIG_SETTING_NAME NEW_CONFIG_VALUE</span><br></pre></td></tr></table></figure>
 <h4 id="管道"><a href="#管道" class="headerlink" title="管道"></a>管道</h4><p>每次请求，都涉及到读(read)和写(write)的系统调用，多次请求会不断地在用户态和内核态切换，使用redis管道，可以将多个write和多个read合并为一个write和一个read，介绍上下文切换的消耗。</p>
 <p>管道可以一次性发送多条命令并在执行完后一次性将结果返回。当一组命令中每条命令都不依赖于之前命令的执行结果时就可以将这组命令一起通过管道发出。</p>
-<p><img src="https://cdn.nlark.com/yuque/0/2023/webp/22457069/1689295741791-fd00d79c-9761-4651-ae9d-089938c28a04.webp" alt="img"></p>
-<p><img src="https://cdn.nlark.com/yuque/0/2023/webp/22457069/1689295752332-498b8205-1293-4749-9583-68af28c7803a.webp" alt="img"></p>
+<p><img src="https://raw.githubusercontent.com/wht6/image/master/img/redis2023_713_5.png" alt></p>
+<p><img src="https://raw.githubusercontent.com/wht6/image/master/img/redis2023_713_6.png" alt></p>
 <p>管道（Pipelineing）不仅是一种减少往返时间的延迟成本的方法，还大大提高了你在给定的Redis服务器中每秒可执行的总操作量。</p>
 <h4 id="Lua脚本"><a href="#Lua脚本" class="headerlink" title="Lua脚本"></a>Lua脚本</h4><p>Redis提供丰富的指令集合，据官网上统计有200多个命令。这些命令显然已经满足了我们的常规的业务场景需求。但是在某些特殊的场景下，业务需要<strong>原子性</strong>操作，redis原有的命令是无法完成，所以需要额外开发实现原子操作。因为这样的问题，Redis为开发者提供了lua脚本的支持，用户可以向服务器发送lua脚本来执行<strong>自定义动作</strong>，以此获取脚本的响应数据。Redis本身又是<strong>单线程执行</strong>lua脚本，保证了lua脚本在处理逻辑过程中<strong>不会被任意其它请求打断</strong>。</p>
 <p>从 Redis 2.6.0 版本开始起；可通过内置的 Lua <strong>解释器</strong>，可以使用 EVAL 命令对 Lua 脚本进行执行。</p>
@@ -581,7 +581,7 @@
                     <a class="tag-none-link" href="/tags/Redis/" rel="tag">Redis</a>
                 </div>
                 <div class="pull-date">
-                    <time datetime="2023-07-15T00:48:41.826Z" itemprop="dateModified">最后编辑：2023-07-15</time>
+                    <time datetime="2023-07-15T01:21:47.080Z" itemprop="dateModified">最后编辑：2023-07-15</time>
                 </div>
             </div>
         </footer>

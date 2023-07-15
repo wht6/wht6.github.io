@@ -24,15 +24,15 @@
 <meta property="og:site_name" content="WHT">
 <meta property="og:description" content="NginxNginx 在启动后，包含一个 master 进程和多个 worker 进程。 master 进程主要用来管理 worker 进程，包含：接收来自外界的信号，向各 worker 进程发送信号，监控 worker 进程的运行状态，当 worker 进程退出后(异常情况下)，会自动重新启动新的 worker 进程。 而网络请求则是由 worker 进程来处理。所有的worker 进程之间是平">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/png/22457069/1668153354023-c763d676-2ac3-4dfb-a74a-671fb05475ec.png">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/jpeg/22457069/1665881522050-d84b0e9d-2120-436b-b64c-c2f7ec4849c6.jpeg">
-<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2022/webp/22457069/1665710296037-e738765a-a82e-4739-9de6-0cb4165ba5d4.webp">
+<meta property="og:image" content="https://raw.githubusercontent.com/wht6/image/master/img/nginx_2023714_1.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/wht6/image/master/img/nginx_2023714_2.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/wht6/image/master/img/nginx_2023714_3.png">
 <meta property="article:published_time" content="2023-07-14T08:00:00.000Z">
-<meta property="article:modified_time" content="2023-07-15T00:52:34.348Z">
+<meta property="article:modified_time" content="2023-07-15T01:25:55.834Z">
 <meta property="article:author" content="王贺天">
 <meta property="article:tag" content="Nginx">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://cdn.nlark.com/yuque/0/2022/png/22457069/1668153354023-c763d676-2ac3-4dfb-a74a-671fb05475ec.png">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/wht6/image/master/img/nginx_2023714_1.png">
   <link rel="alternate" href="atom.xml" type="application/atom+xml">
   <!-- 站点验证相关 -->
   
@@ -303,7 +303,7 @@
             
             <div id="expire-alert" class="alert alert-warning hidden" role="alert">
                 <div class="icon"><i class="fa fa-warning"></i></div>
-                <div class="text"><p>本文最后编辑于 <time datetime="1689382354348"></time> 前，其中的内容可能需要更新。</p></div>
+                <div class="text"><p>本文最后编辑于 <time datetime="1689384355834"></time> 前，其中的内容可能需要更新。</p></div>
             </div>
             
             
@@ -315,7 +315,7 @@
             <hr />
             <div itemprop="articleBody"><h3 id="Nginx"><a href="#Nginx" class="headerlink" title="Nginx"></a>Nginx</h3><p>Nginx 在启动后，包含一个 master 进程和多个 worker 进程。</p>
 <p>master 进程主要用来管理 worker 进程，包含：接收来自外界的信号，向各 worker 进程发送信号，监控 worker 进程的运行状态，当 worker 进程退出后(异常情况下)，会自动重新启动新的 worker 进程。</p>
-<p>而网络请求则是由 worker 进程来处理。所有的worker 进程之间是平等的，并各进程互相独立。一个请求，只可能在一个 worker 进程中处理，一个 worker 进程，不可能处理其它进程的请求。worker 进程的个数会设置为cpu核心数，目的是充分利用 CPU 资源，同时，避免进程数量过多，避免进程竞争 CPU 资源，增加上下文切换的损耗。<br><img src="https://cdn.nlark.com/yuque/0/2022/png/22457069/1668153354023-c763d676-2ac3-4dfb-a74a-671fb05475ec.png" alt="img"></p>
+<p>而网络请求则是由 worker 进程来处理。所有的worker 进程之间是平等的，并各进程互相独立。一个请求，只可能在一个 worker 进程中处理，一个 worker 进程，不可能处理其它进程的请求。worker 进程的个数会设置为cpu核心数，目的是充分利用 CPU 资源，同时，避免进程数量过多，避免进程竞争 CPU 资源，增加上下文切换的损耗。<br><img src="https://raw.githubusercontent.com/wht6/image/master/img/nginx_2023714_1.png" alt></p>
 <h4 id="Nginx启动运行过程"><a href="#Nginx启动运行过程" class="headerlink" title="Nginx启动运行过程"></a>Nginx启动运行过程</h4><ol>
 <li>master建立listen的socket（listenfd）</li>
 <li>master进程fork出多个worker进程（根据设定的worker进程数）</li>
@@ -329,8 +329,8 @@
 <p>如果事件没有准备好，就立即返回，线程就可以去处理其他请求，等事件准备好之后，再去接着执行，这就是异步非阻塞。  </p>
 <h5 id="动静分离"><a href="#动静分离" class="headerlink" title="动静分离"></a>动静分离</h5><p>为什么动静分离：Nginx的静态处理能力很强，但是动态处理能力不足。</p>
 <p>动静分离原理：对于静态资源，在反向代理服务器nginx中进行缓存。若用户请求的动态文件，则转发给Tomcat服务器处理。</p>
-<h3 id="Nginx配置"><a href="#Nginx配置" class="headerlink" title="Nginx配置"></a>Nginx配置</h3><h4 id="Nginx配置文件结构"><a href="#Nginx配置文件结构" class="headerlink" title="Nginx配置文件结构"></a>Nginx配置文件结构</h4><p><img src="https://cdn.nlark.com/yuque/0/2022/jpeg/22457069/1665881522050-d84b0e9d-2120-436b-b64c-c2f7ec4849c6.jpeg" alt="img"></p>
-<p><img src="https://cdn.nlark.com/yuque/0/2022/webp/22457069/1665710296037-e738765a-a82e-4739-9de6-0cb4165ba5d4.webp" alt="img"></p>
+<h3 id="Nginx配置"><a href="#Nginx配置" class="headerlink" title="Nginx配置"></a>Nginx配置</h3><h4 id="Nginx配置文件结构"><a href="#Nginx配置文件结构" class="headerlink" title="Nginx配置文件结构"></a>Nginx配置文件结构</h4><p><img src="https://raw.githubusercontent.com/wht6/image/master/img/nginx_2023714_2.png" alt></p>
+<p><img src="https://raw.githubusercontent.com/wht6/image/master/img/nginx_2023714_3.png" alt></p>
 <p><strong>main（全局设置）</strong>：设置的指令将影响其他所有设置；<br><strong>server（主机设置）</strong>：指令主要用于指定主机和端口、<br><strong>upstream（负载均衡服务器设置）</strong>：指令主要用于负载均衡，设置一系列的后端服务器<br><strong>location（URL匹配特定位置的设置）</strong>：用于匹配网页位置。</p>
 <p>server继承main，location继承server，upstream既不会继承其他设置也不会被继承。</p>
 <h4 id="全局块"><a href="#全局块" class="headerlink" title="全局块"></a>全局块</h4><p>全局块的配置影响Nginx全局。</p>
@@ -471,7 +471,7 @@ master 进程主要用来管理 worker 进程，包含：接收来自外界的�
                     <a class="tag-none-link" href="/tags/Nginx/" rel="tag">Nginx</a>
                 </div>
                 <div class="pull-date">
-                    <time datetime="2023-07-15T00:52:34.348Z" itemprop="dateModified">最后编辑：2023-07-15</time>
+                    <time datetime="2023-07-15T01:25:55.834Z" itemprop="dateModified">最后编辑：2023-07-15</time>
                 </div>
             </div>
         </footer>
