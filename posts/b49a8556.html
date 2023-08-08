@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   
   
-  <title>标签: 防火墙 | WHT</title>
+  <title>Zookeeper框架 | WHT</title>
   
   <meta name="author" content="王贺天" />
   <meta http-equiv="Cache-Control" content="no-transform" />
@@ -15,21 +15,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <meta name="format-detection" content="telphone=no, email=no" />
   
-    <meta name="keywords" content="技术,运维,编程,兴趣" />
+    <meta name="keywords" content="Zookeeper" />
   
-  <meta name="description" content="学习技术，而不止于技术">
-<meta property="og:type" content="website">
-<meta property="og:title" content="标签: 防火墙">
-<meta property="og:url" content="https://ivseek.ink/tags/%E9%98%B2%E7%81%AB%E5%A2%99/index.html">
+  <meta name="description" content="zookeeper是yahoo开发的，用于分布式中一致性处理的框架。zookeeper致力于提供高性能、高可用，且具有严格顺序访问控制能力的分布式协调服务，能够实现的功能包括：配置管理、命名服务、分布式锁、集群管理、队列管理。 高性能：将 全量数据存储在内存 中，并直接服务于客户端的所有非事务请求，尤其适用于 以读为主 的应用场景，对于事务请求操作多的不太适合。 高可用：一般以集群的方式对外提供服">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Zookeeper框架">
+<meta property="og:url" content="https://ivseek.ink/posts/b49a8556.html">
 <meta property="og:site_name" content="WHT">
-<meta property="og:description" content="学习技术，而不止于技术">
+<meta property="og:description" content="zookeeper是yahoo开发的，用于分布式中一致性处理的框架。zookeeper致力于提供高性能、高可用，且具有严格顺序访问控制能力的分布式协调服务，能够实现的功能包括：配置管理、命名服务、分布式锁、集群管理、队列管理。 高性能：将 全量数据存储在内存 中，并直接服务于客户端的所有非事务请求，尤其适用于 以读为主 的应用场景，对于事务请求操作多的不太适合。 高可用：一般以集群的方式对外提供服">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://wht20230806.oss-cn-beijing.aliyuncs.com/master/zoo1_202388.png">
+<meta property="og:image" content="https://wht20230806.oss-cn-beijing.aliyuncs.com/master/zoo2_202388.png">
+<meta property="og:image" content="https://wht20230806.oss-cn-beijing.aliyuncs.com/master/zoo3_202388.png">
+<meta property="og:image" content="https://wht20230806.oss-cn-beijing.aliyuncs.com/master/zoo4_202388.png">
+<meta property="og:image" content="https://wht20230806.oss-cn-beijing.aliyuncs.com/master/zoo5_202388.png">
+<meta property="og:image" content="https://wht20230806.oss-cn-beijing.aliyuncs.com/master/zoo6_202388.png">
+<meta property="article:published_time" content="2023-08-05T08:00:00.000Z">
+<meta property="article:modified_time" content="2023-08-08T14:19:36.663Z">
 <meta property="article:author" content="王贺天">
-<meta property="article:tag" content="技术">
-<meta property="article:tag" content="运维">
-<meta property="article:tag" content="编程">
-<meta property="article:tag" content="兴趣">
+<meta property="article:tag" content="Zookeeper">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://wht20230806.oss-cn-beijing.aliyuncs.com/master/zoo1_202388.png">
   <link rel="alternate" href="atom.xml" type="application/atom+xml">
   <!-- 站点验证相关 -->
   
@@ -269,94 +275,210 @@
 
         
 
-            <!-- Breadcrumb for tag & category page -->
-
-    <article class="kratos-hentry kratos-entry-border-new clearfix">
-        <div class="kratos-breadcrumb">
-            <a href="/">
-                <i class="fa fa-home"></i>
-            </a>
-            <i class="fa fa-angle-right"></i>
-            
-                <a href="/tags/">
-                    标签
-                </a>
-                <i class="fa fa-angle-right"></i>
-                <a href="/tags/%E9%98%B2%E7%81%AB%E5%A2%99">
-                    防火墙
-                </a>
-            
-            
-        </div>
-    </article>
-
-
-
-
+            <article itemscope itemtype="https://schema.org/Article">
     
-    
-        <article class="kratos-hentry clearfix" itemscope itemtype="https://schema.org/Article">
-            <div class="kratos-entry-border-new clearfix">
+    <link itemprop="mainEntityOfPage" href="https://ivseek.ink/posts/b49a8556.html">
+    <div class="kratos-hentry kratos-post-inner clearfix">
+        <header class="kratos-entry-header">
+            
+                <h1 class="kratos-entry-title text-center" itemprop="name headline">Zookeeper框架</h1>
+            
+            
+            <ul class="kratos-post-meta text-center">
+                <li><time datetime="2023-08-05T08:00:00.000Z" itemprop="datePublished"><i class="fa fa-calendar"></i> 2023-08-05</time></li>
+                <li itemprop="author" itemscope itemtype="https://schema.org/Person">
+                    <i class="fa fa-user"></i> 作者 <span itemprop="name">王贺天</span>
+                </li>
                 
-                <div class="kratos-entry-thumb-new">
-                    <a href="/posts/60b.html">
-                        
-                            <img class="kratos-entry-thumb-new-img" alt="">
-                        
-                    </a>
-                </div>
-                <div class="kratos-post-inner-new">
-                    <header class="kratos-entry-header-new">
-                            <a class="label-link" href="/categories/%E8%BF%90%E7%BB%B4/">运维</a>
-                        <h2 class="kratos-entry-title-new"><a href="/posts/60b.html" itemprop="mainEntityOfPage"><span itemprop="name headline">iptables的原理与使用</span></a>
-                    </header>
-                    <div class="kratos-entry-content-new">
-                        <p itemProp="description">
-                            
-                                iptables介绍iptables是Linux自带的一款优秀且开放源代码的基于包过滤的防火墙工具，它的功能十分强大，使用非常灵活，可以对流入和流出服务器的数据包进行很精细的控制。
-iptables实际上它只是一个命令行工具，真正的内...
-                            
-                        </p>
-                    </div>
-                </div>
-                <footer class="kratos-post-meta-new">
-                    <span class="pull-left">
-                        <time datetime="2022-04-17T08:00:00.000Z" itemprop="datePublished">
-                            <a><i class="fa fa-calendar"></i> 2022-04-17</a>
-                        </time>
-                        <a>
-                            
-                                <i class="fa fa-tags"></i>
-                                <a class="tag-none-link" href="/tags/iptables/" rel="tag">iptables</a>, <a class="tag-none-link" href="/tags/%E9%98%B2%E7%81%AB%E5%A2%99/" rel="tag">防火墙</a>
-                            
-                        </a>
-                        
-                            <!-- 当前仅支持valine/waline自带的统计功能 -->
-                            
+                    <li>
+                        <i class="fa fa-edit"></i> 
                         
                         
-                            <!-- 当前仅支持waline自带的统计功能 -->
-                            
+                            ~2.53K
                         
-                    </span>
-                    <span class="pull-right">
-                        <a class="read-more" href="/posts/60b.html" title="阅读全文">阅读全文<i class="fa fa-chevron-circle-right"></i></a>
-                    </span>
-                </footer>
+                        字
+                    </li>
+                
+                
+            </ul>
+        </header>
+        <div class="kratos-post-content">
+            
+            <div id="expire-alert" class="alert alert-warning hidden" role="alert">
+                <div class="icon"><i class="fa fa-warning"></i></div>
+                <div class="text"><p>本文最后编辑于 <time datetime="1691504376663"></time> 前，其中的内容可能需要更新。</p></div>
             </div>
-        </article>
-    
-
-
-
-
-
-    <div class="hidden">
-        <!-- 加载文章阅读对应的统计功能，评论自带的那种 -->
+            
+            
+            
+                <div class="kratos-post-inner-toc toc-div-class" >
+                    <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#zookeeper%E9%9B%86%E7%BE%A4"><span class="toc-number">1.</span> <span class="toc-text">zookeeper集群</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#zookeeper%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8"><span class="toc-number">2.</span> <span class="toc-text">zookeeper数据存储</span></a></li></ol>
+                </div>
+            
+            <hr />
+            <div itemprop="articleBody"><p>zookeeper是yahoo开发的，用于分布式中一致性处理的框架。zookeeper致力于提供高性能、高可用，且具有严格顺序访问控制能力的分布式协调服务，能够实现的功能包括：配置管理、命名服务、分布式锁、集群管理、队列管理。</p>
+<p>高性能：将 <strong>全量数据存储在内存</strong> 中，并直接服务于客户端的所有非事务请求，尤其适用于 <strong>以读为主</strong> 的应用场景，对于事务请求操作多的不太适合。</p>
+<p>高可用：一般以集群的方式对外提供服务，只要集群中超过一般的机器都能够正常工作，那么整个集群就能够正常对外服务。</p>
+<p>严格的访问顺序：对于来自客户端的每个事务请求，zk 都会分配一个 全局事务id：zxid，它反映了所有事务操作的先后顺序。</p>
+<h4 id="zookeeper集群"><a href="#zookeeper集群" class="headerlink" title="zookeeper集群"></a>zookeeper集群</h4><p>zookeeper通过集群的方式对客户端提供一致性协调服务：</p>
+<p><img src="https://wht20230806.oss-cn-beijing.aliyuncs.com/master/zoo1_202388.png" alt></p>
+<p>zk集群的角色：</p>
+<p><strong>Leader</strong>：同一时间集群中只有一个leader，leader负责发起并维护与各Follower及Observer间的心跳。所有的写操作必须要通过Leader完成，再由Leader将写操作广播给其他服务器。</p>
+<p><strong>Follower</strong>：集群中包含多个follower，follower会响应leader的心跳，follower可直接处理并返回客户端的请求，同时会将写请求转发给Leader处理，并且负责在Leader处理写请求时对请求进行投票。</p>
+<p><strong>Observer</strong>：如果Zookeeper集群的读取负载很高，或者客户端多到跨机房，可以设置一些observer服务器，以提高读取的吞吐量，Observer角色与Follower类似，但是有两个区别，一是没有投票权，即不参加选举也不响应提议，二是Observer不需要将事务持久化到磁盘，一旦observer被重启，需要从leader重新同步整个命名空间。</p>
+<p>集群中的每个server都保存一份数据副本，当数据更新时，写请求会全部交给leader来做，然后同步到其他server上。数据更新具有原子性，一次数据更新要么全部成功，要么全部失败。</p>
+<p>zk采用ZAB（Zookeeper Atomic Broadcast）协议来保证所有server上的数据一致性，</p>
+<p>【选举阶段】如果leader挂了，其他server进行选举状态，各自向其他server发起投票，投票当中包含自己的服务器ID和最新事务ID（ZXID），</p>
+<p>每个server都会拿自己的ZXID和接收到的其他server的ZXID作比较，如果发现别人比自己大，就投给别人，总之要投给已知的ZXID最大的server（ZXID最大就代表数据最新）。每次投票后，服务器都会统计投票数量，判断是否有某个节点得到半数以上的投票。如果存在这样的节点，该节点将会成为准Leader。</p>
+<p>【发现阶段】为了防止意外发生，准leader再次收集各个follower的最大的ZXID和历史事务日志，选出最大的ZXID并更新自身历史日志。</p>
+<p>【同步阶段】把leader刚才收集得到的最新历史事务日志，同步给集群中所有的follower。只有当半数follower同步成功，这个准leader才能成为正式的leader。</p>
+<p>写入数据的方式：</p>
+<ol>
+<li>客户端发出写入数据请求给任意Follower。</li>
+<li>Follower把写入数据请求转发给Leader。</li>
+<li>Leader采用二阶段提交方式，先发送Propose广播给Follower。</li>
+<li>Follower接到Propose消息，写入日志成功后，返回ACK消息给Leader。</li>
+<li>Leader接到半数以上ACK消息，返回成功给客户端，并且广播Commit请求给Follower。</li>
+</ol>
+<p><img src="https://wht20230806.oss-cn-beijing.aliyuncs.com/master/zoo2_202388.png" alt></p>
+<p>Zab协议既不是强一致性，也不是弱一致性，而是处于两者之间的<strong>单调一致性</strong>。它依靠事务ID和版本号，保证了数据的更新和读取是有序的。</p>
+<h4 id="zookeeper数据存储"><a href="#zookeeper数据存储" class="headerlink" title="zookeeper数据存储"></a>zookeeper数据存储</h4><p>Zookeeper提供了一个类似于Linux文件系统的树形结构Znode（可认为是轻量级的内存文件系统，但只适合存少量信息，完全不适合存储大量文件或者大文件），同时提供了对于每个节点的监控与通知机制。</p>
+<p>树型结构的节点为Znode，数据存储在Znode节点，Znode的引用方式是<strong>路径引用</strong>，类似于文件路径：</p>
+<p>/ 动物 / 仓鼠；/ 植物 / 荷花。</p>
+<p><img src="https://wht20230806.oss-cn-beijing.aliyuncs.com/master/zoo3_202388.png" alt></p>
+<p>这样的层级结构，让每一个Znode节点拥有唯一的路径，就像命名空间一样对不同信息作出清晰的隔离。</p>
+<p>Znode的内部结构如下：</p>
+<p><img src="https://wht20230806.oss-cn-beijing.aliyuncs.com/master/zoo4_202388.png" alt></p>
+<p><strong>data**</strong>：**Znode存储的数据信息。</p>
+<p><strong>ACL**</strong>：**记录Znode的访问权限，即哪些人或哪些IP可以访问本节点。</p>
+<p><strong>stat**</strong>：**包含Znode的各种元数据，比如事务ID、版本号、时间戳、大小等等。</p>
+<p><strong>child**</strong>：**当前节点的子节点引用，类似于二叉树的左孩子右孩子。</p>
+<p>注意：Zookeeper是为读多写少的场景所设计。Znode并不是用来存储大规模业务数据，而是用于存储少量的状态和配置信息，<strong>每个节点的数据最大不能超过1MB</strong>。</p>
+<p>数据的基本操作API：</p>
+<p><strong>create：</strong>创建节点</p>
+<p><strong>delete：</strong>删除节点</p>
+<p><strong>exists：</strong>判断节点是否存在</p>
+<p><strong>getData：</strong>获得一个节点的数据</p>
+<p><strong>setData：</strong>设置一个节点的数据</p>
+<p><strong>getChildren：</strong>获取节点下的所有子节点</p>
+<p>这其中，exists，getData，getChildren属于读操作。Zookeeper客户端在请求读操作的时候，可以选择是否设置<strong>Watch</strong>。</p>
+<p>Watch可以理解成是注册在特定Znode上的触发器。当这个Znode发生改变，也就是调用了create，delete，setData方法的时候，将会触发Znode上注册的对应事件，请求Watch的客户端会接收到<strong>异步通知</strong>。</p>
+<p>如果在读操作上设置了Watch，服务端接到请求，返回节点数据，并且在对应的哈希表里插入被Watch的Znode路径，以及Watcher列表。</p>
+<p><img src="https://wht20230806.oss-cn-beijing.aliyuncs.com/master/zoo5_202388.png" alt></p>
+<p>当被Watch的Znode已删除，服务端会查找哈希表，找到该Znode对应d的所有Watcher，异步通知客户端，并且删除哈希表中对应的Key-Value。</p>
+<p><img src="https://wht20230806.oss-cn-beijing.aliyuncs.com/master/zoo6_202388.png" alt></p>
+<p>扩展：<a href="https://www.cnblogs.com/jay-huaxiao/p/13599519.html">https://www.cnblogs.com/jay-huaxiao/p/13599519.html</a></p>
+</div>
+        </div>
         
+            <div class="kratos-copyright text-center clearfix">
+                <h5 itemprop="copyrightNotice">本作品采用 <a rel="license nofollow" target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/">知识共享署名-相同方式共享 4.0 国际许可协议</a> 进行许可</h5>
+            </div>
+        
+        <footer class="kratos-entry-footer clearfix">
+            
+                <div class="post-like-donate text-center clearfix" id="post-like-donate">
+                
+                
+                    <a class="share" href="javascript:;"><i class="fa fa-share-alt"></i> 分享</a>
+                    <div class="share-wrap" style="display: none;">
+    <div class="share-group">
+        <a href="javascript:;" class="share-plain qq" onclick="share('qq');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-qq"></i>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain qzone" onclick="share('qzone');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-star"></i>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain weixin pop style-plain" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-weixin"></i>
+            </div>
+            <div class="share-int">
+                <div class="qrcode" id="wechat-qr"></div>
+                <p>打开微信“扫一扫”，打开网页后点击屏幕右上角分享按钮</p>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain weibo" onclick="share('weibo');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-weibo"></i>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain facebook style-plain" onclick="share('facebook');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-facebook"></i>
+            </div>
+        </a>
+        <a href="javascript:;" class="share-plain twitter style-plain" onclick="share('twitter');" rel="nofollow">
+            <div class="icon-wrap">
+                <i class="fa fa-twitter"></i>
+            </div>
+        </a>
     </div>
-
-
+    <script type="text/javascript">
+        $(()=>{
+            new QRCode("wechat-qr", {
+                text: "https://ivseek.ink/posts/b49a8556.html",
+                width: 150,
+                height: 150,
+                correctLevel : QRCode.CorrectLevel.H
+            });
+        });
+        function share(dest) {
+            const qqBase        = "https://connect.qq.com/widget/shareqq/index.html?";
+            const weiboBase     = "https://service.weibo.com/share/share.php?";
+            const qzoneBase     = "https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?";
+            const facebookBase  = "https://www.facebook.com/sharer/sharer.php?";
+            const twitterBase   = "https://twitter.com/intent/tweet?";
+            const hostUrl       = "https://ivseek.ink/posts/b49a8556.html";
+            const title         = "「Zookeeper框架」";
+            const excerpt       = `zookeeper是yahoo开发的，用于分布式中一致性处理的框架。zookeeper致力于提供高性能、高可用，且具有严格顺序访问控制能力的分布式协调服务，能够实现的功能包括：配置管理、命名服务、分布式锁、集群管理、队列管理。
+高性能...`;
+            let _URL;
+            switch (dest) {
+                case "qq"       : _URL = qqBase+"url="+hostUrl+"&title="+title+"&desc=&summary="+excerpt+"&site=cxpy";     break;
+                case "weibo"    : _URL = weiboBase+"url="+hostUrl+"&title="+title+excerpt;                                 break;
+                case "qzone"    : _URL = qzoneBase+"url="+hostUrl+"&title="+title+"&desc=&summary="+excerpt+"&site=cxpy";  break;
+                case "facebook" : _URL = facebookBase+"u="+hostUrl;                                                        break;
+                case "twitter"  : _URL = twitterBase+"text="+title+excerpt+"&url="+hostUrl;                                break;
+            }
+            window.open(_URL);
+        };
+    </script>
+</div>
+                
+                </div>
+            
+            <div class="footer-tag clearfix">
+                <div class="pull-left">
+                <i class="fa fa-tags"></i>
+                    <a class="tag-none-link" href="/tags/Zookeeper/" rel="tag">Zookeeper</a>
+                </div>
+                <div class="pull-date">
+                    <time datetime="2023-08-08T14:19:36.663Z" itemprop="dateModified">最后编辑：2023-08-08</time>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+        <nav class="navigation post-navigation clearfix" role="navigation">
+            
+            <div class="nav-previous clearfix">
+                <a title=" ElasticSearch介绍及使用" href="/posts/c2bcb58.html">&lt; 上一篇</a>
+            </div>
+            
+            
+            <div class="nav-next clearfix">
+                <a title=" K8S之Ingress" href="/posts/f89d4fa6.html">下一篇 &gt;</a>
+            </div>
+            
+        </nav>
+    
+    
+</article>
 
         
 
@@ -369,8 +491,6 @@ iptables实际上它只是一个命令行工具，真正的内...
 
 <section id="kratos-widget-area" class="col-md-4 hidden-xs hidden-sm">
     <!-- 文章和页面根据splitter来分割，没有的话就从头开始设置为sticky -->
-    
-        <div class="sticky-area">
     
     
                 <aside id="krw-about" class="widget widget-kratos-about clearfix">
@@ -411,6 +531,20 @@ iptables实际上它只是一个命令行工具，真正的内...
     </div>
 </aside>
             
+                    <div class="sticky-area">
+                
+                    <aside id="krw-toc" class="widget widget-kratos-toc clearfix toc-div-class" >
+    <div class="photo-background"></div>
+    <h4 class="widget-title no-after">
+        <i class="fa fa-compass"></i>
+        文章目录
+        <span class="toc-progress-bar" role="progressbar" aria-label="阅读进度："></span>
+    </h4>
+    <div class="textwidget">
+        <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#zookeeper%E9%9B%86%E7%BE%A4"><span class="toc-text">zookeeper集群</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#zookeeper%E6%95%B0%E6%8D%AE%E5%AD%98%E5%82%A8"><span class="toc-text">zookeeper数据存储</span></a></li></ol>
+    </div>
+</aside>
+                
                 
   <aside id="krw-categories" class="widget widget-kratos-categories clearfix">
     <h4 class="widget-title"><i class="fa fa-folder"></i>分类目录</h4>
